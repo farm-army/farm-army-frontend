@@ -176,6 +176,13 @@ class PlatformRepository
                 'icon' => '/assets/platforms/alpha.png',
                 'token' => 'alpha',
             ],
+            [
+                'id' => 'mdex',
+                'label' => 'MDEX',
+                'url' => 'https://bsc.mdex.com/',
+                'icon' => '/assets/platforms/mdex.png',
+                'token' => 'mdx',
+            ],
         ];
     }
 }

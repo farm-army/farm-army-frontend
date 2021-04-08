@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% set title = "Binance Smart Chain - Farming Pools" %}
+
+{% block content %}
+    <div class="container">
+        <div id="app-farms" data-api="{{ path('app_default_farms') }}" data-preload="{{ farms_preload }}"></div>
+    </div>
+{% endblock %}
+
+{% block stylesheet %}
+    {{ encore_entry_link_tags('farms') }}
+{% endblock stylesheet %}
+
+{% block javascript %}
+    {{ encore_entry_script_tags('farms') }}
+{% endblock javascript %}

@@ -1,0 +1,104 @@
+{% if details.farm.deposit|default %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex">
+                <div class="flex-1">
+                    <div class="fw-bold">Total Value:</div>
+                    {% if details.yield.amount|default %}
+                        <div style="font-size: 0.8em" title="Yield Earnings">
+                            <i class="fas fa-chart-line"></i>
+                            <span class="font-monospace">
+                                {{ details.yield.amount|format_token }} <span class="text-{{ details.yield.percent > 0 ? 'success' : 'danger' }}">{{ details.yield.percent|round(2) }}%</span>
+                                </span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="flex-grow-1 align-self-end align-self-stretch text-end">
+                    <div>
+                            <span class="font-monospace">
+                            {{ details.farm.deposit.amount|format_token }} {% if details.farm.deposit.usd|default %}<span class="fw-bold">${{ details.farm.deposit.usd|number_format(2) }}</span>{% endif %}
+                        </span>
+                    </div>
+
+                    {% if details.lpTokens|default([])|length > 0 %}
+                        <div class="text-muted" style="font-size:0.8em">
+                            {% for lp_token in details.lpTokens %}
+                                <picture>
+                                    <source srcset="{{ lp_token.icon|replace({'.png': '.webp'}) }}" type="image/webp">
+                                    <img alt="" src="{{ lp_token.icon }}" title="{{ lp_token.symbol }}" width="14" height="14">
+                                </picture>
+
+                                <span class="font-monospace">{{ lp_token.amount|format_token }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% if details.farm.rewards|default([])|length > 0 %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex">
+                <div class="flex-xxx">
+                    <div class="text-muted">Pending Rewards:</div>
+                </div>
+
+                <div class="d-flex ms-auto text-end">
+                    {% for reward in details.farm.rewards|default([])|reverse %}
+                        {% include 'components/reward.html.twig' with {
+                            'reward': {
+                                'amount': reward.amount,
+                                'usd': reward.usd|default,
+                                'icon': '/token/' ~ reward.symbol|lower ~ '.png',
+                                'token': reward.symbol
+                            }
+                        } %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% if details.transactions|default([])|length > 0 %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Transactions <picture>
+                    <source srcset="{{ farm.icon|replace({'.png': '.webp'}) }}" type="image/webp">
+                    <img alt="{{ farm.token|default }}" title="{{ farm.token|default }}" src="{{ farm.icon }}" width="18" height="18">
+                </picture></h5>
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for transation in details.transactions|default([]) %}
+                    <tr>
+                        <td><a target="_blank" href="https://bscscan.com/tx/{{ transation.hash }}" title="bscscan: Transaction"><i class="fas fa-external-link-alt"></i></a></td>
+                        <td>{{ transation.timestamp|date('Y-m-d') }}</td>
+                        <td>{{ transation.amount|abs|format_token }}</td>
+                        <td>
+                            {% if transation.amount > 0 %}
+                                <i class="fas fa-arrow-alt-circle-right text-success"></i>
+                            {% else %}
+                                <i class="fas fa-arrow-alt-circle-left text-danger"></i>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}

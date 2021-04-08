@@ -1,0 +1,50 @@
+<div class="card shadow-sm">
+    <div class="card-body">
+        {% include 'components/card_address_farm.html.twig' with {
+            'box': {
+                'id': farm.farm.id|default('???'),
+                'icon': farm.icon,
+                'name': farm.farm.name,
+                'link': farm.farm.link|default,
+                'has_details': farm.farm.has_details|default(false),
+                'apy': {
+                    'percent': farm.farm.yield.apy|default(0)
+                },
+                'apr': {
+                    'percent': farm.farm.yield.apr|default(0)
+                },
+                'capital': {
+                    'usd': farm.deposit.usd|default,
+                    'balance': farm.deposit.amount|default,
+                },
+                'yield': {
+                    'usd': farm.deposit.usd_yield|default,
+                    'balance': farm.deposit.yield|default,
+                }
+            }
+        } %}
+
+        <div class="d-flex pt-2">
+            <div class="flex-grow-1 align-self-end">
+                {% if farm.farm.platform|default %}
+                    <div title="Origin Platform" class="align-self-end text-muted" style="font-size: 0.8em">{{ farm.farm.platform|capitalize }}</div>
+                {% endif %}
+            </div>
+
+            <div class="text-end">
+                <div class="d-flex" title="Rewards (Pending Harvest)">
+                    {% for reward in farm.rewards|default([]) %}
+                        {% include 'components/reward.html.twig' with {
+                            'reward': {
+                                'amount': reward.amount,
+                                'usd': reward.usd|default,
+                                'icon': '/token/' ~ reward.symbol|lower ~ '.png',
+                                'token': reward.symbol
+                            }
+                        } %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

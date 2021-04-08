@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Address invalid' %}
+
+{% block content %}
+
+    <div class="alert alert-danger text-center">Please provide a valid chain address format</div>
+
+    {% include 'components/address_form.html.twig' %}
+
+{% endblock %}
+

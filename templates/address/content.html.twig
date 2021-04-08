@@ -1,0 +1,147 @@
+<div class="d-flex">
+    <div class="flex-grow-1">
+        <a class="btn btn-outline-dark mx-2" data-bs-toggle="modal" data-bs-target="#wallet-modal"><i class="fas fa-wallet" title="Token & Liquidity Pools"></i> Wallet</a>
+    </div>
+
+    <div class="text-end">
+        <div class="d-flex">
+            {% for key, item in summary %}
+                <div class="d-flex ps-2">
+                    <div class="lh-sm pe-1">
+                        {% if loop.last %}
+                            <div class="fw-bold">${{ item|number_format(2) }}</div>
+                        {% else %}
+                            ${{ item|number_format(2) }}
+                        {% endif %}
+                        <div class="text-muted" style="font-size: 0.8em;">{{ key|capitalize }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<hr>
+
+{% for platform in platforms %}
+    {% if platform.farms|length > 0 %}
+
+    <div class="d-flex pt-3">
+        <div class="flex">
+             <a target="_blank" href="{{ platform.url }}"><img width="32" height="32" class="me-2" src="{{ platform.icon }}" title="{{ platform.label }}"></a>
+        </div>
+        <div class="flex-grow-1 align-middle lh-sm">{{ platform.label }}
+            <div class="text-muted">
+                {% if platform.token_price|default %}
+                    <span title="Token Price" class="text-muted" style="font-size: 0.75em">${{ platform.token_price|number_format(2) }}</span>
+                {% endif %}
+
+                <span title="Your Balance">
+                    {% if platform.wallet.balance|default > 0 or platform.wallet.usd|default > 0 %}
+                        <i class="fas fa-wallet"></i>
+                    {% endif %}
+
+                    {% if platform.wallet.balance|default > 0 %}
+                        <span style="font-size: 0.75em">{{ platform.wallet.balance|format_token }}</span>
+                    {% endif %}
+
+                    {% if platform.wallet.usd|default > 0 %}
+                        <span style="font-size: 0.75em">(${{ platform.wallet.usd|number_format(2) }})</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="text-end">
+
+            <div class="d-flex" title="Platform Rewards (Pending Harvest)">
+                {% for reward in platform.rewards|default([])|reverse %}
+                    {% include 'components/reward.html.twig' with {
+                        'reward': {
+                            'amount': reward.amount,
+                            'usd': reward.usd|default,
+                            'icon': '/token/' ~ reward.symbol|lower ~ '.png',
+                            'token': reward.symbol
+                        }
+                    } %}
+                {% endfor %}
+
+                {% if platform.usd|default(0) > 0 %}
+                    <div class="d-flex ps-2 ms-2 lh-sm" title="Deposits">
+                        <div class="lh-sm pe-1">
+                            <div class="fw-bold">${{ platform.usd|number_format(2) }}</div>
+                            <div class="text-muted" style="font-size: 0.8em;">Total</div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+
+        </div>
+    </div>
+
+    <hr>
+
+    {% if platform.farms|length > 0 %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 pb-5">
+            {% for farm in platform.farms|default([]) %}
+                <div class="col">
+                    {% include 'address/farm_card.html.twig' %}
+                </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <div class="text-center text-muted pb-2">No farming</div>
+    {% endif %}
+        {% endif %}
+{% endfor %}
+
+
+{% if wallet|default([])|length > 0 %}
+    <div class="modal fade" id="wallet-modal" tabindex="-1" aria-labelledby="wallet-modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="wallet-modal-title">
+                        Wallet -
+                        <span class="text-muted">{{ address_truncate }}</span> -
+                        <a class="text-muted text-dark" target="_blank" href="https://bscscan.com/address/{{ address }}" title="bscscan: Address"><i class="fas fa-external-link-alt"></i></a>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% for token in wallet %}
+                        <div class="card shadow-sm mb-2">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <div class="pe-2">
+                                        <picture>
+                                            <source srcset="/token/{{ token.symbol|default('unknown') }}.webp" type="image/webp">
+                                            <img alt="" src="/token/{{ token.symbol|default('unknown') }}.png" title="{{ token.symbol|default('unknown') }}" width="42" height="42">
+                                        </picture>
+                                    </div>
+
+                                    <div class="flex-grow-1 lh-sm">
+                                        <div class="fw-bold">{{ token.symbol|default('?')|upper }}</div>
+                                        <div style="font-size: 0.9em;"><a class="text-muted text-dark" target="_blank" href="https://bscscan.com/token/{{ token.token }}" title="bscscan: Token"><i class="fas fa-external-link-alt"></i></a></div>
+                                    </div>
+
+                                    <div class="text-end font-monospace lh-sm">
+                                        <div class="fw-bold">{% if token.usd|default %}${{ token.usd|number_format(2) }}{% else %}n/a{% endif %}</div>
+                                        <div class="text-muted" style="font-size: 0.9em;">{{ token.amount|format_token }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

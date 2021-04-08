@@ -1,0 +1,10 @@
+# EightPoints GuzzleBundle
+# A full list of configuration options can be found here:
+# https://github.com/8p/EightPointsGuzzleBundle/blob/master/src/Resources/doc/configuration-reference.md
+eight_points_guzzle:
+    clients:
+        default:
+            options:
+                # timeout in seconds
+                timeout: 10
+                connect_timeout: 10

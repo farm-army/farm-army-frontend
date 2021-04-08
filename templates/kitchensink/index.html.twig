@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Kitchensink' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="d-flex pt-3">
+            <div class="flex"><img width="32" height="32" class="me-2" src="{{ asset('/assets/platforms/auto.png') }}"></div>
+            <div class="flex-grow-1 align-middle lh-sm">Beefy<div class="text-muted" style="font-size: 0.75em">${{ 484.23|number_format(2) }}</div></div>
+
+            <div class="text-end">
+                <div class="d-flex">
+                    {% include 'components/reward.html.twig' with {
+                        'reward': {
+                            'amount': 0.008723,
+                            'usd': 20.12,
+                            'icon': '/token/bunny.png',
+                            'token': 'TWT-BNB LP'
+                        }
+                    } %}
+
+                    {% include 'components/reward.html.twig' with {
+                        'reward': {
+                            'amount': 3.1,
+                            'usd': 200.12,
+                            'icon': '/token/cake.png',
+                            'token': 'CAKR'
+                        }
+                    } %}
+
+                    <div class="d-flex ps-2 ms-2 lh-sm">
+                        <div class="lh-sm pe-1" style="font-size: 0.8em;">
+                            <div class="fw-bold">${{ 124453.23|number_format(2) }}</div>
+                            <div class="text-muted">Total</div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    {% include 'components/card_address_farm.html.twig' with {
+                        'box': {
+                            'icon': '/token/usdc.png',
+                            'name': 'TWT-BNB LP',
+                            'apy': {
+                                'percent': 81100.92
+                            },
+                            'capital': {
+                                'usd': 110.30,
+                                'balance': 5.35
+                            },
+                            'yield': {
+                                'usd': 20.30,
+                                'balance': 0.35
+                            }
+                        }
+                    } %}
+
+                    <div class="d-flex pt-3">
+                        <div class="flex-grow-1"></div>
+
+                        <div class="text-end">
+                            <div class="d-flex">
+                                {% include 'components/reward.html.twig' with {
+                                    'reward': {
+                                        'amount': 0.008723,
+                                        'usd': 20.12,
+                                        'icon': '/token/bunny.png',
+                                        'token': 'TWT-BNB LP'
+                                    }
+                                } %}
+
+                                {% include 'components/reward.html.twig' with {
+                                    'reward': {
+                                        'amount': 3.1,
+                                        'usd': 200.12,
+                                        'icon': '/token/cake.png',
+                                        'token': 'CAKR'
+                                    }
+                                } %}
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+    </div>
+
+{% endblock %}

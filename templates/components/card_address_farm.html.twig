@@ -1,0 +1,40 @@
+<div class="d-flex">
+    <div class="pe-2">
+        {% set f_image %}
+            <picture>
+                <source srcset="{{ box.icon|replace({'.png': '.webp'}) }}" type="image/webp">
+                <img width="42" height="42" src="{{ box.icon }}" title="{{ box.name }}" alt="">
+            </picture>
+        {% endset %}
+
+        {% if box.link|default and box.link is not empty %}
+            <a href="{{ box.link }}" target="_blank">{{ f_image }}</a>
+        {% else %}
+            {{ f_image }}
+        {% endif %}
+    </div>
+    <div class="flex-grow-1 lh-sm">
+        <div class="fw-bold">{{ box.name|u.truncate(20, '...') }}{% if box.has_details|default(false) %} <a data-bs-toggle="modal" data-bs-title="{{ box.name|u.truncate(20, '...') }}" data-bs-target="#exampleModal" href="{{ path('farm_detail', {'address': address, 'farmId': box.id|md5}) }}"><i class="text-muted fas fa-info-circle" style="opacity: 0.6" title="Show Details"></i></a>{% endif %}</div>
+        <div class="text-muted" style="font-size: 0.9em;">
+            {% if box.apy.percent is defined and box.apy.percent > 0 %}
+                {{ box.apy.percent|format_percent }}% APY
+            {% elseif box.apr.percent is defined and box.apr.percent > 0 %}
+                {{ box.apr.percent|format_percent }}% APR
+            {% else %}
+                &nbsp;
+            {% endif %}
+        </div>
+    </div>
+    <div class="text-center"></div>
+    <div class="text-end font-monospace lh-sm">
+        <div class="fw-bold">{{ box.capital.usd is not empty ? '$' ~ box.capital.usd|number_format(2) : 'n/a' }}</div>
+        <div class="text-muted" style="font-size: 0.9em;">{{ box.capital.balance|format_token }} {{ box.capital.token|default }}</div>
+
+        {% if box.yield.usd|default(0) > 0 or box.yield.balance|default(0) > 0 %}
+            <div title="Yield earnings" style="font-size: 0.9em;">
+                <div>+{{ box.yield.usd is not empty ? '$' ~ box.yield.usd|number_format(2) : 'n/a' }}</div>
+                <div class="text-muted">+{{ box.yield.balance|format_token }} {{ box.yield.token|default }}</div>
+            </div>
+        {% endif %}
+    </div>
+</div>

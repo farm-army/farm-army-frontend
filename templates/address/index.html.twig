@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% set title = address_truncate %}
+
+{% block content %}
+    <div class="container">
+        <div id="app-address" data-url="{{ path('farm_content', {'address': address|slice(2)}) }}" data-context="{{ app_context|json_encode }}"></div>
+    </div>
+
+    <div class="modal" id="exampleModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Details - <span class="text-muted title fs-5"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class=" ajax-spinner text-center py-4">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div class="content"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+
+{% block stylesheet %}
+    {{ encore_entry_link_tags('address') }}
+{% endblock stylesheet %}
+
+{% block javascript %}
+{{ encore_entry_script_tags('address') }}
+{% endblock javascript %}

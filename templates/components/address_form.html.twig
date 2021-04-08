@@ -1,0 +1,19 @@
+<form method="post" action="{{ path('frontpage') }}">
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto col-lg-5">
+            <div class="input-group">
+                <a type="submit" class="btn btn-success px-3 d-none dapp-wallet" title="Use Connected Wallet"><i class="far fas fa-wallet"></i> Use Wallet</a>
+
+                <input value="{{ chain_address|default('') }}" type="text" placeholder="Your address 0x001Ac7..." id="chain-address-input" name="chain_address" class="form-control {% if invalid|default %}is-invalid{% endif %}"
+                       aria-describedby="validation_address">
+
+                <button type="submit" class="btn btn-primary px-3"><i class="far fas fa-tractor" title="Show farms"></i></button>
+
+                <div id="validation_address" class="invalid-feedback">
+                    Please provide a valid chain address format
+                </div>
+            </div>
+            <div class="form-text">No address? <a class="text-decoration-none" href="{{ path('random_address') }}">Open random address</a></div>
+        </div>
+    </div>
+</form>

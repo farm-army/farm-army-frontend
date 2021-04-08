@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% set title = "API" %}
+
+{% block content %}
+    <h2>API</h2>
+
+    <div class="alert alert-primary" role="alert">
+        <h4 class="alert-heading">Early Stage!</h4>
+        <p>There is currently no API contract, the response can be changed at any time when needed. Response reflects just the frontend rendering. Please also call the API wisely.</p>
+    </div>
+
+    <div class="card shadow-sm mb-2">
+        <div class="card-body">
+            <h5 class="card-title">Farming Pools</h5>
+            <code>[GET] /api/v0/farms</code>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-2">
+        <div class="card-body">
+            <h5 class="card-title">Address Farms</h5>
+            <code>[GET] /api/v0/farms/{address}</code>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-2">
+        <div class="card-body">
+            <h5 class="card-title">Platform Token Balances</h5>
+            <code>[GET] /api/v0/balances/{address}</code>
+        </div>
+    </div>
+
+
+    <div class="card shadow-sm mb-2">
+        <div class="card-body">
+            <h5 class="card-title">Prices</h5>
+            <code>[GET] /api/v0/prices</code>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-2">
+        <div class="card-body">
+            <h5 class="card-title">Tokens</h5>
+            <code>[GET] /api/v0/tokens</code>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-2">
+        <div class="card-body">
+            <h5 class="card-title">Liquidity Tokens</h5>
+            <code>[GET] /api/v0/liquidity-tokens</code>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>Token Images</h2>
+
+    <div class="card shadow-sm mb-2">
+        <div class="card-body">
+            <h5 class="card-title">Single Tokens</h5>
+            <code><img width="32" width="32" src="/token/btc.webp"> /token/btc.webp</code>
+            <hr>
+            <code><img width="32" width="32" src="/token/btc.png"> /token/btc.png</code>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-2">
+        <div class="card-body">
+            <h5 class="card-title">Token Pairs</h5>
+            <code><img width="32" width="32" src="/token/btc-ltc.webp"> /token/btc-ltc.webp</code>
+            <hr>
+            <code><img width="32" width="32" src="/token/btc-ltc.png"> /token/btc-ltc.png</code>
+        </div>
+    </div>
+{% endblock %}

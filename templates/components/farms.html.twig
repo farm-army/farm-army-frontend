@@ -1,0 +1,7 @@
+{% for farm in farms %}
+    <div class="card shadow-sm mb-2 pool-card" data-search-tags="{{ farm.name }} {{ farm.token|default }}" data-search-provider="{{ farm.provider.id }}">
+        <div class="card-body">
+            {% include 'components/farm_card.html.twig' with {'box': farm} %}
+        </div>
+    </div>
+{% endfor %}

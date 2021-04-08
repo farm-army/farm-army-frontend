@@ -1,0 +1,12 @@
+[submodule "remotes/pancake-frontend"]
+	path = remotes/pancake-frontend
+	url = https://github.com/pancakeswap/pancake-frontend.git
+[submodule "remotes/cryptocurrency-icons"]
+	path = remotes/cryptocurrency-icons
+	url = https://github.com/spothq/cryptocurrency-icons
+[submodule "remotes/trustwallet-assets"]
+	path = remotes/trustwallet-assets
+	url = https://github.com/trustwallet/assets.git
+[submodule "remotes/valuedefi-trustwallet-assets"]
+	path = remotes/valuedefi-trustwallet-assets
+	url = https://github.com/valuedefi/trustwallet-assets.git

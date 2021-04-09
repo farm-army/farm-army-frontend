@@ -1,0 +1,5 @@
+{% if platform.farms|length > 0 %}
+    {% include 'address/platform/header.html.twig' with {'platform': platform} only %}
+    <hr>
+    {% include 'address/platform/content.html.twig' with {'platform': platform, 'address': address} only %}
+{% endif %}

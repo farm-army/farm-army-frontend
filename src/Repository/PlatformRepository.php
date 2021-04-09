@@ -183,6 +183,13 @@ class PlatformRepository
                 'icon' => '/assets/platforms/mdex.png',
                 'token' => 'mdx',
             ],
+            [
+                'id' => 'polaris',
+                'label' => 'Polaris',
+                'url' => 'https://app.polarisdefi.io/',
+                'icon' => '/assets/platforms/polaris.png',
+                'token' => 'polar',
+            ],
         ];
     }
 }

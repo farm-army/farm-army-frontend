@@ -190,6 +190,13 @@ class PlatformRepository
                 'icon' => '/assets/platforms/polaris.png',
                 'token' => 'polar',
             ],
+            [
+                'id' => 'cheese',
+                'label' => 'Cheesecake',
+                'url' => 'https://cheesecakeswap.com/',
+                'icon' => '/assets/platforms/cheese.png',
+                'token' => 'ccake',
+            ],
         ];
     }
 }

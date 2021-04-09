@@ -24,7 +24,7 @@ class PlatformRepository
             [
                 'id' => 'autofarm',
                 'label' => 'Autofarm',
-                'url' => 'https://beta.autofarm.network/',
+                'url' => 'https://autofarm.network/',
                 'icon' => '/assets/platforms/auto.png',
                 'token' => 'auto',
             ],

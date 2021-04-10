@@ -53,7 +53,7 @@ class AddressController extends AbstractController
     {
         $randomAddresses = $randomAddress->getRandomAddresses();
 
-        return $this->forward('App\Controller\FarmController::index', [
+        return $this->forward('App\Controller\AddressController::index', [
             'address' => substr($randomAddresses[array_rand($randomAddresses)], 2),
         ]);
     }

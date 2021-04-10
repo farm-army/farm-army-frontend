@@ -84,7 +84,7 @@ export default {
       }
 
       this.calculateSummary();
-      this.calculateSummary();
+      this.appendPlatformWalletInfo();
     },
 
     async fetchWallet() {
@@ -155,7 +155,7 @@ export default {
     },
 
     appendPlatformWalletInfo() {
-      if (!this.wallet.tokens || this.wallet) {
+      if (!this.wallet.tokens || !this.wallet) {
         return;
       }
 

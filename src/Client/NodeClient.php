@@ -239,6 +239,93 @@ class NodeClient
         return $values;
     }
 
+    public function getAddressFarmsForPlatforms(string $address, array $platforms): array
+    {
+        $cache = $this->cacheItemPool->getItem('farms-v1-platforms-' . $address . '-' . json_encode($platforms));
+        if ($cache->isHit()) {
+            return $cache->get();
+        }
+
+        $uri = $this->baseUrl . '/yield/' . urlencode($address) . '?' . http_build_query(['p' => implode(',', $platforms)]);
+
+        try {
+            $content = $this->client->request('GET', $uri, [
+                'timeout' => 20,
+            ]);
+        } catch (GuzzleException $e) {
+            return [];
+        }
+
+        $content = json_decode($content->getBody()->getContents(), true);
+
+        $result = [];
+
+        $prices = false;
+
+        foreach ($content as $platform => $farms) {
+            $result[$platform] = $this->platformRepository->getPlatform($platform);
+
+            if ($prices === false) {
+                $prices = $this->getPrices();
+            }
+
+            if (isset($prices[$result[$platform]['token']])) {
+                $result[$platform]['token_price'] = $prices[$result[$platform]['token']];
+            }
+
+            $result[$platform]['name'] = $platform;
+            $result[$platform]['farms'] = $this->formatFarms($farms);
+
+            $result[$platform]['rewards'] = $this->getTotalRewards($farms);
+
+            $result[$platform]['rewards_total'] = array_sum(array_map(static function (array $obj) {
+                return $obj['usd'] ?? 0;
+            }, $result[$platform]['rewards'] ?? []));
+
+            $result[$platform]['usd'] = $this->getUsd($farms);
+
+            if (isset($result[$platform]['token'])) {
+                $token = $result[$platform]['token'];
+
+                if (isset($balances[$token])) {
+                    $result[$platform]['wallet'] = $balances[$token];
+                }
+            }
+        }
+
+        $cache->set($result)->expiresAfter(10);
+
+        $this->cacheItemPool->save($cache);
+
+        return $result;
+    }
+
+    public function getWallet(string $address): array
+    {
+        $cache = $this->cacheItemPool->getItem('wallet-v1-' . $address);
+        if ($cache->isHit()) {
+            return $cache->get();
+        }
+
+        $uri = $this->baseUrl . '/wallet/' . urlencode($address);
+
+        try {
+            $content = $this->client->request('GET', $uri, [
+                'timeout' => 20,
+            ]);
+        } catch (GuzzleException $e) {
+            return [];
+        }
+
+        $result = json_decode($content->getBody()->getContents(), true);
+
+        $cache->set($result)->expiresAfter(60 * 5);
+
+        $this->cacheItemPool->save($cache);
+
+        return $result;
+    }
+
     /**
      * @param $farms1
      * @return array

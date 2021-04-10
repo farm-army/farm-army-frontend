@@ -15,6 +15,27 @@ class PlatformRepository
         throw new \InvalidArgumentException();
     }
 
+    public function getPlatformChunks(): array
+    {
+        $chunks = array_map(
+            fn($p) => $p['id'],
+            $this->getPlatforms()
+        );
+
+        $middleGroup = ['pancakebunny'];
+        $slowGroup = ['alpha', 'alpaca'];
+
+        $chunks = array_diff($chunks, $slowGroup);
+        $chunks = array_diff($chunks, $middleGroup);
+
+        $chunks = array_chunk($chunks, 4);
+
+        $chunks[] = $slowGroup;
+        $chunks[] = $middleGroup;
+
+        return $chunks;
+    }
+
     /**
      * @return \string[][]
      */

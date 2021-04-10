@@ -11,7 +11,7 @@
                       style="font-size: 0.75em">${{ platform.token_price|number_format(2) }}</span>
             {% endif %}
 
-            <span title="Your Balance">
+            <span title="Your Balance" class="platform-balance">
                     {% if platform.wallet.balance|default > 0 or platform.wallet.usd|default > 0 %}
                         <i class="fas fa-wallet"></i>
                     {% endif %}

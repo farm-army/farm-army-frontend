@@ -10,49 +10,213 @@
       </div>
     </div>
 
-    <div class="text-center ajax-spinner" :class="!isLoading ? 'd-none' : ''">
-      <div class="spinner-border">
-        <span class="sr-only">Loading...</span>
+    <div class="position-relative" :class="!isLoading ? 'd-none' : ''">
+      <div  style="margin-bottom: -30px;" class="position-absolute bottom-0 start-50 translate-middle-x">
+        <div class="spinner-border">
+          <span class="sr-only">Loading...</span>
+        </div>
       </div>
     </div>
 
-    <div class="fade-in" v-html="content" :class="!content ? 'd-none' : ''"></div>
+    <div class="d-flex">
+      <div class="flex-grow-1">
+        <template v-if="wallet && wallet.html">
+          <a class="btn btn-outline-dark mx-2" data-bs-toggle="modal" data-bs-target="#wallet-modal"><i class="fas fa-wallet" title="Token & Liquidity Pools"></i> Wallet</a>
+        </template>
+      </div>
+
+      <div class="text-end">
+        <div class="d-flex">
+
+          <div class="d-flex ps-2" v-for="s in summary" :key="`summary-${s.key}`">
+            <div class="d-flex ps-2">
+              <div class="lh-sm pe-1">
+                <div class="fw-bold" v-if="s.key === 'total'">{{ s.value }}</div>
+                <div v-else>{{ s.value }}</div>
+                <div class="text-muted" style="font-size: 0.8em;">{{ s.label }}</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div v-html="wallet.html"></div>
+
+    <div v-for="platform in getPlatforms" :key="`platform-${platform.id}`" v-html="platform.html"></div>
   </div>
 </template>
 
 <script>
+import Utils from "../utils/utils";
+
 export default {
   data() {
     return {
       isLoading: true,
-      content: '',
       context: {},
+      platforms: [],
+      wallet: {},
+      summary: []
     };
   },
 
   methods: {
-    async fetch(url) {
-      this.isLoading = true;
-      this.content = '';
-
+    async fetchChunk(url) {
       const res = await fetch(url);
-      const content = await res.text();
+      const platforms = await res.json();
 
-      this.isLoading = false;
-      this.content = content;
+      const state = Object.values(this.platforms);
+
+      for (const [key, platform] of Object.entries(platforms)) {
+        const index = state.findIndex(platformOld => {
+          if (platformOld.id === key) {
+            return true
+          }
+        })
+
+        if (index >= 0) {
+          this.platforms[index] = platform;
+        } else {
+          this.platforms.push(platform)
+        }
+      }
+
+      this.calculateSummary();
+      this.calculateSummary();
+    },
+
+    async fetchWallet() {
+      const res = await fetch(this.context.wallet_url);
+      this.wallet = await res.json();
     },
 
     async reload(platform, event) {
-      event.preventDefault()
-      await this.fetch(this.$root.$data.api);
+      event.preventDefault();
+
+      if (this.isLoading) {
+        return;
+      }
+
+      await this.fetchData();
+    },
+
+    calculateSummary() {
+      const summary = {
+        rewards: 0,
+        wallet: 0,
+        liquidityPools : 0,
+        vaults: 0,
+      };
+
+      for (const key in this.platforms) {
+        const platform = this.platforms[key];
+
+        if (platform.usd) {
+          summary.vaults += platform.usd
+        }
+
+        if (platform.rewards_total) {
+          summary.rewards += platform.rewards_total
+        }
+      }
+
+      for (const key in this.wallet.tokens || []) {
+        const item = this.wallet.tokens[key];
+
+        if (item.usd) {
+          summary.wallet += item.usd
+        }
+      }
+
+      for (const key in this.wallet.liquidityPools || []) {
+        const item = this.wallet.liquidityPools[key];
+
+        if (item.usd) {
+          summary.liquidityPools += item.usd
+        }
+      }
+
+      summary.total = Object.values(summary).reduce((a, b) => a + b, 0);
+
+      const result = Object.entries(summary).map(row => {
+        const [key, value] = row;
+
+        return {
+          key: key,
+          label: key[0].toUpperCase() + key.slice(1),
+          usd: value,
+          value: Utils.formatCurrency(value),
+        };
+      }).filter(s => s.usd > 0).sort((a, b) => a.usd - b.usd);
+
+      this.summary = result;
+    },
+
+    appendPlatformWalletInfo() {
+      if (!this.wallet.tokens || this.wallet) {
+        return;
+      }
+
+      for (const key in this.platforms) {
+        const platform = this.platforms[key];
+
+        const token = platform.token;
+        if (!token) {
+          continue;
+        }
+
+        const balance = this.wallet.tokens.find(t => t.symbol.toLowerCase() === token.toLowerCase());
+        if (!balance) {
+          continue;
+        }
+
+        const wrapperElm = document.createElement('div');
+        wrapperElm.innerHTML = platform.html;
+
+        let innerHTML = ` <i class="fas fa-wallet"></i> <span style="font-size: 0.75em">${Utils.formatTokenAmount(balance.amount)}</span>`;
+
+        if (balance.usd) {
+          innerHTML += ` <span style="font-size: 0.75em">(${Utils.formatCurrency(balance.usd)})</span>`
+        }
+
+        wrapperElm.querySelector('.platform-balance').innerHTML = innerHTML;
+
+        platform.html = wrapperElm.innerHTML;
+      }
+    },
+
+    async fetchData() {
+      this.isLoading = true;
+      this.platforms = [];
+      this.wallet = {};
+      this.summary = [];
+
+      const calls = this.context.platform_chunks.map(chunk => this.fetchChunk(chunk));
+
+      calls.push(this.fetchWallet())
+
+      await Promise.allSettled([...calls]);
+
+      this.calculateSummary();
+      this.appendPlatformWalletInfo();
+
+      this.isLoading = false;
     },
   },
 
-  computed: {},
+  computed: {
+    getPlatforms() {
+      return Object.values(this.platforms).sort((a, b) => {
+        return ((b.usd || 0) + (b.rewards_total || 0)) - ((a.usd || 0) + (a.rewards_total || 0))
+      });
+    }
+  },
 
   async created() {
     this.context = JSON.parse(this.$root.$data.context);
-    await this.fetch(this.$root.$data.api);
+    await this.fetchData();
   },
 };
 </script>

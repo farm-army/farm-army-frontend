@@ -4,21 +4,27 @@ namespace App\Controller;
 
 use App\Client\NodeClient;
 use App\Pools\FarmPools;
+use App\Repository\PlatformRepository;
 use App\Symbol\IconResolver;
 use App\Utils\RandomAddress;
 use App\Utils\Web3Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
 
 class AddressController extends AbstractController
 {
     /**
      * @Route("/0x{address}", name="app_farm_index")
      */
-    public function index(string $address): Response
+    public function index(string $address, PlatformRepository $platformRepository, UrlGeneratorInterface $urlGenerator): Response
     {
+        $addressNoPrefix = $address;
         $address = '0x' . $address;
 
         if (!Web3Util::isAddress($address)) {
@@ -28,6 +34,11 @@ class AddressController extends AbstractController
         $var = [
             'address' => $address,
             'address_truncate' => substr($address, 0, 8) . '...' . substr($address, -8),
+            'platform_chunks' => array_map(
+                fn($chunk) => $urlGenerator->generate('farm_json_platform_chunks', ['address' => $addressNoPrefix, 'chunk' => $chunk]),
+                array_keys($platformRepository->getPlatformChunks())
+            ),
+            'wallet_url' => $urlGenerator->generate('farm_json_wallet', ['address' => $addressNoPrefix]),
         ];
 
         $var['app_context'] = $var;
@@ -74,6 +85,79 @@ class AddressController extends AbstractController
             'wallet' => $addressFarms['wallet'],
             'summary' => $addressFarms['summary'],
         ], $response);
+    }
+
+    /**
+     * @Route("/farms/0x{address}/platform/{chunk}.json", name="farm_json_platform_chunks", methods={"GET"}, requirements={
+     *      "chunk"="\d{1,2}",
+     *      "_format"="json",
+     * })
+     */
+    public function jsonAjax(string $address, string $chunk, NodeClient $nodeClient, Environment $twig, PlatformRepository $platformRepository): Response
+    {
+        $address = '0x' . $address;
+
+        if (!Web3Util::isAddress($address)) {
+            throw new BadRequestHttpException('Invalid address');
+        }
+
+        $chunks = $platformRepository->getPlatformChunks();
+        if (!isset($chunks[$chunk])) {
+            throw new BadRequestHttpException('Invalid chunk');
+        }
+
+        $platforms = $nodeClient->getAddressFarmsForPlatforms(strtolower($address), $chunks[$chunk]);
+
+        foreach($platforms as $key => $platform) {
+            $platforms[$key]['html'] = $twig->render('address/platform/platform.html.twig', [
+                'address' => $address,
+                'platform' => $platform
+            ]);
+        }
+
+        $response = new JsonResponse($platforms);
+        $response->setPublic();
+        $response->setMaxAge(9);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/farms/0x{address}/wallet.json", name="farm_json_wallet", methods={"GET"}, requirements={
+     *      "_format"="json",
+     * })
+     */
+    public function jsonWallet(string $address, NodeClient $nodeClient, Environment $twig): Response
+    {
+        $address = '0x' . $address;
+
+        if (!Web3Util::isAddress($address)) {
+            throw new BadRequestHttpException('Invalid address');
+        }
+
+        $walletRaw = $nodeClient->getWallet(strtolower($address));
+        $wallet = [...($walletRaw['tokens'] ?? []), ...($walletRaw['liquidityPools'] ?? [])];
+
+        usort($wallet, function ($a, $b) {
+            return ($b['usd'] ?? 0) <=> ($a['usd'] ?? 0);
+        });
+
+        $html = $twig->render('address/wallet/modal.html.twig', [
+            'address' => $address,
+            'address_truncate' => substr($address, 0, 8) . '...' . substr($address, -8),
+            'wallet' => $wallet
+        ]);
+
+        $response = new JsonResponse([
+            'tokens' => $walletRaw['tokens'] ?? [],
+            'liquidityPools' => $walletRaw['liquidityPools'] ?? [],
+            'html' => $html,
+        ]);
+
+        $response->setPublic();
+        $response->setMaxAge(9);
+
+        return $response;
     }
 
     /**

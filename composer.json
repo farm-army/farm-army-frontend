@@ -17,6 +17,7 @@
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "*",
         "symfony/console": "*",
+        "symfony/css-selector": "5.2.*",
         "symfony/dom-crawler": "5.2.*",
         "symfony/dotenv": "*",
         "symfony/expression-language": "*",

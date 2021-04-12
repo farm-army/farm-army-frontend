@@ -4,7 +4,7 @@
             <div class="pe-2 position-relative">
                 <picture>
                     <source srcset="{{ box.icon|replace({'.png': '.webp'}) }}" type="image/webp">
-                    <img width="42" height="42" src="{{ box.icon }}" title="{{ box.name }}" alt="">
+                    <img loading="lazy" width="42" height="42" src="{{ box.icon }}" title="{{ box.name }}" alt="">
                 </picture>
 
                 <div class="position-absolute top-0 start-0 translate-middle">
@@ -42,7 +42,7 @@
             {% for earn in box.earns|default([]) %}
                 <picture>
                     <source srcset="{{ path('token_icon', {'symbol': earn, 'format': 'webp'}) }}" type="image/webp">
-                    <img width="16" height="16" src="{{ path('token_icon', {'symbol': earn, 'format': 'png'}) }}" title="Earn {{ earn }}" alt="Earn {{ earn }}">
+                    <img loading="lazy" width="16" height="16" src="{{ path('token_icon', {'symbol': earn, 'format': 'png'}) }}" title="Earn {{ earn }}" alt="Earn {{ earn }}">
                 </picture>
             {% endfor %}
             <div class="text-muted">Earn</div>

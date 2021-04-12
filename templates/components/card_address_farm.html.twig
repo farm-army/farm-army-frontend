@@ -3,7 +3,7 @@
         {% set f_image %}
             <picture>
                 <source srcset="{{ box.icon|replace({'.png': '.webp'}) }}" type="image/webp">
-                <img width="42" height="42" src="{{ box.icon }}" title="{{ box.name }}" alt="">
+                <img loading="lazy" width="42" height="42" src="{{ box.icon }}" title="{{ box.name }}" alt="">
             </picture>
         {% endset %}
 

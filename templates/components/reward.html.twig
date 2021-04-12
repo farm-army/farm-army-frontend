@@ -7,7 +7,7 @@
     <div>
         <picture>
             <source srcset="{{ reward.icon|replace({'.png': '.webp'}) }}" type="image/webp">
-            <img alt="" width="24" height="24" src="{{ reward.icon }}" title="{{ reward.token }}">
+            <img loading="lazy" alt="" width="24" height="24" src="{{ reward.icon }}" title="{{ reward.token }}">
         </picture>
     </div>
 </div>

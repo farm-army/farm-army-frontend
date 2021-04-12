@@ -12,7 +12,7 @@
 
     <div class="mt-4 pt-4 border-top text-center">
         {% for platform in platforms %}
-            <a class="p-1" href="{{ platform.url }}" title="{{ platform.label }}" target="_blank"><img class="m-1" style="filter: grayscale(30%);" height="32" src="{{ asset(platform.icon) }}" alt="{{ platform.id }}"></a>
+            <a class="p-1" href="{{ platform.url }}" title="{{ platform.label }}" target="_blank"><img loading="lazy" class="m-1" style="filter: grayscale(30%);" height="32" src="{{ asset(platform.icon) }}" alt="{{ platform.id }}"></a>
         {% endfor %}
     </div>
 

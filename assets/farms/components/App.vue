@@ -5,12 +5,12 @@
       <div class="col-sm-2">
         <div class="list-group provider-options">
           <a href="#" class="list-group-item list-group-item-action" :class="platforms.length === 0 ? 'active' : ''" v-on:click="togglePlatform(undefined, $event)">
-            <img width="32" height="32" src="/assets/rocket.png"> Show All
+            <img loading="lazy" width="32" height="32" src="/assets/rocket.png"> Show All
           </a>
 
           <template v-for="(row, index) in providers">
             <a href="#" class="list-group-item list-group-item-action"  :class="platforms.includes(row.id) ? 'active' : ''" v-on:click="togglePlatform(row.id, $event)" :key="`providers-${index}`" >
-              <img width="32" height="32" :src="row.icon">
+              <img loading="lazy" width="32" height="32" :src="row.icon">
               <span class="align-middle">{{ row.label }}</span>
             </a>
           </template>

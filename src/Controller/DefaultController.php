@@ -55,23 +55,13 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="frontpage", methods={"GET"})
      */
-    public function index(Request $request,
-        PlatformRepository $platformRepository,
-        FarmPools $farmPools
-    ) {
-        $farms = $farmPools->generateFarms();
-
+    public function index(Request $request)
+    {
         $platforms = $this->platformRepository->getPlatforms();
 
         $parameters = [
             'platforms' => $platforms,
-            'farms' => $farms,
-            'new' => array_slice($farms, 0, 10),
-            'providers' => $platformRepository->getPlatforms(),
-            'farms_preload' => json_encode([
-                'farms' => array_slice($farmPools->generateContent(), 0, 20),
-                'platforms' => $platforms,
-            ])
+            'providers' => $this->platformRepository->getPlatforms(),
         ];
 
         if ($chainAddress = $request->cookies->get('chain_address')) {
@@ -84,10 +74,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", methods={"POST"})
      */
-    public function post(Request $request,
-        PlatformRepository $platformRepository,
-        FarmPools $farmPools
-    ) {
+    public function post(Request $request) {
         if (($address = $request->request->get('chain_address')) && Web3Util::isAddress($address)) {
             $response = new RedirectResponse($this->generateUrl('app_farm_index', ['address' => substr($address, 2)]));
 
@@ -96,20 +83,13 @@ class DefaultController extends AbstractController
             return $response;
         }
 
-        $farms = $farmPools->generateFarms();
-
         $platforms = $this->platformRepository->getPlatforms();
 
         return $this->render('frontpage/frontpage.html.twig', [
             'invalid' =>  true,
-            'platforms' => $this->platformRepository->getPlatforms(),
+            'platforms' => $platforms,
             'chain_address' => $address ?? '',
-            'farms_preload' => json_encode([
-                'farms' => array_slice($farmPools->generateContent(), 0, 20),
-                'platforms' => $platforms,
-            ]),
-            'providers' => $platformRepository->getPlatforms(),
-            'farms' => $farms,
+            'providers' => $platforms,
         ]);
     }
 

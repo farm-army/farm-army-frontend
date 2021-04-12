@@ -2,17 +2,10 @@
 
 namespace App\Controller;
 
-use App\Client\NodeClient;
 use App\Pools\FarmPools;
 use App\Repository\PlatformRepository;
-use App\Symbol\IconResolver;
-use App\Utils\InterestUtil;
-use App\Utils\Web3Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PoolController extends AbstractController
@@ -29,11 +22,16 @@ class PoolController extends AbstractController
      */
     public function index(FarmPools $farmPools)
     {
+        $response = new Response();
+
+        $response->setPublic();
+        $response->setMaxAge(60 * 30);
+
         return $this->render('pool/index.html.twig', [
             'farms_preload' => json_encode([
                 'farms' => array_slice($farmPools->generateContent(), 0, 20),
                 'platforms' => $this->platformRepository->getPlatforms(),
             ])
-        ]);
+        ], $response);
     }
 }

@@ -43,7 +43,13 @@ class AddressController extends AbstractController
 
         $var['app_context'] = $var;
 
-        return $this->render('address/index.html.twig', $var);
+
+        $response = new Response();
+
+        $response->setPublic();
+        $response->setMaxAge(9);
+
+        return $this->render('address/index.html.twig', $var, $response);
     }
 
     /**
@@ -186,9 +192,14 @@ class AddressController extends AbstractController
             }
         }
 
+        $response = new Response();
+
+        $response->setPublic();
+        $response->setMaxAge(9);
+
         return $this->render('address/details.html.twig', [
             'farm' => $farm,
             'details' => $details,
-        ]);
+        ], $response);
     }
 }

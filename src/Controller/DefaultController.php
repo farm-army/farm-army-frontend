@@ -68,7 +68,11 @@ class DefaultController extends AbstractController
             $parameters['chain_address'] = $chainAddress;
         }
 
-        return $this->render('frontpage/frontpage.html.twig', $parameters);
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge(60 * 30);
+
+        return $this->render('frontpage/frontpage.html.twig', $parameters, $response);
     }
 
     /**
@@ -98,8 +102,13 @@ class DefaultController extends AbstractController
      */
     public function sitemap(): Response
     {
-        return new Response($this->renderView('seo/sitemap.xml.twig'), 200, [
+        $response = new Response($this->renderView('seo/sitemap.xml.twig'), 200, [
             'Content-type' => ' text/xml; charset=utf-8'
         ]);
+
+        $response->setPublic();
+        $response->setMaxAge(60 * 30);
+
+        return $response;
     }
 }

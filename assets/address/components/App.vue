@@ -21,8 +21,10 @@
     <div class="d-flex">
       <div class="flex-grow-1">
         <template v-if="wallet && wallet.html">
-          <a class="btn btn-outline-dark mx-2" data-bs-toggle="modal" data-bs-target="#wallet-modal"><i class="fas fa-wallet" title="Token & Liquidity Pools"></i> Wallet</a>
+          <a class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#wallet-modal"><i class="fas fa-wallet" title="Token & Liquidity Pools"></i> Wallet</a>
         </template>
+
+        <a class="btn btn-outline-dark" :href="`${context.address}/transactions`"><i class="fas fa-exchange-alt"></i> Transactions</a>
       </div>
 
       <div class="text-end">

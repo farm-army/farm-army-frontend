@@ -12,7 +12,11 @@ class PlatformRepository
             }
         }
 
-        throw new \InvalidArgumentException();
+        return [
+            'id' => 'unknown',
+            'label' => 'Unknown',
+            'icon' => '/assets/platforms/unknown.png',
+        ];
     }
 
     public function getPlatformChunks(): array

@@ -53,6 +53,29 @@ class AddressController extends AbstractController
     }
 
     /**
+     * @Route("/0x{address}/transactions", name="app_farm_transactions", methods={"GET"})
+     */
+    public function transactions(string $address, NodeClient $nodeClient): Response
+    {
+        $address = '0x' . $address;
+
+        if (!Web3Util::isAddress($address)) {
+            throw new BadRequestHttpException('invalid address');
+        }
+
+        $response = new Response();
+
+       // $response->setPublic();
+        //$response->setMaxAge(9);
+
+        $transactions = $nodeClient->getTransactions($address);
+
+        return $this->render('address/transactions.html.twig', [
+            'address' => $address,
+            'transactions' => $transactions,
+        ], $response);
+    }
+    /**
      * @Route("/random", name="random_address")
      */
     public function random(RandomAddress $randomAddress): Response

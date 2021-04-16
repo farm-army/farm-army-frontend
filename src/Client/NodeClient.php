@@ -417,4 +417,37 @@ class NodeClient
 
         return $result;
     }
+
+    public function getTransactions(string $address): array
+    {
+        $cache = $this->cacheItemPool->getItem('address-transactions-' . md5($address));
+
+        if ($cache->isHit()) {
+           // return $cache->get();
+        }
+
+        try {
+            $content = $this->client->request('GET', $this->baseUrl . '/transactions/' . $address, [
+                'timeout' => 16,
+            ]);
+        } catch (GuzzleException $e) {
+            return [];
+        }
+
+        $transactions = json_decode($content->getBody()->getContents(), true);
+
+        foreach ($transactions as $key => $transaction) {
+            if (isset($transaction['vault']['provider'])) {
+                $transactions[$key]['provider'] = $this->platformRepository->getPlatform($transaction['vault']['provider']);
+            }
+
+            if (isset($transaction['symbol'])) {
+                $transactions[$key]['icon'] = $this->iconResolver->getIcon($transaction['symbol']);
+            }
+        }
+
+        $this->cacheItemPool->save($cache->set($transactions)->expiresAfter(60 * 5));
+
+        return $transactions;
+    }
 }

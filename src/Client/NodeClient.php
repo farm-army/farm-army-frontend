@@ -423,7 +423,7 @@ class NodeClient
         $cache = $this->cacheItemPool->getItem('address-transactions-' . md5($address));
 
         if ($cache->isHit()) {
-           // return $cache->get();
+            return $cache->get();
         }
 
         try {
@@ -436,6 +436,7 @@ class NodeClient
 
         $transactions = json_decode($content->getBody()->getContents(), true);
 
+        $groupedHash = [];
         foreach ($transactions as $key => $transaction) {
             if (isset($transaction['vault']['provider'])) {
                 $transactions[$key]['provider'] = $this->platformRepository->getPlatform($transaction['vault']['provider']);
@@ -444,10 +445,18 @@ class NodeClient
             if (isset($transaction['symbol'])) {
                 $transactions[$key]['icon'] = $this->iconResolver->getIcon($transaction['symbol']);
             }
+
+            if (!isset($groupedHash[$transaction['hash']])) {
+                $groupedHash[$transaction['hash']] = [];
+            }
+
+            $groupedHash[$transaction['hash']][] = $transactions[$key];
         }
 
-        $this->cacheItemPool->save($cache->set($transactions)->expiresAfter(60 * 5));
+        $groupedHash = array_values($groupedHash);
 
-        return $transactions;
+        $this->cacheItemPool->save($cache->set($groupedHash)->expiresAfter(60));
+
+        return $groupedHash;
     }
 }

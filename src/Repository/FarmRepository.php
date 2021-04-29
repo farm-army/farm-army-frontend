@@ -25,13 +25,14 @@ class FarmRepository extends ServiceEntityRepository
 
         foreach ($farms as $farm) {
 
-            $sql = "INSERT INTO farm (farm_id, created_at, last_found_at, updated_at, json, name) VALUES (:farm_id, :created_at, :last_found_at, :updated_at, :json, :name) "
-                . "ON CONFLICT(farm_id) DO UPDATE SET last_found_at = :last_found_at, json = :json, updated_at = :updated_at, name = :name";
+            $sql = "INSERT INTO farm (farm_id, created_at, last_found_at, updated_at, json, name, tvl) VALUES (:farm_id, :created_at, :last_found_at, :updated_at, :json, :name, :tvl) "
+                . "ON CONFLICT(farm_id) DO UPDATE SET last_found_at = :last_found_at, json = :json, updated_at = :updated_at, name = :name, tvl = :tvl";
 
             $stmt = $this->connection->prepare($sql);
 
             $stmt->bindValue('farm_id', $farm['id']);
             $stmt->bindValue('name', $farm['name'] ?? null);
+            $stmt->bindValue('tvl', $farm['tvl']['usd'] ?? null);
             $stmt->bindValue('created_at', $currentDate);
             $stmt->bindValue('last_found_at', $currentDate);
             $stmt->bindValue('updated_at', $currentDate);
@@ -56,8 +57,30 @@ class FarmRepository extends ServiceEntityRepository
 
         $result = $qb->getQuery()
             ->useQueryCache(true)
-            ->setResultCacheLifetime(60 * 10)
-            ->setResultCacheId('new-farms')
+            ->setResultCacheLifetime(60 * 2)
+            ->setResultCacheId('new-farms-v1')
+            ->getArrayResult();
+
+        return array_keys($result);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getTvl(): array
+    {
+        $qb = $this->createQueryBuilder('f', 'f.farmId');
+        $qb->select('f.farmId');
+
+        $qb->andWhere('f.tvl > 0');
+
+        $qb->orderBy('f.tvl', 'DESC');
+        $qb->setMaxResults(10);
+
+        $result = $qb->getQuery()
+            ->useQueryCache(true)
+            ->setResultCacheLifetime(60 * 2)
+            ->setResultCacheId('tvl-farms-v1')
             ->getArrayResult();
 
         return array_keys($result);

@@ -65,8 +65,8 @@ class AddressController extends AbstractController
 
         $response = new Response();
 
-       // $response->setPublic();
-        //$response->setMaxAge(9);
+        $response->setPublic();
+        $response->setMaxAge(9);
 
         $transactions = $nodeClient->getTransactions($address);
 

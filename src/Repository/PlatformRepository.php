@@ -32,7 +32,7 @@ class PlatformRepository
         $chunks = array_diff($chunks, $slowGroup);
         $chunks = array_diff($chunks, $middleGroup);
 
-        $chunks = array_chunk($chunks, 4);
+        $chunks = array_chunk($chunks, 5);
 
         $chunks[] = $slowGroup;
         $chunks[] = $middleGroup;
@@ -221,6 +221,13 @@ class PlatformRepository
                 'url' => 'https://cheesecakeswap.com/',
                 'icon' => '/assets/platforms/cheese.png',
                 'token' => 'ccake',
+            ],
+            [
+                'id' => 'swamp',
+                'label' => 'Swamp',
+                'url' => 'https://swamp.finance/',
+                'icon' => '/assets/platforms/swamp.png',
+                'token' => 'swamp',
             ],
         ];
     }

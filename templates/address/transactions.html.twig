@@ -23,75 +23,81 @@
             </div>
         </div>
     </div>
-    {% for transaction in transactions %}
+    {% for group in transactions %}
         <div class="card shadow-sm mb-2">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-3 text-nowrap">
-                        <span>{{ transaction.timestamp|date('y-m-d H:i') }}</span>
-                        <br>
-                        <a target="_blank" href="https://bscscan.com/tx/{{ transaction.hash }}" title="bscscan: Transaction"><i class="fas fa-external-link-alt"></i></a> <span class="text-muted" title="{{ transaction.hash }}">{{ transaction.hash|u.truncate(8) }}...</span>
-                    </div>
+            {% for transaction in group %}
 
-                    <div class="col-3 text-center font-monospace">
-                        {% if transaction.icon|default %}
-                            <picture>
-                                <source srcset="{{ transaction.icon|replace({'.png': '.webp'}) }}" type="image/webp">
-                                <img loading="lazy" width="16" height="16" src="{{ transaction.icon }}" title="{{ transaction.symbol|default }}" alt="{{ transaction.symbol|default }}">
-                            </picture>
-                        {% endif %}
-                        {{ transaction.amount|abs|format_token }}
-                        {% if transaction.usd|default %}
+                    <div class="row">
+                        <div class="col-3 text-nowrap">
+                            {% if loop.first %}
+                            <span>{{ transaction.timestamp|date('y-m-d H:i') }}</span>
                             <br>
-                            <span class="text-muted">${{ transaction.usd|abs|number_format(2) }}</span>
-                        {% endif %}
-                    </div>
+                            <a target="_blank" href="https://bscscan.com/tx/{{ transaction.hash }}" title="bscscan: Transaction"><i class="fas fa-external-link-alt"></i></a> <span class="text-muted" title="{{ transaction.hash }}">{{ transaction.hash|u.truncate(8) }}...</span>
+                            {% endif %}
+                        </div>
 
-                    <div class="col-3 text-center font-monospace">
-                        {% if transaction.amount > 0 %}
-                            <i class="fas fa-arrow-alt-circle-left text-success"></i>
-                        {% else %}
-                            <i class="fas fa-arrow-alt-circle-right text-danger"></i>
-                        {% endif %}
-                        {% if transaction.amount > 0 %}
-                            <a target="_blank" class="text-muted text-decoration-none" href="https://bscscan.com/tx/{{ transaction.from }}" title="bscscan: {{ transaction.from }}">{{ transaction.from|truncate_address(6) }}</a>
-                        {% else %}
-                            <a target="_blank" class="text-muted text-decoration-none text-dark" href="https://bscscan.com/tx/{{ transaction.to }}" title="bscscan: {{ transaction.to }}">{{ transaction.to|truncate_address(6) }}</a>
-                        {% endif %}
-                    </div>
+                        <div class="col-3 text-center font-monospace">
+                            {% if transaction.icon|default %}
+                                <picture>
+                                    <source srcset="{{ transaction.icon|replace({'.png': '.webp'}) }}" type="image/webp">
+                                    <img loading="lazy" width="16" height="16" src="{{ transaction.icon }}" title="{{ transaction.symbol|default }}" alt="{{ transaction.symbol|default }}">
+                                </picture>
+                            {% endif %}
+                            {{ transaction.amount|abs|format_token }}
+                            {% if transaction.usd|default %}
+                                <br>
+                                <span class="text-muted">${{ transaction.usd|abs|number_format(2) }}</span>
+                            {% endif %}
+                        </div>
 
-                    <div class="col-3">
+                        <div class="col-3 text-center font-monospace">
+                            {% if transaction.amount > 0 %}
+                                <i class="fas fa-arrow-alt-circle-left text-success"></i>
+                            {% else %}
+                                <i class="fas fa-arrow-alt-circle-right text-danger"></i>
+                            {% endif %}
+                            {% if transaction.amount > 0 %}
+                                <a target="_blank" class="text-muted text-decoration-none" href="https://bscscan.com/address/{{ transaction.from }}" title="bscscan: {{ transaction.from }}">{{ transaction.from|truncate_address(6) }}</a>
+                            {% else %}
+                                <a target="_blank" class="text-muted text-decoration-none text-dark" href="https://bscscan.com/address/{{ transaction.to }}" title="bscscan: {{ transaction.to }}">{{ transaction.to|truncate_address(6) }}</a>
+                            {% endif %}
+                        </div>
 
-                        <div class="d-flex">
-                            <div class="flex-grow-1 align-self-end">
-                            </div>
-                            <div class="text-end">
+                        <div class="col-3">
 
-                                <div class="d-flex">
-                                    <div class="lh-sm pe-1">
-                                        {{ transaction.vault.name|default|u.truncate(20, '...') }}
-                                        {% if transaction.provider.label|default %}
-                                            <div class="text-muted">{{ transaction.provider.label }}</div>
-                                        {% endif %}
+                            <div class="d-flex">
+                                <div class="flex-grow-1 align-self-end">
+                                </div>
+                                <div class="text-end">
 
-                                    </div>
-                                    <div>
-                                        {% if transaction.provider|default %}
-                                            {% if transaction.vault.link|default  %}
-                                                <a href="{{ transaction.vault.link }}" target="_blank"><img loading="lazy" width="32" height="32" src="{{ transaction.provider.icon }}" alt=""></a>
-                                            {% else %}
-                                                <img loading="lazy" width="36" height="36" src="{{ transaction.provider.icon }}" alt="">
+                                    <div class="d-flex">
+                                        <div class="lh-sm pe-1">
+                                            {{ transaction.vault.name|default|u.truncate(20, '...') }}
+                                            {% if transaction.provider.label|default %}
+                                                <div class="text-muted">{{ transaction.provider.label }}</div>
                                             {% endif %}
 
-                                        {% endif %}
-                                    </div>
-                                </div>
+                                        </div>
+                                        <div>
+                                            {% if transaction.provider|default %}
+                                                {% if transaction.vault.link|default  %}
+                                                    <a href="{{ transaction.vault.link }}" target="_blank"><img loading="lazy" width="32" height="32" src="{{ transaction.provider.icon }}" alt=""></a>
+                                                {% else %}
+                                                    <img loading="lazy" width="36" height="36" src="{{ transaction.provider.icon }}" alt="">
+                                                {% endif %}
 
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+
+            {% endfor %}
             </div>
         </div>
     {% endfor %}

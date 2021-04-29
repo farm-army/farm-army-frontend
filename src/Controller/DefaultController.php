@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Pools\FarmPools;
+use App\Repository\FarmRepository;
 use App\Repository\PlatformRepository;
 use App\Utils\Web3Util;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,11 +17,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
-    private $platformRepository;
+    private PlatformRepository $platformRepository;
+    private FarmRepository $farmRepository;
+    private FarmPools $farmPools;
+    private CacheItemPoolInterface $cacheItemPool;
 
-    public function __construct(PlatformRepository $platformRepository)
-    {
+    public function __construct(
+        PlatformRepository $platformRepository,
+        FarmRepository $farmRepository,
+        FarmPools $farmPools,
+        CacheItemPoolInterface $cacheItemPool
+    ) {
         $this->platformRepository = $platformRepository;
+        $this->farmRepository = $farmRepository;
+        $this->farmPools = $farmPools;
+        $this->cacheItemPool = $cacheItemPool;
     }
 
     /**
@@ -55,7 +67,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="frontpage", methods={"GET"})
      */
-    public function index(Request $request)
+    public function index(Request $request, FarmRepository $farmRepository, FarmPools $farmPools)
     {
         $platforms = $this->platformRepository->getPlatforms();
 
@@ -68,11 +80,49 @@ class DefaultController extends AbstractController
             $parameters['chain_address'] = $chainAddress;
         }
 
+        $parameters = array_merge($parameters, $this->getFrontpageFarms());
+
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge(60 * 30);
 
         return $this->render('frontpage/frontpage.html.twig', $parameters, $response);
+    }
+
+    private function getFrontpageFarms(): array
+    {
+        $cache = $this->cacheItemPool->getItem('frontpage-farms-v1');
+
+        if ($cache->isHit()) {
+            return $cache->get();
+        }
+
+        $new = array_fill_keys($this->farmRepository->getNewFarm(), null);
+        $tvl = array_fill_keys($this->farmRepository->getTvl(), null);
+
+        $generateContent = $this->farmPools->generateContent();
+
+        foreach($generateContent as $farm)  {
+            $id = $farm['id'];
+            if (array_key_exists($id, $new)) {
+                $new[$id] = $farm;
+            }
+
+            if (array_key_exists($id, $tvl)) {
+                $tvl[$id] = $farm;
+            }
+        }
+
+        $result = [
+            'new' => array_values(array_filter($new)),
+            'tvl' => array_values(array_filter($tvl)),
+        ];
+
+        $this->cacheItemPool->save(
+            $cache->set($result)->expiresAfter(60 * 30)
+        );
+
+        return $result;
     }
 
     /**
@@ -89,12 +139,16 @@ class DefaultController extends AbstractController
 
         $platforms = $this->platformRepository->getPlatforms();
 
-        return $this->render('frontpage/frontpage.html.twig', [
-            'invalid' =>  true,
+        $parameters = [
+            'invalid' => true,
             'platforms' => $platforms,
             'chain_address' => $address ?? '',
             'providers' => $platforms,
-        ]);
+        ];
+
+        $parameters = array_merge($parameters, $this->getFrontpageFarms());
+
+        return $this->render('frontpage/frontpage.html.twig', $parameters);
     }
 
     /**

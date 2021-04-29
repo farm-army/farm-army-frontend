@@ -9,7 +9,9 @@ use App\Repository\FarmRepository;
  * @ORM\Entity(repositoryClass=FarmRepository::class)
  * @ORM\Table(name="farm",
  *     indexes={
- *        @ORM\Index(name="farm_created_at", columns={"created_at"})
+ *        @ORM\Index(name="farm_created_at", columns={"created_at"}),
+ *        @ORM\Index(name="farm_tvl", columns={"tvl"}),
+ *        @ORM\Index(name="farm_farm_id", columns={"farm_id"})
  *     },
  *     uniqueConstraints={
  *        @ORM\UniqueConstraint(name="farm_farm_id", columns={"farm_id"})
@@ -33,6 +35,11 @@ class Farm
      * @ORM\Column(type="string", nullable=true)
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $tvl;
 
     /**
      * @ORM\Column(type="array", nullable=true)

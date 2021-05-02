@@ -36,20 +36,20 @@ class FarmPools
         $this->farmRepository = $farmRepository;
     }
 
-    public function generateContent(): array
+    public function generateContent(string $template = 'components/farms_mini.html.twig'): array
     {
-        $cache = $this->cacheItemPool->getItem('generate-farms-content');
+        $cache = $this->cacheItemPool->getItem('generate-farms-content-' . md5($template));
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
-        $farms = array_map(function(array $farm): array {
+        $farms = array_map(function(array $farm) use ($template): array {
             $arr = [
                 'id' => $farm['id'],
                 'name' => $farm['name'],
                 'platform' => $farm['provider']['id'],
-                'content' => $this->environment->render('components/farms_mini.html.twig', [
+                'content' => $this->environment->render($template, [
                     'farm' => $farm,
                 ])
             ];

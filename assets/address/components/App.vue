@@ -18,18 +18,17 @@
       </div>
     </div>
 
-    <div class="d-flex">
-      <div class="flex-grow-1">
+    <div class="row">
+      <div class="col">
         <template v-if="wallet && wallet.html">
-          <a class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#wallet-modal"><i class="fas fa-wallet" title="Token & Liquidity Pools"></i> Wallet</a>
+          <a class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#wallet-modal"><i class="fas fa-wallet" title="Token & Liquidity Pools"></i><span class="d-none d-md-inline"> Wallet</span></a>
         </template>
 
-        <a class="btn btn-outline-dark" :href="`${context.address}/transactions`"><i class="fas fa-exchange-alt"></i> Transactions</a>
+        <a class="btn btn-outline-dark" :href="`${context.address}/transactions`"><i class="fas fa-exchange-alt"></i><span class="d-none d-md-inline"> Transactions</span></a>
       </div>
 
-      <div class="text-end">
-        <div class="d-flex">
-
+      <div class="col-md-auto text-end">
+        <div class="d-flex float-end">
           <div class="d-flex ps-2" v-for="s in summary" :key="`summary-${s.key}`">
             <div class="d-flex ps-2">
               <div class="lh-sm pe-1">

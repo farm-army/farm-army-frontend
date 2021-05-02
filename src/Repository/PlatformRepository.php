@@ -26,16 +26,16 @@ class PlatformRepository
             $this->getPlatforms()
         );
 
-        $middleGroup = ['pancakebunny'];
+       // $middleGroup = ['pancakebunny'];
         $slowGroup = ['alpha', 'alpaca'];
 
         $chunks = array_diff($chunks, $slowGroup);
-        $chunks = array_diff($chunks, $middleGroup);
+       // $chunks = array_diff($chunks, $middleGroup);
 
         $chunks = array_chunk($chunks, 5);
 
         $chunks[] = $slowGroup;
-        $chunks[] = $middleGroup;
+       // $chunks[] = $middleGroup;
 
         return $chunks;
     }
@@ -155,7 +155,7 @@ class PlatformRepository
             [
                 'id' => 'slime',
                 'label' => 'Slime',
-                'url' => 'https://slime.finance/',
+                'url' => 'https://app.slime.finance/',
                 'icon' => '/assets/platforms/slime.png',
                 'token' => 'slme',
             ],
@@ -228,6 +228,20 @@ class PlatformRepository
                 'url' => 'https://swamp.finance/',
                 'icon' => '/assets/platforms/swamp.png',
                 'token' => 'swamp',
+            ],
+            [
+                'id' => 'pandayield',
+                'label' => 'PandaYield',
+                'url' => 'https://pandayield.com/',
+                'icon' => '/assets/platforms/pandayield.png',
+                'token' => 'bboo',
+            ],
+            [
+                'id' => 'cafeswap',
+                'label' => 'CafeSwap',
+                'url' => 'https://app.cafeswap.finance/',
+                'icon' => '/assets/platforms/cafeswap.png',
+                'token' => 'brew',
             ],
         ];
     }

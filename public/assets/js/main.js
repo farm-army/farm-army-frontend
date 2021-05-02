@@ -1,5 +1,4 @@
 import '../css/main.css';
-import '../css/dark.css';
 
 $(function() {
     var $chainInput = $("#chain-address-input");

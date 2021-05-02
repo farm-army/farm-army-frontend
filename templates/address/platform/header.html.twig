@@ -1,44 +1,51 @@
-<div class="d-flex pt-3">
-    <div class="flex">
-        <a target="_blank" href="{{ platform.url }}">
-                <img width="32" height="32" class="me-2" src="{{ platform.icon }}" title="{{ platform.label }}">
-        </a>
-    </div>
-    <div class="flex-grow-1 align-middle lh-sm">{{ platform.label }}
-        <div class="text-muted">
-            {% if platform.token_price|default %}
-                <span title="Token Price" class="text-muted"
-                      style="font-size: 0.75em">${{ platform.token_price|number_format(2) }}</span>
-            {% endif %}
+<div class="row pt-3">
 
-            <span title="Your Balance" class="platform-balance">
+    <div class="col">
+        <div class="d-flex">
+            <div class="flex">
+                <a target="_blank" href="{{ platform.url }}">
+                    <img width="32" height="32" class="me-2" src="{{ platform.icon }}" title="{{ platform.label }}">
+                </a>
+            </div>
+            <div class="flex-grow-1 align-middle lh-sm">{{ platform.label }}
+                <div class="text-muted">
+                    {% if platform.token_price|default %}
+                        <span title="Token Price" class="text-muted"
+                              style="font-size: 0.75em">${{ platform.token_price|number_format(2) }}</span>
+                    {% endif %}
+
+                    <span title="Your Balance" class="platform-balance">
                     {% if platform.wallet.balance|default > 0 or platform.wallet.usd|default > 0 %}
                         <i class="fas fa-wallet"></i>
                     {% endif %}
 
-                {% if platform.wallet.balance|default > 0 %}
-                    <span style="font-size: 0.75em">{{ platform.wallet.balance|format_token }}</span>
-                {% endif %}
+                        {% if platform.wallet.balance|default > 0 %}
+                            <span style="font-size: 0.75em">{{ platform.wallet.balance|format_token }}</span>
+                        {% endif %}
 
-                {% if platform.wallet.usd|default > 0 %}
-                    <span style="font-size: 0.75em">(${{ platform.wallet.usd|number_format(2) }})</span>
-                {% endif %}
+                        {% if platform.wallet.usd|default > 0 %}
+                            <span style="font-size: 0.75em">(${{ platform.wallet.usd|number_format(2) }})</span>
+                        {% endif %}
                 </span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="text-end">
+    <div class="col-auto text-end">
         <div class="d-flex" title="Platform Rewards (Pending Harvest)">
-            {% for reward in platform.rewards|default([])|reverse %}
-                {% include 'components/reward.html.twig' with {
-                    'reward': {
-                        'amount': reward.amount,
-                        'usd': reward.usd|default,
-                        'icon': '/token/' ~ reward.symbol|lower ~ '.png',
-                        'token': reward.symbol
-                    }
-                } %}
-            {% endfor %}
+            <div class="d-none d-md-flex">
+                {% for reward in platform.rewards|default([])|reverse %}
+                    {% include 'components/reward.html.twig' with {
+                        'reward': {
+                            'amount': reward.amount,
+                            'usd': reward.usd|default,
+                            'icon': '/token/' ~ reward.symbol|lower ~ '.png',
+                            'token': reward.symbol
+                        }
+                    } %}
+                {% endfor %}
+            </div>
 
             {% if platform.usd|default(0) > 0 %}
                 <div class="d-flex ps-2 ms-2 lh-sm" title="Deposits">

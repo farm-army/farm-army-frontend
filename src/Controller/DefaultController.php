@@ -91,7 +91,7 @@ class DefaultController extends AbstractController
 
     private function getFrontpageFarms(): array
     {
-        $cache = $this->cacheItemPool->getItem('frontpage-farms-v1');
+        $cache = $this->cacheItemPool->getItem('frontpage-farms-v3');
 
         if ($cache->isHit()) {
             return $cache->get();
@@ -100,7 +100,7 @@ class DefaultController extends AbstractController
         $new = array_fill_keys($this->farmRepository->getNewFarm(), null);
         $tvl = array_fill_keys($this->farmRepository->getTvl(), null);
 
-        $generateContent = $this->farmPools->generateContent();
+        $generateContent = $this->farmPools->generateContent('components/farms_frontpage.html.twig');
 
         foreach($generateContent as $farm)  {
             $id = $farm['id'];

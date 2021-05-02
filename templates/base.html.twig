@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="utf-8">
@@ -15,7 +15,14 @@
 
     <title>farm.army - {{ title }}</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    <!-- The page supports both dark and light color schemes,
+         and the page author prefers / default is light. -->
+    <meta name="color-scheme" content="light dark">
+
+    <!-- Replace the Bootstrap CSS with the
+         Bootstrap-Dark Variant CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@0.1/dist/css/bootstrap-nightshade.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
           integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous"/>
@@ -56,6 +63,9 @@
                         <a class="nav-link text-dark" href="{{ path('frontpage') }}">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-dark" href="{{ path('arrivals') }}">Arrivals</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-dark" href="{{ path('api_docu') }}">API</a>
                     </li>
                     <li class="nav-item">
@@ -80,11 +90,11 @@
 
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
         <div class="row">
-            <div class="col-3 col-md">
+            <div class="col">
                 <img loading="lazy" class="mb-2" src="{{ asset('assets/img/farm_army_32.png') }}" alt="" height="19">
                 <small class="d-block mb-3 text-muted">farm.army - &copy; {{ 'now'|date('Y') }}</small>
             </div>
-            <div class="col-3 col-md">
+            <div class="col text-center">
                 <h5>Contact</h5>
                 <ul class="list-unstyled text-small">
                     <li><a class="link-secondary" href="https://twitter.com/FarmArmy">Twitter</a></li>
@@ -92,26 +102,15 @@
                     <li><a class="link-secondary" href="https://github.com/farm-army">GitHub</a></li>
                 </ul>
             </div>
-            <div class="col-3 col-md">
-                <h5>Exchanges</h5>
+            <div class="col text-end">
+                <h5>Links</h5>
                 <ul class="list-unstyled text-small">
                     <li><a class="link-secondary" target="_blank" href="https://www.binance.com/?ref=17569916">Binance</a></li>
                     <li><a class="link-secondary" target="_blank" href="https://www.coinbase.com/join/5a2ae60e76531100d3af2ee5">Coinbase</a></li>
                     <li><a class="link-secondary" target="_blank" href="https://www.bybit.com/app/register?ref=46AK7">Bybit</a></li>
                     <li><a class="link-secondary" target="_blank" href="https://ftx.com/#a=1494781">FTX</a></li>
                     <li><a class="link-secondary" target="_blank" href="https://www.bitfinex.com/?refcode=kDLceRHa">Bitfinex</a></li>
-                </ul>
-            </div>
-            <div class="col-3 col-md">
-                <h5>Platforms</h5>
-                <ul class="list-unstyled text-small">
-                    <li><a class="link-secondary" target="_blank" href="https://beefy.finance/">beefy.finance</a></li>
-                    <li><a class="link-secondary" target="_blank" href="https://beta.autofarm.network/">autofarm.network</a></li>
-                    <li><a class="link-secondary" target="_blank" href="https://pancakebunny.finance">pancakebunny.finance</a></li>
-                    <li><a class="link-secondary" target="_blank" href="https://www.bakeryswap.org">bakeryswap</a></li>
-                    <li><a class="link-secondary" target="_blank" href="https://pancakeswap.finance">pancakeswap.finance</a></li>
-                    <li><a class="link-secondary" target="_blank" href="https://jetfuel.finance">jetfuel.finance</a></li>
-                    <li><a class="link-secondary" target="_blank" href="https://app.acryptos.com/">acryptos</a></li>
+                    <li><a class="link-secondary" target="_blank" href="https://app.cakedefi.com?ref=053932">Cake DeFi</a></li>
                 </ul>
             </div>
         </div>

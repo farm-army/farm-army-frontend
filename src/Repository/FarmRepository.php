@@ -44,6 +44,23 @@ class FarmRepository extends ServiceEntityRepository
         $this->connection->commit();
     }
 
+    public function getNewFarmsTimeline(): array
+    {
+        $qb = $this->createQueryBuilder('f', 'f.farmId');
+        $qb->select('f.farmId', 'f.createdAt');
+
+        $qb->orderBy('f.createdAt', 'DESC');
+        $qb->setMaxResults(300);
+
+        $result = $qb->getQuery()
+            ->useQueryCache(true)
+            ->setResultCacheLifetime(60 * 10)
+            ->setResultCacheId('new-farms-v1-timeline')
+            ->getArrayResult();
+
+        return $result;
+    }
+
     /**
      * @return string[]
      */
@@ -53,12 +70,12 @@ class FarmRepository extends ServiceEntityRepository
         $qb->select('f.farmId');
 
         $qb->orderBy('f.createdAt', 'DESC');
-        $qb->setMaxResults(10);
+        $qb->setMaxResults(20);
 
         $result = $qb->getQuery()
             ->useQueryCache(true)
             ->setResultCacheLifetime(60 * 2)
-            ->setResultCacheId('new-farms-v1')
+            ->setResultCacheId('new-farms-v3')
             ->getArrayResult();
 
         return array_keys($result);
@@ -80,7 +97,7 @@ class FarmRepository extends ServiceEntityRepository
         $result = $qb->getQuery()
             ->useQueryCache(true)
             ->setResultCacheLifetime(60 * 2)
-            ->setResultCacheId('tvl-farms-v1')
+            ->setResultCacheId('tvl-farms-v3')
             ->getArrayResult();
 
         return array_keys($result);

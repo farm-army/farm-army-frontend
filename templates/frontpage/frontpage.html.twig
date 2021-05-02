@@ -26,16 +26,34 @@
 
     <div class="mt-4 pt-4 border-top">
         {% if new|default([])|length > 0 %}
-            <h3 class="p-2 text-center">New Arrivals</h3>
-            {% for farm in new %}
-                {{ farm.content|raw }}
+            <h3 class="text-center">New Arrivals</h3>
+
+            <div class="container text-center pb-3">
+                <a href="{{ path('arrivals') }}" class="text-decoration-none">Show Timeline</a>
+            </div>
+
+            {% for farms in new|batch(2) %}
+                <div class="row">
+
+                    {% for farm in farms %}
+                        <div class="col-12 col-lg-6">
+                            {{ farm.content|raw }}
+                        </div>
+                    {% endfor %}
+                </div>
             {% endfor %}
         {% endif %}
 
         {% if tvl|default([])|length > 0 %}
-            <h3 class="p-2  text-center">Top TVL</h3>
-            {% for farm in tvl %}
-                {{ farm.content|raw }}
+            <h3 class="p-2 pt-5  text-center">Top TVL</h3>
+            {% for farms in tvl|batch(2) %}
+                <div class="row">
+                    {% for farm in farms %}
+                        <div class="col-12 col-lg-6">
+                            {{ farm.content|raw }}
+                        </div>
+                    {% endfor %}
+                </div>
             {% endfor %}
         {% endif %}
     </div>

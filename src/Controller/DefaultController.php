@@ -156,7 +156,12 @@ class DefaultController extends AbstractController
      */
     public function sitemap(): Response
     {
-        $response = new Response($this->renderView('seo/sitemap.xml.twig'), 200, [
+        $content = $this->renderView('seo/sitemap.xml.twig', [
+            'farms' => $this->farmRepository->getFarmHashes(),
+            'tokens' => $this->farmRepository->getFarmTokens(),
+        ]);
+
+        $response = new Response($content, 200, [
             'Content-type' => ' text/xml; charset=utf-8'
         ]);
 

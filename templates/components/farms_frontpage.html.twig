@@ -7,15 +7,18 @@
             <div class="col-4">
                 <div class="d-flex">
                     <div class="pe-2 position-relative">
-                        <picture>
-                            <source srcset="{{ box.icon|replace({'.png': '.webp'}) }}" type="image/webp">
-                            <img loading="lazy" width="42" height="42" src="{{ box.icon }}" title="{{ box.name }}" alt="">
-                        </picture>
                         <div class="position-absolute top-0 start-0 translate-middle">
                             {% if box.hot|default(false) %} <i class="fas fa-fire text-danger" title="Hot"></i>{% endif %}
                             {% if box.new|default(false) %} <i class="fas fa-birthday-cake text-warning" title="Newcomer"></i>{% endif %}
                             {% if box.notes|default([])|length > 0 %} <i class="text-muted fas fa-info-circle" style="font-size: 0.8em; opacity: 0.6" title="{{ box.notes|join(' ') }}"></i>{% endif %}
                         </div>
+
+                        <a href="{{ path('vault_address', { 'hash': box.id|md5 }) }}">
+                            <picture>
+                                <source srcset="{{ box.icon|replace({'.png': '.webp'}) }}" type="image/webp">
+                                <img loading="lazy" width="42" height="42" src="{{ box.icon }}" title="{{ box.name }}" alt="">
+                            </picture>
+                        </a>
                     </div>
                     <div class="text-truncate">
                         <div class="fw-bold"><span class="d-inline-block">{{ box.name }}</span></div>

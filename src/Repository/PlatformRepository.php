@@ -243,6 +243,20 @@ class PlatformRepository
                 'icon' => '/assets/platforms/cafeswap.png',
                 'token' => 'brew',
             ],
+            [
+                'id' => 'belt',
+                'label' => 'Belt.fi',
+                'url' => 'https://belt.fi/',
+                'icon' => '/assets/platforms/belt.png',
+                'token' => 'belt',
+            ],
+            [
+                'id' => 'panther',
+                'label' => 'PantherSwap',
+                'url' => 'https://pantherswap.com',
+                'icon' => '/assets/platforms/panther.png',
+                'token' => 'panther',
+            ],
         ];
     }
 }

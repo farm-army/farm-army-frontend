@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% set title = "Binance Smart Chain - Token " ~ symbol|default|upper ~ ' ' ~ token %}
+
+{% block content %}
+
+    <h2>Token - {{ token_card.symbol|default }}</h2>
+
+    {% include 'vault/component/token_card.html.twig' with {
+        'item': token_card,
+     } only %}
+
+    {% if vaults|length > 0 %}
+        <h2>Vaults</h2>
+
+        {% for batch in vaults|batch(2) %}
+            <div class="row">
+                {% for other in batch %}
+                    <div class="col-12 col-lg-6">
+                        {% include 'components/farms_frontpage.html.twig' with {'farm': other} only %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

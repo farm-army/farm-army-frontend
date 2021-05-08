@@ -34,7 +34,7 @@ class IconResolver
 
         $icon = $this->getIconInner($symbol);
 
-        $this->cacheItemPool->save($cache->set($icon)->expiresAfter(60 * 60 * 5));
+        $this->cacheItemPool->save($cache->set($icon)->expiresAfter(60 * 24 * 5));
 
         return $icon;
     }
@@ -143,6 +143,16 @@ class IconResolver
 
         if ($asset = $this->tokenResolver->getTokenIcon($symbol)) {
             return $asset;
+        }
+
+        // prefixed "iBUSD", "beltUSD"
+        foreach (['belt', 'i', 'ib'] as $prefix) {
+            if (str_starts_with(strtolower($symbol), $prefix)) {
+                $symbol2 = substr($symbol, strlen($prefix));
+                if (strlen($symbol2) >= 3 && $icon = $this->getLocalImage($symbol2)) {
+                    return $icon;
+                }
+            }
         }
 
         return null;

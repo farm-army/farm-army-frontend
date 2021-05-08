@@ -19,4 +19,19 @@
         <loc>{{ absolute_url(path('arrivals')) }}</loc>
         <lastmod>{{ 'today'|date('Y-m-d') }}</lastmod>
     </url>
+
+{% for farm in farms %}
+    <url>
+        <loc>{{ absolute_url(path('vault_address', {'hash': farm.hash})) }}</loc>
+        <lastmod>{{ farm.updatedAt|date('Y-m-d') }}</lastmod>
+    </url>
+{% endfor %}
+
+{% for token in tokens %}
+    <url>
+        <loc>{{ absolute_url(path('token_address', {'token': token.token|lower})) }}</loc>
+        <lastmod>{{ token.updatedAt|date('Y-m-d') }}</lastmod>
+    </url>
+{% endfor %}
+
 </urlset>

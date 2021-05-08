@@ -71,6 +71,27 @@ class NodeClient
         return [];
     }
 
+    public function getTokenInfo(string $address): array
+    {
+        $cache = $this->cacheItemPool->getItem('token-info-v1-' . $address);
+
+        if ($cache->isHit()) {
+            return $cache->get();
+        }
+
+        try {
+            $prices = json_decode($this->client->request('GET', $this->baseUrl . '/token/' . urlencode($address))->getBody()->getContents(), true);
+
+            $cache->expiresAfter(60 * 5)->set($prices);
+            $this->cacheItemPool->save($cache);
+
+            return $prices;
+        } catch (GuzzleException $e) {
+        }
+
+        return [];
+    }
+
     public function getTokens(): array
     {
         $cache = $this->cacheItemPool->getItem('tokens');

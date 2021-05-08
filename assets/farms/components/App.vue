@@ -4,12 +4,12 @@
     <div class="row">
       <div class="col-sm-2">
         <div class="list-group provider-options">
-          <a href="#" class="list-group-item list-group-item-action" :class="platforms.length === 0 ? 'active' : ''" v-on:click="togglePlatform(undefined, $event)">
+          <a rel="nofollow" href="#" class="list-group-item list-group-item-action" :class="platforms.length === 0 ? 'active' : ''" v-on:click="togglePlatform(undefined, $event)">
             <img loading="lazy" width="32" height="32" src="/assets/rocket.png"> Show All
           </a>
 
           <template v-for="(row, index) in providers">
-            <a href="#" class="list-group-item list-group-item-action"  :class="platforms.includes(row.id) ? 'active' : ''" v-on:click="togglePlatform(row.id, $event)" :key="`providers-${index}`" >
+            <a rel="nofollow" href="#" class="list-group-item list-group-item-action"  :class="platforms.includes(row.id) ? 'active' : ''" v-on:click="togglePlatform(row.id, $event)" :key="`providers-${index}`" >
               <img loading="lazy" width="32" height="32" :src="row.icon">
               <span class="align-middle">{{ row.label }}</span>
             </a>
@@ -21,7 +21,7 @@
         <div class="pb-3">
 
           <div class="form-group">
-            <input name="text" class="form-control" placeholder="Search a farm or liquidity pool" v-model="search">
+            <input name="text" class="form-control" placeholder="Search a farm or liquidity pool" v-model="searchX">
           </div>
         </div>
 
@@ -77,15 +77,31 @@
 
 <script>
 export default {
+  throttleSearchInput: undefined,
+
   data() {
     return {
       rows: [],
       search: '',
+      searchX: '',
       sort: 'tvl_asc',
       cars: [],
       platforms: [],
-      providers: []
+      providers: [],
     };
+  },
+
+  watch: {
+    searchX: function (val) {
+      if (this.throttleSearchInput) {
+        clearTimeout(this.throttleSearchInput)
+        this.throttleSearchInput = undefined;
+      }
+
+      this.throttleSearchInput = setTimeout(() => {
+        this.search = val;
+      }, 500)
+    },
   },
 
   methods: {
@@ -143,7 +159,8 @@ export default {
       let rows = this.rows.filter(row => {
         let search = true
         if (searchTerm) {
-          search = row.name.toLowerCase().includes(searchTerm)
+          let s = row.name ? row.name.toLowerCase() : '';
+          search = s.includes(searchTerm)
         }
 
         let platforms = true
@@ -180,7 +197,7 @@ export default {
         })
       }
 
-      return rows;
+      return Object.freeze(rows);
     }
   },
 

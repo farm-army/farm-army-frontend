@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% set title = "Binance Smart Chain - Vault " ~ farm.provider.label|default ~ ' - ' ~ farm.name|default %}
+
+{% block content %}
+    <h2>{{ farm.provider.label|default }} - {{ farm.name|default  }}</h2>
+    {% include 'components/farms_frontpage.html.twig' with {'farm': farm} only %}
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <pre style="font-size: 0.8em">{{ json|yaml_encode(4) }}</pre>
+        </div>
+    </div>
+
+    {% if others|length > 0 %}
+        <h2>Other Vaults</h2>
+
+        <p>Vaults with this token address <a href="{{ path('token_address', {'token': farm_db.token}) }}">{{ farm_db.token }}</a>.</p>
+
+        {% if token_card.symbol|default %}
+            {% include 'vault/component/token_card.html.twig' with {
+                'item': token_card,
+            } only %}
+
+            <hr>
+        {% endif %}
+
+        {% for batch in others|batch(2) %}
+            <div class="row">
+                {% for other in batch %}
+                    <div class="col-12 col-lg-6">
+                        {% include 'components/farms_frontpage.html.twig' with {'farm': other} only %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

@@ -14,7 +14,7 @@
         {% endif %}
     </div>
     <div class="flex-grow-1 lh-sm">
-        <div class="fw-bold">{{ box.name|u.truncate(20, '...') }}{% if box.has_details|default(false) %} <a data-bs-toggle="modal" data-bs-title="{{ box.name|u.truncate(20, '...') }}" data-bs-target="#exampleModal" href="{{ path('farm_detail', {'address': address, 'farmId': box.id|md5}) }}"><i class="text-muted fas fa-info-circle" style="opacity: 0.6" title="Show Details"></i></a>{% endif %}</div>
+        <div class="fw-bold">{{ box.name|u.truncate(20, '...') }}{% if box.has_details|default(false) %} <a rel="nofollow" data-bs-toggle="modal" data-bs-title="{{ box.name|u.truncate(20, '...') }}" data-bs-target="#exampleModal" href="{{ path('farm_detail', {'address': address, 'farmId': box.id|md5}) }}"><i class="text-muted fas fa-info-circle" style="opacity: 0.6" title="Show Details"></i></a>{% endif %}</div>
         <div class="text-muted" style="font-size: 0.9em;">
             {% if box.apy.percent is defined and box.apy.percent > 0 %}
                 {{ box.apy.percent|format_percent }}% APY

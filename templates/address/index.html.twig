@@ -2,6 +2,10 @@
 
 {% set title = address_truncate %}
 
+{% block meta %}
+    <meta name="robots" content="noindex">
+{% endblock %}
+
 {% block content %}
     <div id="app-address"
          data-url="{{ path('farm_content', {'address': address|slice(2)}) }}"

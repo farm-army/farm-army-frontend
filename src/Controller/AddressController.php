@@ -64,6 +64,7 @@ class AddressController extends AbstractController
         }
 
         $response = new Response();
+        $response->headers->set('X-Robots-Tag', 'noindex');
 
         $response->setPublic();
         $response->setMaxAge(9);
@@ -106,6 +107,7 @@ class AddressController extends AbstractController
 
         $response->setPublic();
         $response->setMaxAge(9);
+        $response->headers->set('X-Robots-Tag', 'noindex');
 
         return $this->render('address/content.html.twig', [
             'address' => $address,
@@ -147,6 +149,7 @@ class AddressController extends AbstractController
         $response = new JsonResponse($platforms);
         $response->setPublic();
         $response->setMaxAge(9);
+        $response->headers->set('X-Robots-Tag', 'noindex');
 
         return $response;
     }
@@ -185,6 +188,7 @@ class AddressController extends AbstractController
 
         $response->setPublic();
         $response->setMaxAge(9);
+        $response->headers->set('X-Robots-Tag', 'noindex');
 
         return $response;
     }

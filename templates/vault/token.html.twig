@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% set title = "Binance Smart Chain - Token " ~ symbol|default|upper ~ ' ' ~ token %}
+{% set title = "Binance Smart Chain - Token " ~ token_card.symbol|default|upper ~ ' ' ~ token %}
 
 {% block content %}
 
@@ -11,7 +11,11 @@
      } only %}
 
     {% if vaults|length > 0 %}
-        <h2>Vaults</h2>
+        <h2 class="pt-3">Vaults</h2>
+
+        <p>Vaults with same token address</p>
+
+        <hr>
 
         {% for batch in vaults|batch(2) %}
             <div class="row">
@@ -22,6 +26,36 @@
                 {% endfor %}
             </div>
         {% endfor %}
+    {% endif %}
+
+    {% if same_pairs|length > 0 %}
+        <h2 class="pt-3">Other Pairs</h2>
+
+        <p>Pairs / Vaults with same token pairing</p>
+
+        <hr>
+
+        {% for same_pair in same_pairs %}
+            <div class="pb-3 pt-3">
+                {% include 'vault/component/token_card.html.twig' with {
+                    'item': same_pair.info,
+                } only %}
+
+                {% for batch in same_pair.vaults|default([])|batch(2) %}
+                    <div class="row">
+                        {% for other in batch %}
+                            <div class="col-12 col-lg-6">
+                                {% include 'components/farms_frontpage.html.twig' with {'farm': other} only %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <hr>
+        {% endfor %}
+
+
     {% endif %}
 
 {% endblock %}

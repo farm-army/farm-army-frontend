@@ -54,7 +54,9 @@ class TokenController extends AbstractController
         }
 
         $others = [];
-        foreach ($this->farmPools->generateFarms() as $farmX) {
+        $generateFarms = $this->farmPools->generateFarms();
+
+        foreach ($generateFarms as $farmX) {
             if (in_array($farmX['id'], $vaultIds, true)) {
                 $others[] = $farmX;
             }
@@ -65,13 +67,46 @@ class TokenController extends AbstractController
         $response->setPublic();
         $response->setMaxAge(60 * 10);
 
+        $info = $this->nodeClient->getTokenInfo($token);
+
+        $samePairs = [];
+        foreach ($info['equalLiquidityPools'] ?? [] as $pool) {
+            $item = [
+                'info' => $this->getTokenCardInfo($pool),
+                'vaults' => [],
+            ];
+
+            $vaultIds = $this->farmRepository->findFarmIdsByToken(strtolower($pool['address']));
+
+            foreach ($generateFarms as $farmX) {
+                if (in_array($farmX['id'], $vaultIds, true)) {
+                    $item['vaults'][] = $farmX;
+                }
+            }
+
+            $samePairs[] = $item;
+        }
 
         return $this->render('vault/token.html.twig', [
             'token' => $token,
-            'price' => $info['price'] ?? null,
             'vaults' => $others,
             'token_card' => $this->getTokenCard($token),
+            'same_pairs' => $samePairs,
         ], $response);
+    }
+
+    private function getTokenCardInfo(array $info): array
+    {
+        $symbol = implode('-', array_map(fn($item) => $item['symbol'], $info['tokens']));
+
+        $icon = $this->iconResolver->getIcon($symbol);
+
+        return [
+            'icon' => $icon,
+            'price' => $info['price'] ?? null,
+            'symbol' => strtoupper($symbol),
+            'address'=> $info['address'],
+        ];
     }
 
     private function getTokenCard(string $token): array

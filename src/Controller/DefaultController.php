@@ -132,7 +132,7 @@ class DefaultController extends AbstractController
         if (($address = $request->request->get('chain_address')) && Web3Util::isAddress($address)) {
             $response = new RedirectResponse($this->generateUrl('app_farm_index', ['address' => substr($address, 2)]));
 
-            $response->headers->setCookie(new Cookie('chain_address', $address, date_create()->modify('+ 180 days')));
+            $response->headers->setCookie(new Cookie('chain_address', $address, date_create()->modify('+ 180 days'), '/', null, null, false));
 
             return $response;
         }

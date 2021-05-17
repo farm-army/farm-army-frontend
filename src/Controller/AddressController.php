@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Client\NodeClient;
 use App\Pools\FarmPools;
+use App\Repository\FarmRepository;
 use App\Repository\PlatformRepository;
 use App\Symbol\IconResolver;
 use App\Utils\RandomAddress;
@@ -196,22 +197,14 @@ class AddressController extends AbstractController
     /**
      * @Route("/farms/0x{address}/{farmId}", name="farm_detail")
      */
-    public function detail(string $address, string $farmId, NodeClient $nodeClient, IconResolver $iconResolver, FarmPools $farmPools): Response
+    public function detail(string $address, string $farmId, NodeClient $nodeClient, IconResolver $iconResolver, FarmPools $farmPools, FarmRepository $farmRepository): Response
     {
-        $farm = null;
-        foreach ($farmPools->generateFarms() as $farm1) {
-            $id = $farm1['id'] ?? 'foo';
-            if (md5($id) === $farmId) {
-                $farm = $farm1;
-                break;
-            }
-        }
-
+        $farm = $farmRepository->findFarmIdByHash($farmId);
         if (!$farm) {
             throw new NotFoundHttpException();
         }
 
-        $details = $nodeClient->getDetails($address, $farm['id']);
+        $details = $nodeClient->getDetails($address, $farm->getFarmId());
 
         if (isset($details['lpTokens'])) {
             foreach ($details['lpTokens'] as $key => $lpToken) {
@@ -225,7 +218,7 @@ class AddressController extends AbstractController
         $response->setMaxAge(9);
 
         return $this->render('address/details.html.twig', [
-            'farm' => $farm,
+            'farm' => $farmPools->generateFarm($farm->getJson()),
             'details' => $details,
         ], $response);
     }

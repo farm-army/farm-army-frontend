@@ -87,12 +87,28 @@ class TokenController extends AbstractController
             $samePairs[] = $item;
         }
 
-        return $this->render('vault/token.html.twig', [
+        $parameters = [
             'token' => $token,
             'vaults' => $others,
             'token_card' => $this->getTokenCard($token),
             'same_pairs' => $samePairs,
-        ], $response);
+        ];
+
+
+        $candles = [];
+        foreach ($info['candles'] ?? [] as $candle) {
+            $format = date_create_from_format('U', $candle['time'])->format('m-d H') . ':00';
+            $candles[$format] = $candle['close'];
+        }
+
+        if (count($candles) > 0) {
+            $parameters['chart'] = [
+                'label' => array_keys($candles),
+                'data' => array_values($candles),
+            ];
+        }
+
+        return $this->render('vault/token.html.twig', $parameters, $response);
     }
 
     private function getTokenCardInfo(array $info): array

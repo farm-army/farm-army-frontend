@@ -172,6 +172,27 @@ class FarmRepository extends ServiceEntityRepository
         return array_keys($result);
     }
 
+    public function findFarmIdByHash(string $hash): ?Farm
+    {
+        $qb = $this->createQueryBuilder('f', 'f.farmId');
+
+        $qb->andWhere('f.hash = :hash');
+        $qb->setParameter('hash', $hash);
+
+        $qb->andWhere('f.lastFoundAt >= :lastFoundAtWindow');
+        $qb->setParameter('lastFoundAtWindow', date_create('today')->modify('-30 day'));
+
+        $qb->setMaxResults(1);
+
+        $result = $qb->getQuery()
+            ->useQueryCache(true)
+            ->setResultCacheLifetime(60 * 10)
+            ->setResultCacheId('farm-by-v3-hash' . md5($hash))
+            ->getOneOrNullResult();
+
+        return $result;
+    }
+
     /**
      * @return string[]
      */

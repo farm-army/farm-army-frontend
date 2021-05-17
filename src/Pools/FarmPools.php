@@ -75,6 +75,49 @@ class FarmPools
         return $farms;
     }
 
+    public function generateFarm(array $farm, array $hots = [], $new = []): array
+    {
+        $cache = $this->cacheItemPool->getItem('generate-farm-single-' . md5(json_encode([$farm['id'], $hots, $new])));
+
+        if ($cache->isHit()) {
+            return $cache->get();
+        }
+
+        $token = $farm['name'];
+
+        if (isset($farm['token'])) {
+            $token = $farm['token'];
+        }
+
+        $farm['icon'] = '?';
+        if ($token) {
+            $farm['icon'] = $this->iconResolver->getIcon($token);
+        }
+
+        $farm['provider'] = $this->platformRepository->getPlatform($farm['provider']);
+
+        if (isset($farm['yield']['apr']) && $farm['yield']['apr'] > 0) {
+            $farm['yield']['daily'] = $farm['yield']['apr'] / 365;
+        } else {
+            if (isset($farm['yield']['apy']) && $farm['yield']['apy'] > 0) {
+                $farm['yield']['daily'] = InterestUtil::apyToApr($farm['yield']['apy'] / 100);
+            }
+        }
+
+        if (in_array($farm['id'], $hots, true)) {
+            $farm['hot'] = true;
+        }
+
+        if (in_array($farm['id'], $new, true)) {
+            $farm['new'] = true;
+        }
+
+        $cache->expiresAfter(60 * 1)->set($farm);
+        $this->cacheItemPool->save($cache);
+
+        return $farm;
+    }
+
     public function generateFarms(): array
     {
         $cache = $this->cacheItemPool->getItem('generate-farms');
@@ -98,36 +141,7 @@ class FarmPools
         $myFarms = [];
 
         foreach ($farms as $farm) {
-            $token = $farm['name'];
-
-            if (isset($farm['token'])) {
-                $token = $farm['token'];
-            }
-
-            $farm['icon'] = '?';
-            if ($token) {
-                $farm['icon'] = $this->iconResolver->getIcon($token);
-            }
-
-            $farm['provider'] = $this->platformRepository->getPlatform($farm['provider']);
-
-            if (isset($farm['yield']['apr']) && $farm['yield']['apr'] > 0) {
-                $farm['yield']['daily'] = $farm['yield']['apr'] / 365;
-            } else {
-                if (isset($farm['yield']['apy']) && $farm['yield']['apy'] > 0) {
-                    $farm['yield']['daily'] = InterestUtil::apyToApr($farm['yield']['apy'] / 100);
-                }
-            }
-
-            if (in_array($farm['id'], $hots, true)) {
-                $farm['hot'] = true;
-            }
-
-            if (in_array($farm['id'], $new, true)) {
-                $farm['new'] = true;
-            }
-
-            $myFarms[] = $farm;
+            $myFarms[] = $this->generateFarm($farm, $hots, $new);
         }
 
         $cache->expiresAfter(60 * 5)->set($myFarms);

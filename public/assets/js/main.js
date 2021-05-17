@@ -115,4 +115,26 @@ $(function() {
             });
         })
     }
+
+
+    var $charts = $(".chart-js-token-price");
+
+    if ($charts.length > 0) {
+        $charts.each(function() {
+            let $1 = $(this);
+            new Chart($1, {
+                type: 'line',
+                data: {
+                    labels: $1.data('label'),
+                    datasets: [{
+                        label: $1.data('title'),
+                        data: $1.data('data'),
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.2
+                    }]
+                }
+            });
+        });
+    }
 });

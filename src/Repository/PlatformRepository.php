@@ -104,6 +104,13 @@ class PlatformRepository
                 'token' => 'egg',
             ],
             [
+                'id' => 'degentoken',
+                'label' => 'DegenToken',
+                'url' => 'https://degentoken.finance',
+                'icon' => '/assets/platforms/degen.png',
+                'token' => 'aDGNZ',
+            ],
+            [
                 'id' => 'kebab',
                 'label' => 'Kebab',
                 'url' => 'https://kebabfinance.com',

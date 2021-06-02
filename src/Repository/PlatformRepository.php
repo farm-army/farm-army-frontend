@@ -107,8 +107,15 @@ class PlatformRepository
                 'id' => 'degentoken',
                 'label' => 'DegenToken',
                 'url' => 'https://degentoken.finance',
-                'icon' => '/assets/platforms/degen.png',
+                'icon' => '/assets/platforms/adegen.png',
                 'token' => 'aDGNZ',
+            ],
+            [
+                'id' => 'degentokenfarms',
+                'label' => 'DegenTokenFarms',
+                'url' => 'https://degentoken.finance',
+                'icon' => '/assets/platforms/degen.png',
+                'token' => 'DGNZ',
             ],
             [
                 'id' => 'kebab',

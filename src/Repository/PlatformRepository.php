@@ -257,6 +257,27 @@ class PlatformRepository
                 'icon' => '/assets/platforms/panther.png',
                 'token' => 'panther',
             ],
+            [
+                'id' => 'jetswap',
+                'label' => 'JetSwap',
+                'url' => 'https://jetswap.finance',
+                'icon' => '/assets/platforms/jetswap.png',
+                'token' => 'wings',
+            ],
+            [
+                'id' => 'warden',
+                'label' => 'Warden',
+                'url' => 'https://farm.wardenswap.finance',
+                'icon' => '/assets/platforms/warden.png',
+                'token' => 'warden',
+            ],
+            [
+                'id' => 'biswap',
+                'label' => 'Biswap',
+                'url' => 'https://biswap.org/?ref=f5b2fb48d67b5e8e9f01',
+                'icon' => '/assets/platforms/biswap.png',
+                'token' => 'bsw',
+            ],
         ];
     }
 }

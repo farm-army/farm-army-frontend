@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% set title = "Binance Smart Chain - Vault " ~ farm.provider.label|default ~ ' - ' ~ farm.name|default %}
+{% set title = chain.title ~ " - Vault " ~ farm.provider.label|default ~ ' - ' ~ farm.name|default %}
 
 {% block content %}
     <h2>{{ farm.provider.label|default }} - {{ farm.name|default  }}</h2>

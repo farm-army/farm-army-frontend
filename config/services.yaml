@@ -36,6 +36,14 @@ services:
     GuzzleHttp\ClientInterface: '@eight_points_guzzle.client.default'
     Imagine\Image\ImagineInterface: '@liip_imagine.gd'
 
+    App\Twig\ContextExtension:
+        arguments:
+            $chain: '%env(CHAIN)%'
+
+    App\Repository\PlatformRepository:
+        arguments:
+            $chain: '%env(CHAIN)%'
+
     App\Client\NodeClient:
         arguments:
             $baseUrl: '%env(BACKEND_BASE_URL)%'

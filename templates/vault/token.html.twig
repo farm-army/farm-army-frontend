@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% set title = "Binance Smart Chain - Token " ~ token_card.symbol|default|upper ~ ' ' ~ token %}
+{% set title = chain.title ~ " - Token " ~ token_card.symbol|default|upper ~ ' ' ~ token %}
 
 {% block content %}
 
@@ -9,6 +9,19 @@
     {% include 'vault/component/token_card.html.twig' with {
         'item': token_card,
      } only %}
+
+    {% if chart|default %}
+        <div class="card shadow-sm mb-2">
+            <div class="card-body">
+                <canvas id="myChart" class="chart-js-token-price" height="90"
+                        data-label="{{ chart.label|json_encode }}"
+                        data-data="{{ chart.data|json_encode }}"
+                        data-title="Price: {{ token_card.symbol|default('?')|upper }}/USD"
+                ></canvas>
+            </div>
+        </div>
+    {% endif %}
+
 
     {% if vaults|length > 0 %}
         <h2 class="pt-3">Vaults</h2>
@@ -57,5 +70,8 @@
 
 
     {% endif %}
-
 {% endblock %}
+
+{% block javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js" integrity="sha256-uVEHWRIr846/vAdLJeybWxjPNStREzOlqLMXjW/Saeo=" crossorigin="anonymous"></script>
+{% endblock javascript %}

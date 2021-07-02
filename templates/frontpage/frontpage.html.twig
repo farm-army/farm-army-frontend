@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% set title = 'Farm & Liquidity Pools - Binance Smart Chain' %}
-{% set description = 'Searching and tracking farming and liqudify pools on Binance Smart Chain' %}
+{% set title = 'Farm & Liquidity Pools - ' ~ chain.title %}
+{% set description = 'Searching and tracking farming and liqudify pools on ' ~ chain.title %}
 
 {% block content %}
     <div class="mt-4 pt-4 mx-auto text-center">
-        <p class="lead">Track your farming and pool performance on the <a target="_blank" class="text-decoration-none text-dark" href="https://www.binance.org/en/smartChain">Binance Smart Chain</a></p>
+        <p class="lead">Track your farming and pool performance on the {% if chain.id == 'polygon' %}Polygon (MATIC){% else %}<a target="_blank" class="text-decoration-none text-dark" href="https://www.binance.org/en/smartChain">Binance Smart Chain</a>{% endif %}</p>
     </div>
 
     {% include 'components/address_form.html.twig' %}

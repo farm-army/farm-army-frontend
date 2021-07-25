@@ -13,6 +13,7 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $projectDir: '%kernel.project_dir%'
+            $chain: '%env(CHAIN)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -35,14 +36,6 @@ services:
 
     GuzzleHttp\ClientInterface: '@eight_points_guzzle.client.default'
     Imagine\Image\ImagineInterface: '@liip_imagine.gd'
-
-    App\Twig\ContextExtension:
-        arguments:
-            $chain: '%env(CHAIN)%'
-
-    App\Repository\PlatformRepository:
-        arguments:
-            $chain: '%env(CHAIN)%'
 
     App\Client\NodeClient:
         arguments:

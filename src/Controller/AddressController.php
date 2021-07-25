@@ -7,6 +7,7 @@ use App\Pools\FarmPools;
 use App\Repository\FarmRepository;
 use App\Repository\PlatformRepository;
 use App\Symbol\IconResolver;
+use App\Utils\ChainUtil;
 use App\Utils\RandomAddress;
 use App\Utils\Web3Util;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +24,7 @@ class AddressController extends AbstractController
     /**
      * @Route("/0x{address}", name="app_farm_index")
      */
-    public function index(string $address, PlatformRepository $platformRepository, UrlGeneratorInterface $urlGenerator): Response
+    public function index(string $address, PlatformRepository $platformRepository, UrlGeneratorInterface $urlGenerator, ChainUtil $chainUtil): Response
     {
         $addressNoPrefix = $address;
         $address = '0x' . $address;
@@ -33,6 +34,7 @@ class AddressController extends AbstractController
         }
 
         $var = [
+            'explorer' => $chainUtil->getChainExplorerUrl(),
             'address' => $address,
             'address_truncate' => substr($address, 0, 8) . '...' . substr($address, -8),
             'platform_chunks' => array_map(
@@ -56,7 +58,7 @@ class AddressController extends AbstractController
     /**
      * @Route("/0x{address}/transactions", name="app_farm_transactions", methods={"GET"})
      */
-    public function transactions(string $address, NodeClient $nodeClient): Response
+    public function transactions(string $address, NodeClient $nodeClient, ChainUtil $chainUtil): Response
     {
         $address = '0x' . $address;
 
@@ -73,6 +75,7 @@ class AddressController extends AbstractController
         $transactions = $nodeClient->getTransactions($address);
 
         return $this->render('address/transactions.html.twig', [
+            'explorer' => $chainUtil->getChainExplorerUrl(),
             'address' => $address,
             'transactions' => $transactions,
         ], $response);

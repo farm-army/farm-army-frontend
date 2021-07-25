@@ -7,14 +7,17 @@ class PlatformRepository implements PlatformRepositoryInterface
     private PlatformBscRepository $bscRepository;
     private PlatformPolygonRepository $platformPolygonRepository;
     private string $chain;
+    private PlatformFantomRepository $platformFantomRepository;
 
     public function __construct(
         PlatformBscRepository $bscRepository,
         PlatformPolygonRepository $platformPolygonRepository,
+        PlatformFantomRepository $platformFantomRepository,
         string $chain
     ) {
         $this->bscRepository = $bscRepository;
         $this->platformPolygonRepository = $platformPolygonRepository;
+        $this->platformFantomRepository = $platformFantomRepository;
         $this->chain = $chain;
     }
 
@@ -25,6 +28,8 @@ class PlatformRepository implements PlatformRepositoryInterface
                 return $this->bscRepository->getPlatform($id);
             case 'polygon':
                 return $this->platformPolygonRepository->getPlatform($id);
+            case 'fantom':
+                return $this->platformFantomRepository->getPlatform($id);
             default:
                 throw new \InvalidArgumentException('Invalid platform');
         }
@@ -37,6 +42,8 @@ class PlatformRepository implements PlatformRepositoryInterface
                 return $this->bscRepository->getPlatformChunks();
             case 'polygon':
                 return $this->platformPolygonRepository->getPlatformChunks();
+            case 'fantom':
+                return $this->platformFantomRepository->getPlatformChunks();
             default:
                 throw new \InvalidArgumentException('Invalid platform');
         }
@@ -49,6 +56,8 @@ class PlatformRepository implements PlatformRepositoryInterface
                 return $this->bscRepository->getPlatforms();
             case 'polygon':
                 return $this->platformPolygonRepository->getPlatforms();
+            case 'fantom':
+                return $this->platformFantomRepository->getPlatforms();
             default:
                 throw new \InvalidArgumentException('Invalid platform');
         }

@@ -8,11 +8,15 @@ use Symfony\Component\Finder\Finder;
 class TokenResolver
 {
     private $tokenMap = false;
+    private string $projectDir;
+    private string $chain;
+    private CacheItemPoolInterface $cacheItemPool;
 
-    public function __construct(string $projectDir, CacheItemPoolInterface $cacheItemPool)
+    public function __construct(string $projectDir, CacheItemPoolInterface $cacheItemPool, string $chain)
     {
         $this->projectDir = $projectDir;
         $this->cacheItemPool = $cacheItemPool;
+        $this->chain = $chain;
     }
 
     public function getTokenIcon(string $symbol): ?string
@@ -26,16 +30,20 @@ class TokenResolver
 
     private function getTokenMap(): array
     {
-        return [
-            '0x7b65B489fE53fCE1F6548Db886C08aD73111DDd8' => 'iron',
-            '0xd72aA9e1cDDC2F6D6e0444580002170fbA1f8eED' => 'mda',
-            '0xC1eDCc306E6faab9dA629efCa48670BE4678779D' => 'mdg',
-            '0xeFb94d158206dfa5CB8c30950001713106440928' => 'seeds',
-            '0xc66E4De0d9b4F3CB3f271c37991fE62f154471EB' => 'sil',
-            '0x0610C2d9F6EbC40078cf081e2D1C4252dD50ad15' => 'vbswap',
-            '0x35e869B7456462b81cdB5e6e42434bD27f3F788c' => 'mdo',
-            '0xc2161d47011C4065648ab9cDFd0071094228fa09' => 'bcash',
-        ];
+        if ($this->chain === 'bsc') {
+            return [
+                '0x7b65B489fE53fCE1F6548Db886C08aD73111DDd8' => 'iron',
+                '0xd72aA9e1cDDC2F6D6e0444580002170fbA1f8eED' => 'mda',
+                '0xC1eDCc306E6faab9dA629efCa48670BE4678779D' => 'mdg',
+                '0xeFb94d158206dfa5CB8c30950001713106440928' => 'seeds',
+                '0xc66E4De0d9b4F3CB3f271c37991fE62f154471EB' => 'sil',
+                '0x0610C2d9F6EbC40078cf081e2D1C4252dD50ad15' => 'vbswap',
+                '0x35e869B7456462b81cdB5e6e42434bD27f3F788c' => 'mdo',
+                '0xc2161d47011C4065648ab9cDFd0071094228fa09' => 'bcash',
+            ];
+        }
+
+        return [];
     }
 
     private function getTokenIconMap(): array
@@ -46,10 +54,22 @@ class TokenResolver
             return $cache->get();
         }
 
-        $dirs = [
-            $this->projectDir . '/remotes/valuedefi-trustwallet-assets/blockchains/smartchain/assets',
-            $this->projectDir . '/remotes/trustwallet-assets/blockchains/smartchain/assets',
-        ];
+        switch ($this->chain) {
+            case 'bsc':
+                $dirs = [
+                    $this->projectDir . '/remotes/valuedefi-trustwallet-assets/blockchains/smartchain/assets',
+                    $this->projectDir . '/remotes/trustwallet-assets/blockchains/smartchain/assets',
+                ];
+                break;
+            case 'polygon':
+                $dirs = [];
+                break;
+            case 'fantom':
+                $dirs = [];
+                break;
+            default:
+                throw new \InvalidArgumentException('Invalid chain ' . $this->chain);
+        }
 
         $finder = new Finder();
         $finder->name('0x*');

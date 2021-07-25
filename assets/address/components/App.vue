@@ -6,7 +6,7 @@
         <a class="text-muted text-small text-decoration-none">{{ context.address_truncate }}</a>
         -
         <a class="text-muted text-small" target="_blank"
-           :href="'https://bscscan.com/address/' + encodeURIComponent(context.address)"><i class="fas fa-external-link-alt"></i></a>
+           :href="context.explorer + '/address/' + encodeURIComponent(context.address)"><i class="fas fa-external-link-alt"></i></a>
       </div>
     </div>
 

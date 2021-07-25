@@ -43,7 +43,7 @@ class IconResolver
     {
         $symbol = strtolower($symbol);
 
-        if ($local = $this->getLocalImage($symbol)) {
+        if ($this->getLocalImage($symbol)) {
             return $this->urlGenerator->generate('token_icon', [
                 'symbol' => $symbol,
                 'format' => 'png',
@@ -98,6 +98,20 @@ class IconResolver
 
     public function getLocalImage(string $symbol): ?string
     {
+        if ($symbol === 'weth') {
+            $symbol = 'eth';
+        } else if ($symbol === 'wbtc') {
+            $symbol = 'btc';
+        } elseif ($symbol === 'wmatic') {
+            $symbol = 'matic';
+        } elseif ($symbol === 'wftm') {
+            $symbol = 'ftm';
+        } elseif ($symbol === 'wbnb') {
+            $symbol = 'bnb';
+        } elseif ($symbol === 'btcb') {
+            $symbol = 'btc';
+        }
+
         $filename = strtolower($symbol) . '.png';
 
         $icon = $this->projectDir . '/var/icons/' . $filename;

@@ -111,20 +111,6 @@ class PlatformBscRepository
                 'token' => 'kebab',
             ],
             [
-                'id' => 'bearn',
-                'label' => 'bEarn.Fi',
-                'url' => 'https://bearn.fi/',
-                'icon' => '/assets/platforms/bearn.png',
-                'token' => 'bfi',
-            ],
-            [
-                'id' => 'bdollar',
-                'label' => 'bDollar',
-                'url' => 'https://bdollar.fi/',
-                'icon' => '/assets/platforms/bdollar.png',
-                'token' => 'bdo',
-            ],
-            [
                 'id' => 'valuedefi',
                 'label' => 'ValueDefi',
                 'url' => 'https://bsc.valuedefi.io/#/vfarm',
@@ -281,7 +267,7 @@ class PlatformBscRepository
             [
                 'id' => 'evodefi',
                 'label' => 'Evodefi',
-                'url' => 'https://evodefi.com/',
+                'url' => 'https://evodefi.com?ref=r75LG2b3kxfwOPDaLJ3JF1w2dQdXW2TgPaE',
                 'icon' => '/assets/platforms/evodefi.png',
                 'token' => 'gen',
             ],
@@ -298,13 +284,6 @@ class PlatformBscRepository
                 'url' => 'https://master.coinswap.space/farm?coinswapfriend=0x898e99681C29479b86304292b03071C80A57948F',
                 'icon' => '/assets/platforms/coinswap.png',
                 'token' => 'css',
-            ],
-            [
-                'id' => 'merlin',
-                'label' => 'merlin',
-                'url' => 'https://www.merlinlab.com',
-                'icon' => '/assets/platforms/merlin.png',
-                'token' => 'merl',
             ],
         ];
     }

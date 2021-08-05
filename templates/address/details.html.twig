@@ -85,7 +85,7 @@
                 <tbody>
                 {% for transation in details.transactions|default([]) %}
                     <tr>
-                        <td><a target="_blank" href="https://bscscan.com/tx/{{ transation.hash }}" title="bscscan: Transaction"><i class="fas fa-external-link-alt"></i></a></td>
+                        <td><a target="_blank" href="{{ chain.explorer }}/tx/{{ transation.hash }}" title="explorer: Transaction"><i class="fas fa-external-link-alt"></i></a></td>
                         <td>{{ transation.timestamp|date('Y-m-d') }}</td>
                         <td>{{ transation.amount|abs|format_token }}</td>
                         <td>

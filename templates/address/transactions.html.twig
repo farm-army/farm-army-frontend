@@ -13,7 +13,7 @@
             <span class="fw-bold">Transactions</span> -
             <a class="text-muted text-small text-decoration-none">{{ address|truncate_address }}</a>
             -
-            <a class="text-muted text-small" target="_blank" href="https://bscscan.com/address/{{ address }}"><i class="fas fa-external-link-alt"></i></a>
+            <a class="text-muted text-small" target="_blank" href="{{ explorer }}/address/{{ address }}"><i class="fas fa-external-link-alt"></i></a>
         </div>
     </div>
 
@@ -37,7 +37,7 @@
                             {% if loop.first %}
                             <span>{{ transaction.timestamp|date('y-m-d H:i') }}</span>
                             <br>
-                            <a target="_blank" href="https://bscscan.com/tx/{{ transaction.hash }}" title="bscscan: Transaction"><i class="fas fa-external-link-alt"></i></a> <span class="text-muted" title="{{ transaction.hash }}">{{ transaction.hash|u.truncate(8) }}...</span>
+                            <a target="_blank" href="{{ explorer }}/tx/{{ transaction.hash }}" title="explorer: Transaction"><i class="fas fa-external-link-alt"></i></a> <span class="text-muted" title="{{ transaction.hash }}">{{ transaction.hash|u.truncate(8) }}...</span>
                             {% endif %}
                         </div>
 
@@ -62,9 +62,9 @@
                                 <i class="fas fa-arrow-alt-circle-right text-danger"></i>
                             {% endif %}
                             {% if transaction.amount > 0 %}
-                                <a target="_blank" class="text-muted text-decoration-none" href="https://bscscan.com/address/{{ transaction.from }}" title="bscscan: {{ transaction.from }}">{{ transaction.from|truncate_address(6) }}</a>
+                                <a target="_blank" class="text-muted text-decoration-none" href="{{ explorer }}/address/{{ transaction.from }}" title="explorer: {{ transaction.from }}">{{ transaction.from|truncate_address(6) }}</a>
                             {% else %}
-                                <a target="_blank" class="text-muted text-decoration-none text-dark" href="https://bscscan.com/address/{{ transaction.to }}" title="bscscan: {{ transaction.to }}">{{ transaction.to|truncate_address(6) }}</a>
+                                <a target="_blank" class="text-muted text-decoration-none text-dark" href="{{ explorer }}/address/{{ transaction.to }}" title="explorer: {{ transaction.to }}">{{ transaction.to|truncate_address(6) }}</a>
                             {% endif %}
                         </div>
 

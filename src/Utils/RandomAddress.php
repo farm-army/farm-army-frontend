@@ -22,7 +22,7 @@ class RandomAddress
         $cache = $this->cacheItemPool->getItem('random-address');
 
         if ($cache->isHit()) {
-            return $cache->get();
+           // return $cache->get();
         }
 
         if ($this->chain === 'bsc') {
@@ -46,48 +46,75 @@ class RandomAddress
             ];
 
             $scan = 'https://polygonscan.com/txs?a=%s&f=3';
+        } else if ($this->chain === 'kcc') {
+            $urls = [
+                '0x0cc7fb3626c55ce4eff79045e8e7cb52434431d4', // kuswap
+            ];
+
+            $scan = 'https://explorer.kcc.io/api/kcs/address/normal/%s/1/50';
         } else {
             throw new \RuntimeException('Invalid chain');
         }
 
         $addresses = [];
 
-        foreach($urls as $url) {
-            if(!@$content = file_get_contents(sprintf($scan, $url))) {
-                continue;
+        if ($this->chain === 'kcc') {
+            foreach ($urls as $url) {
+                if (!@$content = file_get_contents(sprintf($scan, $url))) {
+                    continue;
+                }
+
+                if (!$json = json_decode($content, true)) {
+                    continue;
+                }
+
+                $array = array_filter($json['data'] ?? [], static function (array $item) use ($url) {
+                    return isset($item['from']) && $item['from']
+                        && !str_starts_with($item['from'], '0x000000000000000000000')
+                        && strtolower($item['from']) !== strtolower($url);
+                });
+
+                $array = array_values(array_unique(array_map(static fn(array $item) => $item['from'], $array)));
+                $addresses = array_merge($addresses, $array);
             }
-
-            $crawler = new Crawler($content);
-            $crawler = $crawler->filter('#paywall_mask tbody tr a');
-
-            foreach ($crawler as $domElement) {
-                if (!$href = $domElement->attributes->getNamedItem('href')) {
+        } else {
+            foreach ($urls as $url) {
+                if (!@$content = file_get_contents(sprintf($scan, $url))) {
                     continue;
                 }
 
-                if (!$href->textContent || !str_contains($href->textContent, 'address/')) {
-                    continue;
-                }
+                $crawler = new Crawler($content);
+                $crawler = $crawler->filter('#paywall_mask tbody tr a');
 
-                if (!preg_match('(0x[a-fA-F0-9]{40})', $href->textContent, $matches)) {
-                    continue;
-                }
+                foreach ($crawler as $domElement) {
+                    if (!$href = $domElement->attributes->getNamedItem('href')) {
+                        continue;
+                    }
 
-                $address = $matches[0];
+                    if (!$href->textContent || !str_contains($href->textContent, 'address/')) {
+                        continue;
+                    }
 
-                if (in_array($address, $addresses, true)) {
-                    continue;
-                }
+                    if (!preg_match('(0x[a-fA-F0-9]{40})', $href->textContent, $matches)) {
+                        continue;
+                    }
 
-                $addresses[] = $address;
+                    $address = $matches[0];
 
-                if (count($addresses) === 8) {
-                    break;
+                    if (in_array($address, $addresses, true)) {
+                        continue;
+                    }
+
+                    $addresses[] = $address;
+
+                    if (count($addresses) === 8) {
+                        break;
+                    }
                 }
             }
         }
 
-        $cache->set($addresses)->expiresAfter(60 * 60 * 5);
+        $cache->set($addresses)->expiresAfter(60 * 60 * 10);
 
         $this->cacheItemPool->save($cache);
 

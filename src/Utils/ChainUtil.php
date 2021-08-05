@@ -19,6 +19,8 @@ class ChainUtil
             return 'https://polygonscan.com';
         } else if($this->chain === 'fantom') {
             return 'https://ftmscan.com';
+        } else if($this->chain === 'kcc') {
+            return 'https://explorer.kcc.io/en';
         }
 
         return 'https://bscscan.com';

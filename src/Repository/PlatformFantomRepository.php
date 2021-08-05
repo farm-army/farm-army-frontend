@@ -74,6 +74,27 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
             ],
+            [
+                'id' => 'fcurve',
+                'label' => 'Curve',
+                'url' => 'https://ftm.curve.fi/',
+                'icon' => '/assets/platforms/curve.png',
+                'token' => 'crv',
+            ],
+            [
+                'id' => 'frankenstein',
+                'label' => 'Frankenstein',
+                'url' => 'https://frankenstein.finance/?ref=0x898e99681C29479b86304292b03071C80A57948F',
+                'icon' => '/assets/platforms/frankenstein.png',
+                'token' => 'frank',
+            ],
+            [
+                'id' => 'ester',
+                'label' => 'Ester',
+                'url' => 'https://app.ester.finance/',
+                'icon' => '/assets/platforms/ester.png',
+                'token' => 'est',
+            ],
         ];
     }
 }

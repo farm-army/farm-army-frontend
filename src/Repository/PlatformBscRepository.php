@@ -171,7 +171,7 @@ class PlatformBscRepository
                 'label' => 'Wault Finance',
                 'url' => 'https://app.wault.finance/',
                 'icon' => '/assets/platforms/wault.png',
-                'token' => 'wault',
+                'token' => 'wex',
             ],
             [
                 'id' => 'alpaca',
@@ -284,6 +284,27 @@ class PlatformBscRepository
                 'url' => 'https://master.coinswap.space/farm?coinswapfriend=0x898e99681C29479b86304292b03071C80A57948F',
                 'icon' => '/assets/platforms/coinswap.png',
                 'token' => 'css',
+            ],
+            [
+                'id' => 'farmhero',
+                'label' => 'FarmHero',
+                'url' => 'https://bsc.farmhero.io?r=f3rm3rmy',
+                'icon' => '/assets/platforms/farmhero.png',
+                'token' => 'hero',
+            ],
+            [
+                'id' => 'treedefi',
+                'label' => 'Treedefi',
+                'url' => 'https://app.treedefi.com',
+                'icon' => '/assets/platforms/treedefi.png',
+                'token' => 'seed',
+            ],
+            [
+                'id' => 'yieldparrot',
+                'label' => 'YieldParrot',
+                'url' => 'https://app.yieldparrot.finance',
+                'icon' => '/assets/platforms/yieldparrot.png',
+                'token' => 'lory',
             ],
         ];
     }

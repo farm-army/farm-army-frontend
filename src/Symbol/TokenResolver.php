@@ -46,7 +46,7 @@ class TokenResolver
         return [];
     }
 
-    private function getTokenIconMap(): array
+    public function getTokenIconMap(): array
     {
         $cache = $this->cacheItemPool->getItem('icon-map');
 
@@ -65,6 +65,9 @@ class TokenResolver
                 $dirs = [];
                 break;
             case 'fantom':
+                $dirs = [];
+                break;
+            case 'kcc':
                 $dirs = [];
                 break;
             default:
@@ -131,5 +134,30 @@ class TokenResolver
         $this->cacheItemPool->save($cache->set($icons)->expiresAfter(60 * 60 * 24 * 7));
 
         return $icons;
+    }
+
+    public function getPancakeTokens(): array
+    {
+        $content = file_get_contents($this->projectDir . '/remotes/pancake-frontend/src/config/constants/tokens.ts');
+
+        preg_match_all(
+            "#symbol:\s*'(?<symbol>\w+)',\s*address:\s*{\s*56:\s*'(?<address>\w+)'#m",
+            $content,
+            $matches,
+            PREG_SET_ORDER
+        );
+
+        $tokens = [];
+
+        foreach ($matches as $match) {
+            $address = strtolower($match['address']);
+
+            $tokens[$address] = [
+                'symbol' => strtolower($match['symbol']),
+                'address' => $address,
+            ];
+        }
+
+        return $tokens;
     }
 }

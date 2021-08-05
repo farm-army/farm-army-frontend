@@ -10,6 +10,7 @@
     <div id="app-address"
          data-url="{{ path('farm_content', {'address': address|slice(2)}) }}"
          data-context="{{ app_context|json_encode }}"
+         data-explorer="{{ explorer }}"
          data-chunks="{{ path('farm_json_platform_chunks', {'chunk': 1, 'address': address|slice(2)}) }}">
     </div>
 

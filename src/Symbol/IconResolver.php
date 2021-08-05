@@ -15,13 +15,15 @@ class IconResolver
     private CacheItemPoolInterface $cacheItemPool;
     private TokenResolver $tokenResolver;
     private int $assetVersion = 3;
+    private string $chain;
 
-    public function __construct(string $projectDir, UrlGeneratorInterface $urlGenerator, CacheItemPoolInterface $cacheItemPool, TokenResolver $tokenResolver)
+    public function __construct(string $projectDir, UrlGeneratorInterface $urlGenerator, CacheItemPoolInterface $cacheItemPool, TokenResolver $tokenResolver, string $chain)
     {
         $this->projectDir = $projectDir;
         $this->urlGenerator = $urlGenerator;
         $this->cacheItemPool = $cacheItemPool;
         $this->tokenResolver = $tokenResolver;
+        $this->chain = $chain;
     }
 
     public function getIcon(string $symbol): string
@@ -120,8 +122,9 @@ class IconResolver
         }
 
         $paths = [
-            $this->projectDir . '/remotes/pancake-frontend/public/images/tokens/',
-            $this->projectDir . '/remotes/cryptocurrency-icons/128/icon'
+            $this->projectDir . '/var/tokens/' . $this->chain . '/symbol/',
+            $this->projectDir . '/var/tokens/',
+            $this->projectDir . '/remotes/cryptocurrency-icons/128/icon/'
         ];
 
         foreach ($paths as $path) {
@@ -146,7 +149,7 @@ class IconResolver
             $finder = new Finder();
             $finder->name('*.png');
 
-            foreach ($finder->in($path) as $file) {
+            foreach ($finder->depth('== 0')->in($path) as $file) {
                 $fileName = strtolower($file->getFilename());
 
                 if ($fileName === $symbol . '.png') {

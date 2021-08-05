@@ -19,12 +19,19 @@ class ContextExtension extends AbstractExtension implements GlobalsInterface
         switch ($this->chain) {
             case 'bsc':
                 $title = 'Binance Smart Chain';
+                $explorer = 'https://bscscan.com';
                 break;
             case 'polygon':
                 $title = 'Polygon';
+                $explorer = 'https://polygonscan.com';
                 break;
             case 'fantom':
                 $title = 'Fantom';
+                $explorer = 'https://ftmscan.com';
+                break;
+            case 'kcc':
+                $title = 'KuCoin Community Chain';
+                $explorer = 'https://explorer.kcc.io/en';
                 break;
             default:
                 throw new \InvalidArgumentException('Invalid chain');
@@ -34,6 +41,7 @@ class ContextExtension extends AbstractExtension implements GlobalsInterface
             'chain' => [
                 'id' => $this->chain,
                 'title' => $title,
+                'explorer' => $explorer,
             ]
         ];
     }

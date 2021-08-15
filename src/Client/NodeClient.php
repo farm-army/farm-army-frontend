@@ -2,11 +2,13 @@
 
 namespace App\Client;
 
+use App\Repository\FarmRepository;
 use App\Repository\PlatformRepository;
 use App\Symbol\IconResolver;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Log\LoggerInterface;
 
 class NodeClient
 {
@@ -15,39 +17,81 @@ class NodeClient
     private PlatformRepository $platformRepository;
     private CacheItemPoolInterface $cacheItemPool;
     private IconResolver $iconResolver;
+    private LoggerInterface $logger;
+    private FarmRepository $farmRepository;
 
     public function __construct(ClientInterface $client,
         PlatformRepository $platformRepository,
         CacheItemPoolInterface $cacheItemPool,
         IconResolver $iconResolver,
-        string $baseUrl
+        string $baseUrl,
+        LoggerInterface $logger,
+        FarmRepository $farmRepository
     ) {
         $this->client = $client;
         $this->baseUrl = $baseUrl;
         $this->platformRepository = $platformRepository;
         $this->cacheItemPool = $cacheItemPool;
         $this->iconResolver = $iconResolver;
+        $this->logger = $logger;
+        $this->farmRepository = $farmRepository;
     }
 
-    public function getFarms(): array
+    public function getFarms(bool $force = false): array
     {
         $cache = $this->cacheItemPool->getItem('farms');
 
-        if ($cache->isHit()) {
+        if (!$force && $cache->isHit()) {
             return $cache->get();
         }
 
         $farms = [];
 
         try {
-            $farms = json_decode($this->client->request('GET', $this->baseUrl . '/farms')->getBody()->getContents(), true);
+            $farms = json_decode($this->client->request('GET', $this->baseUrl . '/farms', [
+                'timeout' => 60,
+            ])->getBody()->getContents(), true);
         } catch (GuzzleException $e) {
+            $this->logger->error('fetch farm error: ' . $e->getMessage());
         }
+
+        $this->farmRepository->update($farms);
 
         $cache->expiresAfter(60 * 5)->set($farms);
         $this->cacheItemPool->save($cache);
 
         return $farms;
+    }
+
+    public function getAutofarm(string $masterChef, string $address = null): ?array
+    {
+        $cache = $this->cacheItemPool->getItem('farms-' . md5(json_encode([strtolower($masterChef), strtolower($address ?? '')])));
+
+        if ($cache->isHit()) {
+            return $cache->get();
+        }
+
+        $parameters = [
+            'masterchef' => $masterChef,
+            'address' => $address,
+        ];
+
+        $uri = $this->baseUrl . '/autofarm?' . http_build_query(array_filter($parameters));
+
+        $result = null;
+
+        try {
+            $result = json_decode($this->client->request('GET', $uri, [
+                'timeout' => 10,
+            ])->getBody()->getContents(), true);
+        } catch (GuzzleException $e) {
+            $this->logger->error('fetch farm error: ' . $e->getMessage());
+        }
+
+        $cache->expiresAfter(60 * 5)->set($result);
+        $this->cacheItemPool->save($cache);
+
+        return $result;
     }
 
     public function getPrices(): array
@@ -390,7 +434,7 @@ class NodeClient
         return $usd;
     }
 
-    private function formatFarms(array $farms): array
+    public function formatFarms(array $farms): array
     {
         foreach ($farms as $key => $farm) {
             $token = $farm['farm']['name'];
@@ -439,9 +483,9 @@ class NodeClient
         return $result;
     }
 
-    public function getTransactions(string $address): array
+    public function getTransactions(string $address, string $chain): array
     {
-        $cache = $this->cacheItemPool->getItem('address-transactions-' . md5($address));
+        $cache = $this->cacheItemPool->getItem('address-transactions-' . $chain .  '-' . md5($address));
 
         if ($cache->isHit()) {
             return $cache->get();

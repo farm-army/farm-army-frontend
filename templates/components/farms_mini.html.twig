@@ -1,6 +1,8 @@
 {% apply spaceless %}
-<div class="card shadow-sm mb-2 pool-card" data-search-tags="{{ farm.name }} {{ farm.token|default }}" data-search-provider="{{ farm.provider.id }}">
+<div class="card shadow-sm mb-2 pool-card position-relative" data-search-tags="{{ farm.name }} {{ farm.token|default }}" data-search-provider="{{ farm.provider.id }}">
     <div class="card-body">
+        {% include 'components/farm_badges.html.twig' with {'farm': farm} only %}
+
         {% include 'components/farm_card.html.twig' with {'box': farm} %}
         <a href="{{ path('vault_address', {'hash': farm.id|md5}) }}" class="stretched-link"></a>
     </div>

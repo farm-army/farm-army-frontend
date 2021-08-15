@@ -2,31 +2,33 @@
 
 namespace App\Repository;
 
+use App\Utils\ChainGuesser;
+
 class PlatformRepository implements PlatformRepositoryInterface
 {
     private PlatformBscRepository $bscRepository;
     private PlatformPolygonRepository $platformPolygonRepository;
-    private string $chain;
     private PlatformFantomRepository $platformFantomRepository;
     private PlatformKccRepository $platformKccRepository;
+    private ChainGuesser $chainGuesser;
 
     public function __construct(
         PlatformBscRepository $bscRepository,
         PlatformPolygonRepository $platformPolygonRepository,
         PlatformFantomRepository $platformFantomRepository,
         PlatformKccRepository $platformKccRepository,
-        string $chain
+        ChainGuesser $chainGuesser
     ) {
         $this->bscRepository = $bscRepository;
         $this->platformPolygonRepository = $platformPolygonRepository;
         $this->platformFantomRepository = $platformFantomRepository;
         $this->platformKccRepository = $platformKccRepository;
-        $this->chain = $chain;
+        $this->chainGuesser = $chainGuesser;
     }
 
     public function getPlatform(string $id): array
     {
-        switch ($this->chain) {
+        switch ($this->chainGuesser->getChain()) {
             case 'bsc':
                 return $this->bscRepository->getPlatform($id);
             case 'polygon':
@@ -42,7 +44,7 @@ class PlatformRepository implements PlatformRepositoryInterface
 
     public function getPlatformChunks(): array
     {
-        switch ($this->chain) {
+        switch ($this->chainGuesser->getChain()) {
             case 'bsc':
                 return $this->bscRepository->getPlatformChunks();
             case 'polygon':
@@ -58,7 +60,7 @@ class PlatformRepository implements PlatformRepositoryInterface
 
     public function getPlatforms(): array
     {
-        switch ($this->chain) {
+        switch ($this->chainGuesser->getChain()) {
             case 'bsc':
                 return $this->bscRepository->getPlatforms();
             case 'polygon':

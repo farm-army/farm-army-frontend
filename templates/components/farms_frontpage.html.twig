@@ -1,15 +1,15 @@
 {% set box = farm %}
 
 {% apply spaceless %}
-<div class="card shadow-sm mb-2 pool-card" data-search-tags="{{ farm.name }} {{ farm.token|default }}" data-search-provider="{{ farm.provider.id }}">
+<div class="card shadow-sm mb-2 pool-card position-relative" data-search-tags="{{ farm.name }} {{ farm.token|default }}" data-search-provider="{{ farm.provider.id }}">
+    {% include 'components/farm_badges.html.twig' with {'farm': farm} only %}
+
     <div class="card-body">
         <div class="row">
             <div class="col-4">
                 <div class="d-flex">
                     <div class="pe-2 position-relative">
                         <div class="position-absolute top-0 start-0 translate-middle">
-                            {% if box.hot|default(false) %} <i class="fas fa-fire text-danger" title="Hot"></i>{% endif %}
-                            {% if box.new|default(false) %} <i class="fas fa-birthday-cake text-warning" title="Newcomer"></i>{% endif %}
                             {% if box.notes|default([])|length > 0 %} <i class="text-muted fas fa-info-circle" style="font-size: 0.8em; opacity: 0.6" title="{{ box.notes|join(' ') }}"></i>{% endif %}
                         </div>
 
@@ -35,6 +35,7 @@
                 {% if box.yield.apy is defined and box.yield.apy > 0 %}
                     <div><span class="text-muted">APY</span>&nbsp;<span>{{ box.yield.apy|format_percent }}%</span></div>
                 {% endif %}
+
             </div>
 
             <div class="col-2 text-center"  style="font-size:0.9em">

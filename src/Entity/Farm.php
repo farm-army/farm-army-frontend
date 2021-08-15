@@ -15,6 +15,9 @@ use App\Repository\FarmRepository;
  *        @ORM\Index(name="farm_hash", columns={"hash"}),
  *        @ORM\Index(name="farm_farm_id", columns={"farm_id"}),
  *        @ORM\Index(name="farm_token", columns={"token"}),
+ *        @ORM\Index(name="farm_chain", columns={"chain"}),
+ *        @ORM\Index(name="farm_compound", columns={"compound"}),
+ *        @ORM\Index(name="farm_leverage", columns={"leverage"}),
  *        @ORM\Index(name="farm_token_last_found_at", columns={"token", "last_found_at"}),
  *     },
  *     uniqueConstraints={
@@ -71,17 +74,32 @@ class Farm
     private $lastFoundAt;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=50)
      */
     private $token;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=15)
+     */
+    private $chain;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $leverage = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $compound = false;
+
+    /**
+     * @ORM\Column(type="string", nullable=true, length=50)
      */
     private $token0;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, length=50)
      */
     private $token1;
 

@@ -18,20 +18,17 @@ class TokenController extends AbstractController
 {
     private FarmRepository $farmRepository;
     private FarmPools $farmPools;
-    private PlatformRepository $platformRepository;
     private NodeClient $nodeClient;
     private IconResolver $iconResolver;
 
     public function __construct(
         FarmRepository $farmRepository,
         FarmPools $farmPools,
-        PlatformRepository $platformRepository,
         NodeClient $nodeClient,
         IconResolver $iconResolver
     ) {
         $this->farmRepository = $farmRepository;
         $this->farmPools = $farmPools;
-        $this->platformRepository = $platformRepository;
         $this->nodeClient = $nodeClient;
         $this->iconResolver = $iconResolver;
     }
@@ -47,20 +44,15 @@ class TokenController extends AbstractController
             throw new NotFoundHttpException('invalid token address');
         }
 
-        $vaultIds = $this->farmRepository->findFarmIdsByToken($token);
-
-        if (count($vaultIds) === 0) {
+        $vaults = $this->farmRepository->findFarmIdsByToken($token);
+        if (count($vaults) === 0) {
             throw new NotFoundHttpException('token not found');
         }
 
-        $others = [];
-        $generateFarms = $this->farmPools->generateFarms();
-
-        foreach ($generateFarms as $farmX) {
-            if (in_array($farmX['id'], $vaultIds, true)) {
-                $others[] = $farmX;
-            }
-        }
+        $others = array_map(
+            fn(array $i) => $this->farmPools->enrichFarmData($i['json']),
+            $vaults
+        );
 
         $response = new Response();
 
@@ -76,13 +68,10 @@ class TokenController extends AbstractController
                 'vaults' => [],
             ];
 
-            $vaultIds = $this->farmRepository->findFarmIdsByToken(strtolower($pool['address']));
-
-            foreach ($generateFarms as $farmX) {
-                if (in_array($farmX['id'], $vaultIds, true)) {
-                    $item['vaults'][] = $farmX;
-                }
-            }
+            $item['vaults'] = array_map(
+                fn(array $i) => $this->farmPools->enrichFarmData($i['json']),
+                $this->farmRepository->findFarmIdsByToken(strtolower($pool['address']))
+            );
 
             $samePairs[] = $item;
         }
@@ -93,7 +82,6 @@ class TokenController extends AbstractController
             'token_card' => $this->getTokenCard($token),
             'same_pairs' => $samePairs,
         ];
-
 
         $candles = [];
         foreach ($info['candles'] ?? [] as $candle) {
@@ -149,7 +137,7 @@ class TokenController extends AbstractController
     /**
      * @Route("/vault/{hash}", name="vault_address", methods={"GET"})
      */
-    public function detail(string $hash)
+    public function detail(string $hash): Response
     {
         $response = new Response();
 
@@ -165,27 +153,15 @@ class TokenController extends AbstractController
             throw new NotFoundHttpException('vault not found');
         }
 
-        $farms = $this->farmPools->generateFarms();
-        $otherIds = $farmDb->getToken() ? $this->farmRepository->findFarmIdsByToken($farmDb->getToken()) : [];
-
-        $farm = null;
-        $others = [];
-        foreach($farms as $farmX) {
-            if ($farmX['id'] === $farmDb->getFarmId()) {
-                $farm = $farmX;
-            } else if(in_array($farmX['id'], $otherIds, true)) {
-                $others[] = $farmX;
-            }
-        }
-
-        if (!$farm) {
-            throw new NotFoundHttpException('vault not found');
-        }
+        $others = array_map(
+            fn(array $i) => $this->farmPools->enrichFarmData($i['json']),
+            $farmDb->getToken() ? $this->farmRepository->findFarmIdsByToken($farmDb->getToken(), $farmDb->getFarmId()) : []
+        );
 
         $json = $farmDb->getJson();
 
         return $this->render('vault/detail.html.twig', [
-            'farm' => $farm,
+            'farm' => $this->farmPools->enrichFarmData($farmDb->getJson()),
             'json' => $json,
             'others' => $others,
             'farm_db' => $farmDb,

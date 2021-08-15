@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Pools\FarmPools;
 use App\Repository\PlatformRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -29,9 +30,26 @@ class PoolController extends AbstractController
 
         return $this->render('pool/index.html.twig', [
             'farms_preload' => json_encode([
-                'farms' => array_slice($farmPools->generateContent(), 0, 20),
+                'farms' => array_slice($farmPools->renderAllFarms(), 0, 20),
                 'platforms' => $this->platformRepository->getPlatforms(),
             ])
         ], $response);
+    }
+
+
+    /**
+     * @Route("/farms.json", name="app_default_farms", methods={"GET"})
+     */
+    public function farms(FarmPools $farmPools): JsonResponse
+    {
+        $response = new JsonResponse([
+            'farms' => $farmPools->renderAllFarms(),
+            'platforms' => $this->platformRepository->getPlatforms(),
+        ]);
+
+        $response->setPublic();
+        $response->setMaxAge(60 * 30);
+
+        return $response;
     }
 }

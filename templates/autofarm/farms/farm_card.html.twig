@@ -1,11 +1,13 @@
 <div class="row">
-    <div class="col-3">
+    <div class="col-5">
         <div class="d-flex">
             <div class="pe-2 position-relative">
-                <picture>
-                    <source srcset="{{ box.icon|replace({'.png': '.webp'}) }}" type="image/webp">
-                    <img loading="lazy" width="42" height="42" src="{{ box.icon }}" title="{{ box.name }}" alt="">
-                </picture>
+                <a href="{{ path('token_address', {'token': box.extra.transactionToken}) }}" title="Token: {{ box.name }}">
+                    <picture>
+                        <source srcset="{{ box.icon|replace({'.png': '.webp'}) }}" type="image/webp">
+                        <img loading="lazy" width="42" height="42" src="{{ box.icon }}" title="{{ box.name }}" alt="">
+                    </picture>
+                </a>
 
                 <div class="position-absolute top-0 start-0 translate-middle">
                     {% if box.notes|default([])|length > 0 %} <i class="text-muted fas fa-info-circle" style="font-size: 0.8em; opacity: 0.6" title="{{ box.notes|join(' ') }}"></i>{% endif %}
@@ -13,7 +15,7 @@
             </div>
             <div>
                 <div class="fw-bold">{{ box.name }}</div>
-                <div class="text-muted">{% if box.platform|default %}{{ box.platform|capitalize }}{% endif %}</div>
+                <div class="text-muted"><span class="text-muted"> PID: {{ box.raw.pid|default }}</span> {% if box.platform|default %}{{ box.platform|capitalize }}{% endif %}</div>
             </div>
         </div>
     </div>
@@ -45,11 +47,5 @@
             {% endfor %}
             <div class="text-muted">Earn</div>
         {% endif %}
-    </div>
-
-    <div class="col-2">
-        <div class="float-end">
-            <a href="{{ farm.link is defined ? farm.link : farm.provider.url|default('#') }}" target="_blank"><img width="48" height="48" alt="{{ farm.provider.label }}" title="{{ farm.provider.label }}" src="{{ farm.provider.icon }}"></a>
-        </div>
     </div>
 </div>

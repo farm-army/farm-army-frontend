@@ -193,6 +193,13 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/quickswap.png',
                 'token' => 'quick',
             ],
+            [
+                'id' => 'pearzap',
+                'label' => 'PearZap',
+                'url' => 'https://app.pearzap.com/?r=yv676c7746zC072579641y20709y1y5zC6yA35726F',
+                'icon' => '/assets/platforms/pearzap.png',
+                'token' => 'pear',
+            ],
         ];
     }
 }

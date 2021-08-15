@@ -25,12 +25,12 @@ class ApiController extends AbstractController
      */
     public function index(FarmPools $farmPools): Response
     {
-        $response = new JsonResponse($farmPools->generateFarms());
+        $response = new JsonResponse($farmPools->generateApiFarms());
 
         $response->setPublic();
         $response->setMaxAge(60 * 30);
 
-        return new JsonResponse($farmPools->generateFarms());
+        return $response;
     }
 
     /**

@@ -2,33 +2,29 @@
 
 namespace App\Symbol;
 
+use App\Utils\ChainGuesser;
 use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class IconResolver
 {
-    private const STATIC = [];
-
     private string $projectDir;
     private UrlGeneratorInterface $urlGenerator;
     private CacheItemPoolInterface $cacheItemPool;
-    private TokenResolver $tokenResolver;
     private int $assetVersion = 3;
-    private string $chain;
+    private ChainGuesser $chainGuesser;
 
-    public function __construct(string $projectDir, UrlGeneratorInterface $urlGenerator, CacheItemPoolInterface $cacheItemPool, TokenResolver $tokenResolver, string $chain)
+    public function __construct(string $projectDir, UrlGeneratorInterface $urlGenerator, CacheItemPoolInterface $cacheItemPool, ChainGuesser $chainGuesser)
     {
         $this->projectDir = $projectDir;
         $this->urlGenerator = $urlGenerator;
         $this->cacheItemPool = $cacheItemPool;
-        $this->tokenResolver = $tokenResolver;
-        $this->chain = $chain;
+        $this->chainGuesser = $chainGuesser;
     }
 
     public function getIcon(string $symbol): string
     {
-        $cache = $this->cacheItemPool->getItem('icon-' . md5($symbol));
+        $cache = $this->cacheItemPool->getItem('icon-' . md5($symbol) . 'v' . $this->assetVersion);
 
         if ($cache->isHit()) {
             return $cache->get();
@@ -36,7 +32,7 @@ class IconResolver
 
         $icon = $this->getIconInner($symbol);
 
-        $this->cacheItemPool->save($cache->set($icon)->expiresAfter(60 * 24 * 5));
+        $this->cacheItemPool->save($cache->set($icon)->expiresAfter(60 * 60 * 5 + random_int(1, 60)));
 
         return $icon;
     }
@@ -53,19 +49,7 @@ class IconResolver
             ]);
         }
 
-        if (isset(self::STATIC[$symbol])) {
-            return self::STATIC[$symbol];
-        }
-
         if (preg_match('#^(\w+)-(\w+)$#i', $symbol, $match) || preg_match('#(\w+)-(\w+)\s+#i', $symbol, $match)) {
-            if (isset(self::STATIC[$match[1] . '-' . $match[2]])) {
-                return self::STATIC[$match[1] . '-' . $match[2]];
-            }
-
-            if (isset(self::STATIC[$match[2] . '-' . $match[1]])) {
-                return self::STATIC[$match[2] . '-' . $match[1]];
-            }
-
             if ($pair = $this->getLocalPair($match[1], $match[2])) {
                 return $pair;
             }
@@ -86,7 +70,7 @@ class IconResolver
         $iconA = $this->getLocalImage($symbolA);
         $iconB = $this->getLocalImage($symbolB);
 
-        if (!file_exists($iconA) & !file_exists($iconB)) {
+        if (!$iconA & !$iconB) {
             return null;
         }
 
@@ -102,7 +86,7 @@ class IconResolver
     {
         if ($symbol === 'weth') {
             $symbol = 'eth';
-        } else if ($symbol === 'wbtc') {
+        } else if ($symbol === 'wbtc' || $symbol === 'btcb') {
             $symbol = 'btc';
         } elseif ($symbol === 'wmatic') {
             $symbol = 'matic';
@@ -110,8 +94,6 @@ class IconResolver
             $symbol = 'ftm';
         } elseif ($symbol === 'wbnb') {
             $symbol = 'bnb';
-        } elseif ($symbol === 'btcb') {
-            $symbol = 'btc';
         }
 
         $filename = strtolower($symbol) . '.png';
@@ -122,44 +104,15 @@ class IconResolver
         }
 
         $paths = [
-            $this->projectDir . '/var/tokens/' . $this->chain . '/symbol/',
+            $this->projectDir . '/var/tokens/' . $this->chainGuesser->getChain() . '/symbol/',
             $this->projectDir . '/var/tokens/',
             $this->projectDir . '/remotes/cryptocurrency-icons/128/icon/'
         ];
 
         foreach ($paths as $path) {
-            if (!is_dir($path)) {
-                continue;
-            }
-
             if (is_file($file = $path . $symbol . '.png')) {
                 return $file;
             }
-
-            if (is_file($file = $path . strtoupper($symbol) . '.png')) {
-                return $file;
-            }
-        }
-
-        foreach ($paths as $path) {
-            if (!is_dir($path)) {
-                continue;
-            }
-
-            $finder = new Finder();
-            $finder->name('*.png');
-
-            foreach ($finder->depth('== 0')->in($path) as $file) {
-                $fileName = strtolower($file->getFilename());
-
-                if ($fileName === $symbol . '.png') {
-                    return $file->getPathname();
-                };
-            }
-        }
-
-        if ($asset = $this->tokenResolver->getTokenIcon($symbol)) {
-            return $asset;
         }
 
         // prefixed "iBUSD", "beltUSD"
@@ -173,5 +126,69 @@ class IconResolver
         }
 
         return null;
+    }
+
+    public function getTokenIconForSymbolAddressReverse(string $icon): ?array
+    {
+        $cache = $this->cacheItemPool->getItem('icon-v1-addresses-' . md5($icon) . 'v' . $this->assetVersion);
+        if ($cache->isHit()) {
+            return $cache->get();
+        }
+
+        $files = [];
+
+        $empty = true;
+        foreach (explode('-', $icon) as $item) {
+            if (str_starts_with($item, '0x')) {
+                if (is_file($icon2 = ($this->projectDir . '/var/tokens/' . $this->chainGuesser->getChain() . '/address/' . strtolower($item) . '.png'))) {
+                    $item = $icon2;
+                    $empty = false;
+                } else {
+                    $item = $this->getLocalImage('unknown');
+                }
+            } else {
+                if ($icon2 = $this->getLocalImage($item)) {
+                    $item = $icon2;
+                    $empty = false;
+                } else {
+                    $item = $this->getLocalImage('unknown');
+                }
+            }
+
+            $files[] = $item;
+        }
+
+        $result = $empty ? null : $files;
+
+        $this->cacheItemPool->save($cache->set($result)->expiresAfter(60 * 60 * 5 + random_int(1, 60)));
+
+        return $result;
+    }
+
+    public function getTokenIconForSymbolAddress(array $addresses): ?string
+    {
+        $cache = $this->cacheItemPool->getItem('icon-v1-addresses-' . md5(json_encode($addresses)) . 'v' . $this->assetVersion);
+        if ($cache->isHit()) {
+            return $cache->get();
+        }
+
+        $parts = [];
+
+        $empty = true;
+        foreach ($addresses as $address) {
+            if (!is_file($icon = ($this->projectDir . '/var/tokens/' . $this->chainGuesser->getChain() . '/address/' . strtolower($address) . '.png'))) {
+                $parts[] = 'unknown';
+                continue;
+            }
+
+            $empty = false;
+            $parts[] = $address;
+        }
+
+        $result = $empty ? null : implode('-', $parts);
+
+        $this->cacheItemPool->save($cache->set($icon)->expiresAfter(60 * 60 * 5 + random_int(1, 60)));
+
+        return $result;
     }
 }

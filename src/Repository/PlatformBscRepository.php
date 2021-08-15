@@ -306,6 +306,21 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/yieldparrot.png',
                 'token' => 'lory',
             ],
+            [
+                'id' => 'honeyfarm',
+                'label' => 'HoneyFarm',
+                'url' => 'https://honeyfarm.finance?ref=MHg4OThlOTk2ODFDMjk0NzliODYzMDQyOTJiMDMwNzFDODBBNTc5NDhG',
+                'icon' => '/assets/platforms/honeyfarm.png',
+                //'token' => 'honey',
+                'token' => 'bear',
+            ],
+            [
+                'id' => 'rabbit',
+                'label' => 'Rabbit',
+                'url' => 'https://rabbitfinance.io',
+                'icon' => '/assets/platforms/rabbit.png',
+                'token' => 'rabbit',
+            ],
         ];
     }
 }

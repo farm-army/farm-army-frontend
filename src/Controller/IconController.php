@@ -9,6 +9,7 @@ use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class IconController
@@ -20,7 +21,11 @@ class IconController
      */
     public function iconPair(string $symbolA, string $symbolB, string $format, IconResolver $iconResolver, ImagineInterface $imagine, string $projectDir): Response
     {
-        if (!($fileA = $iconResolver->getLocalImage($symbolA)) || !$fileB = $iconResolver->getLocalImage($symbolB)) {
+        if (strlen($symbolA) > 42 || strlen($symbolB) > 42) {
+            throw new NotFoundHttpException('Invalid symbol');
+        }
+
+        if (!$files = $iconResolver->getTokenIconForSymbolAddressReverse($symbolA . '-' . $symbolB)) {
             return new BinaryFileResponse($iconResolver->getLocalImage('unknown'));
         }
 
@@ -28,11 +33,11 @@ class IconController
 
         $size = 64;
 
-        $img1 = $imagine->open($fileA)
+        $img1 = $imagine->open($files[0])
             ->resize(new Box($size / 1.5, $size / 1.5))
             ->crop(new Point(0, 0), new Box($size / 1.5, $size / 1.5));
 
-        $img2 = $imagine->open($fileB)
+        $img2 = $imagine->open($files[1])
             ->resize(new Box($size / 1.5, $size / 1.5))
             ->crop(new Point(0, 0), new Box($size / 1.5, $size / 1.5));
 
@@ -60,9 +65,15 @@ class IconController
      */
     public function icon(string $symbol, string $format, ImagineInterface $imagine, IconResolver $iconResolver, string $projectDir): Response
     {
-        if (!$file = $iconResolver->getLocalImage($symbol)) {
+        if (strlen($symbol) > 42) {
+            throw new NotFoundHttpException('Invalid symbol');
+        }
+
+        if (!$files = $iconResolver->getTokenIconForSymbolAddressReverse($symbol)) {
             return new BinaryFileResponse($iconResolver->getLocalImage('unknown'));
         }
+
+        $file = $files[0];
 
         $imgPath = $projectDir . "/public/token/$symbol.$format";
         $size = 64;

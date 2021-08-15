@@ -2,35 +2,20 @@
 
 namespace App\Symbol;
 
-use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Finder\Finder;
 
 class TokenResolver
 {
-    private $tokenMap = false;
     private string $projectDir;
-    private string $chain;
-    private CacheItemPoolInterface $cacheItemPool;
 
-    public function __construct(string $projectDir, CacheItemPoolInterface $cacheItemPool, string $chain)
+    public function __construct(string $projectDir)
     {
         $this->projectDir = $projectDir;
-        $this->cacheItemPool = $cacheItemPool;
-        $this->chain = $chain;
     }
 
-    public function getTokenIcon(string $symbol): ?string
+    private function getTokenMap(string $chain): array
     {
-        if ($this->tokenMap === false) {
-            $this->tokenMap = $this->getTokenIconMap();
-        }
-
-        return $this->tokenMap[strtolower($symbol)] ?? null;
-    }
-
-    private function getTokenMap(): array
-    {
-        if ($this->chain === 'bsc') {
+        if ($chain === 'bsc') {
             return [
                 '0x7b65B489fE53fCE1F6548Db886C08aD73111DDd8' => 'iron',
                 '0xd72aA9e1cDDC2F6D6e0444580002170fbA1f8eED' => 'mda',
@@ -46,15 +31,9 @@ class TokenResolver
         return [];
     }
 
-    public function getTokenIconMap(): array
+    public function getChainTokens(string $chain): array
     {
-        $cache = $this->cacheItemPool->getItem('icon-map');
-
-        if ($cache->isHit()) {
-            return $cache->get();
-        }
-
-        switch ($this->chain) {
+        switch ($chain) {
             case 'bsc':
                 $dirs = [
                     $this->projectDir . '/remotes/valuedefi-trustwallet-assets/blockchains/smartchain/assets',
@@ -71,15 +50,15 @@ class TokenResolver
                 $dirs = [];
                 break;
             default:
-                throw new \InvalidArgumentException('Invalid chain ' . $this->chain);
+                throw new \InvalidArgumentException('Invalid chain ' . $chain);
         }
 
         $finder = new Finder();
-        $finder->name('0x*');
+        $finder->depth('== 0')->name('0x*');
 
         $tokens = [];
 
-        $tokenMap = $this->getTokenMap();
+        $tokenMap = $this->getTokenMap($chain);
 
         foreach ($dirs as $dir) {
             if (!is_dir($dir)) {
@@ -122,18 +101,7 @@ class TokenResolver
             }
         }
 
-        $icons = [];
-        foreach ($tokens as $token) {
-            if (isset($token['symbol'])) {
-                $icons[$token['symbol']] = $token['icon'];
-            }
-
-            $icons[$token['address']] = $token['icon'];
-        }
-
-        $this->cacheItemPool->save($cache->set($icons)->expiresAfter(60 * 60 * 24 * 7));
-
-        return $icons;
+        return array_values($tokens);
     }
 
     public function getPancakeTokens(): array

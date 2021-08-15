@@ -4,22 +4,15 @@ namespace App\Utils;
 
 class ChainUtil
 {
-    private string $chain;
-
-    public function __construct(string $chain)
+    public function getChainExplorerUrl(string $chain): string
     {
-        $this->chain = $chain;
-    }
-
-    public function getChainExplorerUrl(): string
-    {
-        if ($this->chain === 'bsc') {
+        if ($chain === 'bsc') {
             return 'https://bscscan.com';
-        } else if($this->chain === 'polygon') {
+        } else if($chain === 'polygon') {
             return 'https://polygonscan.com';
-        } else if($this->chain === 'fantom') {
+        } else if($chain === 'fantom') {
             return 'https://ftmscan.com';
-        } else if($this->chain === 'kcc') {
+        } else if($chain === 'kcc') {
             return 'https://explorer.kcc.io/en';
         }
 

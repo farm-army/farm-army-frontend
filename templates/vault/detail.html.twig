@@ -6,24 +6,26 @@
     <h2>{{ farm.provider.label|default }} - {{ farm.name|default  }}</h2>
     {% include 'components/farms_frontpage.html.twig' with {'farm': farm} only %}
 
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm">
         <div class="card-body">
             <pre style="font-size: 0.8em">{{ json|yaml_encode(4) }}</pre>
         </div>
     </div>
 
+    <h2 class="pt-3">Token</h2>
+
+    <p>Vault want token address <a href="{{ path('token_address', {'token': farm_db.token}) }}">{{ farm_db.token }}</a>.</p>
+
+    {% if token_card.symbol|default %}
+        {% include 'vault/component/token_card.html.twig' with {
+            'item': token_card,
+        } only %}
+    {% endif %}
+
     {% if others|length > 0 %}
-        <h2>Other Vaults</h2>
+        <h2 class="pt-3">Other Pairs</h2>
 
-        <p>Vaults with this token address <a href="{{ path('token_address', {'token': farm_db.token}) }}">{{ farm_db.token }}</a>.</p>
-
-        {% if token_card.symbol|default %}
-            {% include 'vault/component/token_card.html.twig' with {
-                'item': token_card,
-            } only %}
-
-            <hr>
-        {% endif %}
+        <p>Vaults with same token address</p>
 
         {% for batch in others|batch(2) %}
             <div class="row">

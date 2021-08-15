@@ -25,8 +25,8 @@ class FarmRepository extends ServiceEntityRepository
 
         foreach ($farms as $farm) {
 
-            $sql = "INSERT INTO farm (hash, farm_id, created_at, last_found_at, updated_at, json, name, tvl, token) VALUES (:hash, :farm_id, :created_at, :last_found_at, :updated_at, :json, :name, :tvl, :token) "
-                . "ON CONFLICT(farm_id) DO UPDATE SET last_found_at = :last_found_at, json = :json, updated_at = :updated_at, name = :name, tvl = :tvl, token = :token, hash = :hash";
+            $sql = "INSERT INTO farm (hash, farm_id, created_at, last_found_at, updated_at, json, name, tvl, token, chain, compound, leverage) VALUES (:hash, :farm_id, :created_at, :last_found_at, :updated_at, :json, :name, :tvl, :token, :chain, :compound, :leverage) "
+                . "ON CONFLICT(farm_id) DO UPDATE SET last_found_at = :last_found_at, json = :json, updated_at = :updated_at, name = :name, tvl = :tvl, token = :token, hash = :hash, chain = :chain, compound = :compound, leverage = :leverage";
 
             $stmt = $this->connection->prepare($sql);
 
@@ -34,6 +34,9 @@ class FarmRepository extends ServiceEntityRepository
             $stmt->bindValue('hash', md5($farm['id']));
             $stmt->bindValue('name', $farm['name'] ?? null);
             $stmt->bindValue('tvl', $farm['tvl']['usd'] ?? null);
+            $stmt->bindValue('chain', $farm['chain'] ?? null);
+            $stmt->bindValue('compound', $farm['compound'] ?? false);
+            $stmt->bindValue('leverage', $farm['leverage'] ?? false);
             $stmt->bindValue('created_at', $currentDate);
             $stmt->bindValue('last_found_at', $currentDate);
             $stmt->bindValue('updated_at', $currentDate);
@@ -48,18 +51,15 @@ class FarmRepository extends ServiceEntityRepository
     public function getNewFarmsTimeline(): array
     {
         $qb = $this->createQueryBuilder('f', 'f.farmId');
-        $qb->select('f.farmId', 'f.createdAt');
 
         $qb->orderBy('f.createdAt', 'DESC');
         $qb->setMaxResults(300);
 
-        $result = $qb->getQuery()
+        return $qb->getQuery()
             ->useQueryCache(true)
             ->setResultCacheLifetime(60 * 10)
-            ->setResultCacheId('new-farms-v1-timeline')
+            ->setResultCacheId('new-farms-v2-timeline')
             ->getArrayResult();
-
-        return $result;
     }
 
     /**
@@ -67,19 +67,16 @@ class FarmRepository extends ServiceEntityRepository
      */
     public function getNewFarm(): array
     {
-        $qb = $this->createQueryBuilder('f', 'f.farmId');
-        $qb->select('f.farmId');
+        $qb = $this->createQueryBuilder('f');
 
         $qb->orderBy('f.createdAt', 'DESC');
         $qb->setMaxResults(20);
 
-        $result = $qb->getQuery()
+        return $qb->getQuery()
             ->useQueryCache(true)
-            ->setResultCacheLifetime(60 * 2)
-            ->setResultCacheId('new-farms-v3')
+            ->setResultCacheLifetime(60 * 5)
+            ->setResultCacheId('new-farms-v4-content')
             ->getArrayResult();
-
-        return array_keys($result);
     }
 
     public function getFarmHashes(): array
@@ -91,7 +88,7 @@ class FarmRepository extends ServiceEntityRepository
         $qb->andWhere('f.lastFoundAt >= :lastFoundAtWindow');
 
         $qb->setParameter('now', date_create()->modify('+2 hours'));
-        $qb->setParameter('lastFoundAtWindow', date_create()->modify('-3 days'));
+        $qb->setParameter('lastFoundAtWindow', $this->findLastSyncWindow());
 
         return $qb->getQuery()
             ->useQueryCache(true)
@@ -112,7 +109,7 @@ class FarmRepository extends ServiceEntityRepository
         $qb->groupBy('f.token');
 
         $qb->setParameter('now', date_create()->modify('+2 hours'));
-        $qb->setParameter('lastFoundAtWindow', date_create()->modify('-3 days'));
+        $qb->setParameter('lastFoundAtWindow', $this->findLastSyncWindow());
 
         return $qb->getQuery()
             ->useQueryCache(true)
@@ -133,7 +130,7 @@ class FarmRepository extends ServiceEntityRepository
 
         $result = $qb->getQuery()
             ->useQueryCache(true)
-            ->setResultCacheLifetime(60 * 2)
+            ->setResultCacheLifetime(60 * 5)
             ->setResultCacheId('last-sync-window')
             ->getSingleScalarResult();
 
@@ -147,12 +144,11 @@ class FarmRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return string[]
+     * @return array[]
      */
-    public function findFarmIdsByToken(string $token): array
+    public function findFarmIdsByToken(string $token, string $selfFarmId = null): array
     {
-        $qb = $this->createQueryBuilder('f', 'f.farmId');
-        $qb->select('f.farmId');
+        $qb = $this->createQueryBuilder('f');
 
         $qb->andWhere('f.token = :token');
         $qb->setParameter('token', $token);
@@ -163,13 +159,16 @@ class FarmRepository extends ServiceEntityRepository
         $qb->orderBy('f.tvl', 'DESC');
         $qb->setMaxResults(50);
 
-        $result = $qb->getQuery()
-            ->useQueryCache(true)
-            ->setResultCacheLifetime(60 * 2)
-            ->setResultCacheId('farm-by-v1-token' . md5($token))
-            ->getArrayResult();
+        if ($selfFarmId) {
+            $qb->andWhere('f.farmId != :id');
+            $qb->setParameter('id', $selfFarmId);
+        }
 
-        return array_keys($result);
+        return $qb->getQuery()
+            ->useQueryCache(true)
+            ->setResultCacheLifetime(60 * 10)
+            ->setResultCacheId('farm-by-v2-token' . md5($token))
+            ->getArrayResult();
     }
 
     public function findFarmIdByHash(string $hash): ?Farm
@@ -180,7 +179,7 @@ class FarmRepository extends ServiceEntityRepository
         $qb->setParameter('hash', $hash);
 
         $qb->andWhere('f.lastFoundAt >= :lastFoundAtWindow');
-        $qb->setParameter('lastFoundAtWindow', date_create('today')->modify('-30 day'));
+        $qb->setParameter('lastFoundAtWindow', $this->findLastSyncWindow());
 
         $qb->setMaxResults(1);
 
@@ -194,24 +193,43 @@ class FarmRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return string[]
+     * @return array[]
      */
     public function getTvl(): array
     {
-        $qb = $this->createQueryBuilder('f', 'f.farmId');
-        $qb->select('f.farmId');
+        $qb = $this->createQueryBuilder('f');
 
         $qb->andWhere('f.tvl > 0');
+
+        $qb->andWhere('f.lastFoundAt >= :lastFoundAtWindow');
+        $qb->setParameter('lastFoundAtWindow', $this->findLastSyncWindow());
 
         $qb->orderBy('f.tvl', 'DESC');
         $qb->setMaxResults(10);
 
-        $result = $qb->getQuery()
+        return $qb->getQuery()
             ->useQueryCache(true)
-            ->setResultCacheLifetime(60 * 2)
-            ->setResultCacheId('tvl-farms-v3')
+            ->setResultCacheLifetime(60 * 5)
+            ->setResultCacheId('tvl-farms-v6-content')
             ->getArrayResult();
+    }
 
-        return array_keys($result);
+    /**
+     * @return array[]
+     */
+    public function getAllValid(): array
+    {
+        $qb = $this->createQueryBuilder('f');
+
+        $qb->orderBy('f.tvl', 'DESC');
+
+        $qb->andWhere('f.lastFoundAt >= :lastFoundAtWindow');
+        $qb->setParameter('lastFoundAtWindow', $this->findLastSyncWindow());
+
+        return $qb->getQuery()
+            ->useQueryCache(true)
+            ->setResultCacheLifetime(60 * 5)
+            ->setResultCacheId('all-valid-farms-v2-content')
+            ->getArrayResult();
     }
 }

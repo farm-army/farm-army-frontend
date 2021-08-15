@@ -9,7 +9,6 @@ use App\Utils\Web3Util;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,25 +48,9 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/farms.json", methods={"GET"})
-     */
-    public function farms(FarmPools $farmPools): JsonResponse
-    {
-        $response = new JsonResponse([
-            'farms' => $farmPools->generateContent(),
-            'platforms' => $this->platformRepository->getPlatforms(),
-        ]);
-
-        $response->setPublic();
-        $response->setMaxAge(60 * 30);
-
-        return $response;
-    }
-
-    /**
      * @Route("/", name="frontpage", methods={"GET"})
      */
-    public function index(Request $request, FarmRepository $farmRepository, FarmPools $farmPools)
+    public function index(Request $request)
     {
         $platforms = $this->platformRepository->getPlatforms();
 
@@ -91,31 +74,20 @@ class DefaultController extends AbstractController
 
     private function getFrontpageFarms(): array
     {
-        $cache = $this->cacheItemPool->getItem('frontpage-farms-v3');
+        $cache = $this->cacheItemPool->getItem('frontpage-farms-v4');
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
-        $new = array_fill_keys($this->farmRepository->getNewFarm(), null);
-        $tvl = array_fill_keys($this->farmRepository->getTvl(), null);
+        $this->farmPools->triggerFetchUpdate();
 
-        $generateContent = $this->farmPools->generateContent('components/farms_frontpage.html.twig');
-
-        foreach($generateContent as $farm)  {
-            $id = $farm['id'];
-            if (array_key_exists($id, $new)) {
-                $new[$id] = $farm;
-            }
-
-            if (array_key_exists($id, $tvl)) {
-                $tvl[$id] = $farm;
-            }
-        }
+        $news = array_map(static fn(array $f) => $f['json'], $this->farmRepository->getNewFarm());
+        $tvls = array_map(static fn(array $f) => $f['json'], $this->farmRepository->getTvl());
 
         $result = [
-            'new' => array_values(array_filter($new)),
-            'tvl' => array_values(array_filter($tvl)),
+            'new' => $this->farmPools->renderFarms($news, 'components/farms_frontpage.html.twig'),
+            'tvl' => $this->farmPools->renderFarms($tvls, 'components/farms_frontpage.html.twig'),
         ];
 
         $this->cacheItemPool->save(

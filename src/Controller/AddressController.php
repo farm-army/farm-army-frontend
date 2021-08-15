@@ -7,6 +7,7 @@ use App\Pools\FarmPools;
 use App\Repository\FarmRepository;
 use App\Repository\PlatformRepository;
 use App\Symbol\IconResolver;
+use App\Utils\ChainGuesser;
 use App\Utils\ChainUtil;
 use App\Utils\RandomAddress;
 use App\Utils\Web3Util;
@@ -24,7 +25,7 @@ class AddressController extends AbstractController
     /**
      * @Route("/0x{address}", name="app_farm_index")
      */
-    public function index(string $address, PlatformRepository $platformRepository, UrlGeneratorInterface $urlGenerator, ChainUtil $chainUtil): Response
+    public function index(string $address, PlatformRepository $platformRepository, UrlGeneratorInterface $urlGenerator, ChainUtil $chainUtil, ChainGuesser $chainGuesser): Response
     {
         $addressNoPrefix = $address;
         $address = '0x' . $address;
@@ -34,7 +35,7 @@ class AddressController extends AbstractController
         }
 
         $var = [
-            'explorer' => $chainUtil->getChainExplorerUrl(),
+            'explorer' => $chainUtil->getChainExplorerUrl($chainGuesser->getChain()),
             'address' => $address,
             'address_truncate' => substr($address, 0, 8) . '...' . substr($address, -8),
             'platform_chunks' => array_map(
@@ -58,7 +59,7 @@ class AddressController extends AbstractController
     /**
      * @Route("/0x{address}/transactions", name="app_farm_transactions", methods={"GET"})
      */
-    public function transactions(string $address, NodeClient $nodeClient, ChainUtil $chainUtil): Response
+    public function transactions(string $address, NodeClient $nodeClient, ChainUtil $chainUtil, ChainGuesser $chainGuesser): Response
     {
         $address = '0x' . $address;
 
@@ -72,10 +73,10 @@ class AddressController extends AbstractController
         $response->setPublic();
         $response->setMaxAge(9);
 
-        $transactions = $nodeClient->getTransactions($address);
+        $transactions = $nodeClient->getTransactions($address, $chainGuesser->getChain());
 
         return $this->render('address/transactions.html.twig', [
-            'explorer' => $chainUtil->getChainExplorerUrl(),
+            'explorer' => $chainUtil->getChainExplorerUrl($chainGuesser->getChain()),
             'address' => $address,
             'transactions' => $transactions,
         ], $response);
@@ -221,7 +222,7 @@ class AddressController extends AbstractController
         $response->setMaxAge(9);
 
         return $this->render('address/details.html.twig', [
-            'farm' => $farmPools->generateFarm($farm->getJson()),
+            'farm' => $farmPools->enrichFarmData($farm->getJson()),
             'details' => $details,
         ], $response);
     }

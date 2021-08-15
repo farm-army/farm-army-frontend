@@ -36,15 +36,21 @@ class FarmPools
         $this->farmRepository = $farmRepository;
     }
 
-    public function generateContent(string $template = 'components/farms_mini.html.twig'): array
+    public function renderAllFarms(string $template = 'components/farms_mini.html.twig'): array
     {
-        $cache = $this->cacheItemPool->getItem('generate-farms-content-' . md5($template));
+        $this->triggerFetchUpdate();
 
-        if ($cache->isHit()) {
-            return $cache->get();
-        }
+        return $this->renderFarms(
+            array_map(static fn(array $f) => $f['json'], $this->farmRepository->getAllValid()),
+            $template
+        );
+    }
 
-        $farms = array_map(function(array $farm) use ($template): array {
+    public function renderFarms(array $farms, string $template = 'components/farms_mini.html.twig'): array
+    {
+        return array_map(function (array $farm) use ($template): array {
+            $farm = $this->enrichFarmData($farm);
+
             $arr = [
                 'id' => $farm['id'],
                 'name' => $farm['name'],
@@ -67,27 +73,38 @@ class FarmPools
             }
 
             return $arr;
-        }, $this->generateFarms());
-
-        $cache->expiresAfter(60 * 15)->set($farms);
-        $this->cacheItemPool->save($cache);
-
-        return $farms;
+        }, $farms);
     }
 
-    public function generateFarm(array $farm, array $hots = [], $new = []): array
+    public function triggerFetchUpdate(): void
     {
-        $cache = $this->cacheItemPool->getItem('generate-farm-single-' . md5(json_encode([$farm['id'], $hots, $new])));
+        $this->nodeClient->getFarms();
+    }
+
+    public function generateApiFarms(): array
+    {
+        $cache = $this->cacheItemPool->getItem('generate-api-farms-v2');
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
-        $token = $farm['name'];
+        $this->triggerFetchUpdate();
 
-        if (isset($farm['token'])) {
-            $token = $farm['token'];
+        $myFarms = [];
+        foreach ($this->farmRepository->getAllValid() as $farm) {
+            $myFarms[] = $this->enrichFarmData($farm['json']);
         }
+
+        $cache->expiresAfter(60 * 5)->set($myFarms);
+        $this->cacheItemPool->save($cache);
+
+        return $myFarms;
+    }
+
+    public function enrichFarmData(array $farm): array
+    {
+        $token = $farm['token'] ?? $farm['name'];
 
         $farm['icon'] = '?';
         if ($token) {
@@ -98,57 +115,10 @@ class FarmPools
 
         if (isset($farm['yield']['apr']) && $farm['yield']['apr'] > 0) {
             $farm['yield']['daily'] = $farm['yield']['apr'] / 365;
-        } else {
-            if (isset($farm['yield']['apy']) && $farm['yield']['apy'] > 0) {
-                $farm['yield']['daily'] = InterestUtil::apyToApr($farm['yield']['apy'] / 100);
-            }
+        } elseif (isset($farm['yield']['apy']) && $farm['yield']['apy'] > 0) {
+            $farm['yield']['daily'] = InterestUtil::apyToApr($farm['yield']['apy'] / 100);
         }
-
-        if (in_array($farm['id'], $hots, true)) {
-            $farm['hot'] = true;
-        }
-
-        if (in_array($farm['id'], $new, true)) {
-            $farm['new'] = true;
-        }
-
-        $cache->expiresAfter(60 * 1)->set($farm);
-        $this->cacheItemPool->save($cache);
 
         return $farm;
-    }
-
-    public function generateFarms(): array
-    {
-        $cache = $this->cacheItemPool->getItem('generate-farms');
-
-        if ($cache->isHit()) {
-            return $cache->get();
-        }
-
-        $farms = $this->nodeClient->getFarms();
-
-        uasort($farms, function ($a, $b) {
-            return ($b['tvl']['usd'] ?? 0) <=> ($a['tvl']['usd'] ?? 0);
-        });
-
-        $hots = array_map(function ($item) {
-            return $item['id'];
-        }, array_slice($farms, 0, 5));
-
-        $new = $this->farmRepository->getNewFarm();
-
-        $myFarms = [];
-
-        foreach ($farms as $farm) {
-            $myFarms[] = $this->generateFarm($farm, $hots, $new);
-        }
-
-        $cache->expiresAfter(60 * 5)->set($myFarms);
-        $this->cacheItemPool->save($cache);
-
-        $this->farmRepository->update($farms);
-
-        return $myFarms;
     }
 }

@@ -5,10 +5,12 @@
                 <div class="d-flex">
                     {% if item.icon|default %}
                         <div class="pe-2">
-                            <picture style="float: left">
-                                <source srcset="{{ item.icon }}" type="image/webp">
-                                <img loading="lazy" src="{{ item.icon }}" title="{{ item.symbol|default }}" alt="" width="42" height="42">
-                            </picture>
+                            <a href="{{ path('token_address', {'token': item.address}) }}" title="Token: {{ item.symbol|default }}">
+                                <picture style="float: left">
+                                    <source srcset="{{ item.icon }}" type="image/webp">
+                                    <img loading="lazy" src="{{ item.icon }}" title="{{ item.symbol|default }}" alt="" width="42" height="42">
+                                </picture>
+                            </a>
                         </div>
                     {% endif %}
                     <div class="lh-sm">

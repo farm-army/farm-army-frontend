@@ -1,5 +1,7 @@
 <div class="card shadow-sm">
-    <div class="card-body">
+    <div class="card-body position-relative">
+        {% include 'components/farm_badges.html.twig' with {'farm': farm.farm} only %}
+
         {% include 'components/card_address_farm.html.twig' with {
             'box': {
                 'id': farm.farm.id|default('???'),

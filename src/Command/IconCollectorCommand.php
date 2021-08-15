@@ -3,7 +3,10 @@
 namespace App\Command;
 
 use App\Symbol\TokenResolver;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Psr\Log\LoggerInterface;
@@ -21,13 +24,15 @@ class IconCollectorCommand extends Command
     private Filesystem $filesystem;
     private TokenResolver $tokenResolver;
     private LoggerInterface $logger;
+    private ClientInterface $client;
 
     public function __construct(
         string $projectDir,
         ImagineInterface $imagine,
         Filesystem $filesystem,
         TokenResolver $tokenResolver,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ClientInterface $client
     ) {
         parent::__construct();
         $this->projectDir = $projectDir;
@@ -35,6 +40,7 @@ class IconCollectorCommand extends Command
         $this->filesystem = $filesystem;
         $this->tokenResolver = $tokenResolver;
         $this->logger = $logger;
+        $this->client = $client;
     }
 
     protected function configure(): void
@@ -48,41 +54,117 @@ class IconCollectorCommand extends Command
         $this->resolveTokenFolders('bsc', $tokens, $this->projectDir . '/remotes/pancake-frontend/public/images/tokens');
         $this->trustwalletTokens('bsc');
 
+        $this->tokenList('bsc', 'https://tokens.pancakeswap.finance/pancakeswap-top-100.json');
+        $this->tokenList('bsc', 'https://tokens.pancakeswap.finance/pancakeswap-extended.json');
+
+        // https://unpkg.com/@sushiswap/default-token-list@14.0.1/build/sushiswap-default.tokenlist.json
+        $this->tokenList('polygon', 'https://unpkg.com/quickswap-default-token-list/build/quickswap-default.tokenlist.json');
+
         return Command::SUCCESS;
     }
 
     private function trustwalletTokens(string $chain): void
     {
-        $map = $this->tokenResolver->getTokenIconMap();
+        $map = $this->tokenResolver->getChainTokens($chain);
 
         $targetDir = $this->projectDir . '/var/tokens/' . $chain;
 
-        foreach ($map as $key => $icon) {
-            $createImage = function () use ($icon) {
-                return $this->imagine->open($icon)
+        foreach ($map as $token) {
+            if (!isset($token['icon'])) {
+                $this->logger->debug('Skip icon:' . $token['symbol'] ?? '');
+                continue;
+            }
+
+            $createImage = function () use ($token) {
+                return $this->imagine->open($token['icon'])
                     ->resize(new Box(64, 64))
                     ->crop(new Point(0, 0), new Box(64, 64));
             };
 
-            if (str_starts_with($key, '0x') && strlen($key) > 10) {
-                $targetAddressIcon = $targetDir . '/address/' . $key . '.png';
+            if (isset($token['address']) && str_starts_with($token['address'], '0x') && strlen($token['address']) > 10) {
+                $targetAddressIcon = $targetDir . '/address/' . strtolower($token['address']) . '.png';
 
                 if (!is_file($targetAddressIcon)) {
                     $createImage()->save($targetAddressIcon, ['quality' => 75]);
                 }
-            } elseif(preg_match('#^[\w-]+$#', $key)) {
-                $targetSymbolIcon = $targetDir . '/symbol/' . $key . '.png';
+            }
+
+            if (isset($token['symbol']) && preg_match('#^[\w-]+$#', $token['symbol'])) {
+                $targetSymbolIcon = $targetDir . '/symbol/' . strtolower($token['symbol']) . '.png';
                 if (!is_file($targetSymbolIcon)) {
                     $createImage()->save($targetSymbolIcon, ['quality' => 75]);
                 }
 
                 // general
-                $targetGeneralSymbolIcon = $this->projectDir . '/var/tokens/' . $key . '.png';
+                $targetGeneralSymbolIcon = $this->projectDir . '/var/tokens/' . strtolower($token['symbol']) . '.png';
                 if (!is_file($targetGeneralSymbolIcon)) {
                     $this->filesystem->copy($targetSymbolIcon, $targetGeneralSymbolIcon);
                 }
             } else {
-                $this->logger->debug('Skip icon:' . $key);
+                $this->logger->debug('Skip icon:' . $token['symbol'] ?? '');
+            }
+        }
+    }
+
+    private function tokenList(string $chain, string $url): void
+    {
+        try {
+            $decode = json_decode($this->client->request('GET', $url)->getBody()->getContents(), true);
+        } catch (\Exception $e) {
+            $this->logger->error('Error ' . $e->getMessage());
+            return;
+        }
+
+        $targetDir = $this->projectDir . '/var/tokens/' . $chain;
+        $this->filesystem->mkdir([$targetDir . '/symbol', $targetDir . '/address']);
+
+        foreach ($decode['tokens'] ?? [] as $token) {
+            if (!isset($token['logoURI'])) {
+                $this->logger->debug('Skip icon:' . $token['logoURI'] ?? '');
+                continue;
+            }
+
+            $createImage = function () use ($token): ?ImageInterface {
+                try {
+                    $response = $this->client->request('GET', $token['logoURI']);
+                } catch (GuzzleException $e) {
+                    $this->logger->debug(sprintf("icon error:%s - %s - %s", $token['symbol'] ?? '', $token['logoURI'] ?? '', $e->getMessage()));
+                    return null;
+                }
+
+                $type = $response->getHeaderLine('content-type');
+
+                if (!$type || strtolower($type) !== 'image/png') {
+                    $this->logger->warning('icon content-type invalid: ' . $type);
+                    return null;
+                }
+
+                return $this->imagine->load($response->getBody()->getContents())
+                    ->resize(new Box(64, 64))
+                    ->crop(new Point(0, 0), new Box(64, 64));
+            };
+
+            if (isset($token['address']) && str_starts_with($token['address'], '0x') && strlen($token['address']) > 10) {
+                $targetAddressIcon = $targetDir . '/address/' . strtolower($token['address']) . '.png';
+
+                if (!is_file($targetAddressIcon) && $img = $createImage()) {
+                    $img->save($targetAddressIcon, ['quality' => 75]);
+                }
+            }
+
+            if (isset($token['symbol']) && preg_match('#^[\w-]+$#', $token['symbol'])) {
+                $targetSymbolIcon = $targetDir . '/symbol/' . strtolower($token['symbol']) . '.png';
+                if (!is_file($targetSymbolIcon) && $img = $createImage()) {
+                    $img->save($targetSymbolIcon, ['quality' => 75]);
+
+                    // general
+                    $targetGeneralSymbolIcon = $this->projectDir . '/var/tokens/' . strtolower($token['symbol']) . '.png';
+                    if (!is_file($targetGeneralSymbolIcon)) {
+                        $this->filesystem->copy($targetSymbolIcon, $targetGeneralSymbolIcon);
+                    }
+                }
+            } else {
+                $this->logger->debug('Skip icon:' . $token['symbol'] ?? '');
             }
         }
     }

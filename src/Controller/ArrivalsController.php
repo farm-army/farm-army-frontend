@@ -47,16 +47,11 @@ class ArrivalsController extends AbstractController
             return $cache->get();
         }
 
-        $generateContent = $this->farmPools->generateContent('components/farms_frontpage.html.twig');
-        $content = array_column($generateContent, 'content', 'id');
+        $this->farmPools->triggerFetchUpdate();
 
         $result = [];
 
         foreach ($this->farmRepository->getNewFarmsTimeline() as $farm) {
-            if (!isset($content[$farm['farmId']])) {
-                continue;
-            }
-
             $date = $farm['createdAt']->format('Y-m-d');
             if (!isset($result[$date])) {
                 $result[$date] = [
@@ -65,7 +60,7 @@ class ArrivalsController extends AbstractController
                 ];
             }
 
-            $result[$date]['items'][] = $content[$farm['farmId']];
+            $result[$date]['items'][] = $this->farmPools->renderFarms([$farm['json']], 'components/farms_frontpage.html.twig')[0]['content'];
         }
 
         $result = array_values($result);

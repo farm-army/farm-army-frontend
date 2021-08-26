@@ -1,7 +1,7 @@
 <div class="d-flex ps-2" title="Platform Rewards (Pending Harvest)">
     <div class="lh-sm pe-1" style="font-size: 0.8em;">
         <div>{{ reward.amount|format_token }}</div>
-        <div class="text-muted">{% if reward.usd is defined and reward.usd is not null and reward.usd != "" and reward.usd > 0 %}${{ reward.usd|number_format(2) }}{% else %}n/a{% endif %}</div>
+        <div class="text-muted">{% if reward.usd is defined and reward.usd is not null and reward.usd != "" and reward.usd > 0 %}{{ reward.usd|format_currency }}{% else %}n/a{% endif %}</div>
     </div>
 
     <div>

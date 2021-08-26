@@ -54,11 +54,11 @@ class IconCollectorCommand extends Command
         $this->resolveTokenFolders('bsc', $tokens, $this->projectDir . '/remotes/pancake-frontend/public/images/tokens');
         $this->trustwalletTokens('bsc');
 
-        $this->tokenList('bsc', 'https://tokens.pancakeswap.finance/pancakeswap-top-100.json');
-        $this->tokenList('bsc', 'https://tokens.pancakeswap.finance/pancakeswap-extended.json');
+        $this->tokenList('https://tokens.pancakeswap.finance/pancakeswap-top-100.json');
+        $this->tokenList('https://tokens.pancakeswap.finance/pancakeswap-extended.json');
 
-        // https://unpkg.com/@sushiswap/default-token-list@14.0.1/build/sushiswap-default.tokenlist.json
-        $this->tokenList('polygon', 'https://unpkg.com/quickswap-default-token-list/build/quickswap-default.tokenlist.json');
+        $this->tokenList('https://unpkg.com/@sushiswap/default-token-list/build/sushiswap-default.tokenlist.json');
+        $this->tokenList('https://unpkg.com/quickswap-default-token-list/build/quickswap-default.tokenlist.json');
 
         return Command::SUCCESS;
     }
@@ -106,7 +106,7 @@ class IconCollectorCommand extends Command
         }
     }
 
-    private function tokenList(string $chain, string $url): void
+    private function tokenList(string $url): void
     {
         try {
             $decode = json_decode($this->client->request('GET', $url)->getBody()->getContents(), true);
@@ -115,10 +115,23 @@ class IconCollectorCommand extends Command
             return;
         }
 
-        $targetDir = $this->projectDir . '/var/tokens/' . $chain;
-        $this->filesystem->mkdir([$targetDir . '/symbol', $targetDir . '/address']);
+        $chains = [
+            56 => 'bsc',
+            137 => 'polygon',
+            250 => 'fantom',
+            321 => 'kcc',
+        ];
 
         foreach ($decode['tokens'] ?? [] as $token) {
+            if (!isset($token['chainId'], $chains[$token['chainId']])) {
+                continue;
+            }
+
+            $chain = $chains[$token['chainId']];
+
+            $targetDir = $this->projectDir . '/var/tokens/' . $chain;
+            $this->filesystem->mkdir([$targetDir . '/symbol', $targetDir . '/address']);
+
             if (!isset($token['logoURI'])) {
                 $this->logger->debug('Skip icon:' . $token['logoURI'] ?? '');
                 continue;

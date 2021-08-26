@@ -18,7 +18,7 @@
                             <span class="fw-bold">{{ item.symbol|default|upper }}</span>
 
                             {% if item.price|default %}
-                                <span class="text-muted font-monospace">${{ item.price|number_format(2) }}</span>
+                                <span class="text-muted font-monospace">{{ item.price|format_currency }}</span>
                             {% endif %}
                         </div>
                         <span class="text-muted" style="font-size: 0.8em;">{{ item.address }}</span>

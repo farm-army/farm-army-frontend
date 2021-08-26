@@ -27,12 +27,12 @@
     </div>
     <div class="text-center"></div>
     <div class="text-end font-monospace lh-sm">
-        <div class="fw-bold">{{ box.capital.usd is not empty ? '$' ~ box.capital.usd|number_format(2) : 'n/a' }}</div>
+        <div class="fw-bold">{{ box.capital.usd is not empty ? box.capital.usd|format_currency : 'n/a' }}</div>
         <div class="text-muted" style="font-size: 0.9em;">{{ box.capital.balance|format_token }} {{ box.capital.token|default }}</div>
 
         {% if box.yield.usd|default(0) > 0 or box.yield.balance|default(0) > 0 %}
             <div title="Yield earnings" style="font-size: 0.9em;">
-                <div>+{{ box.yield.usd is not empty ? '$' ~ box.yield.usd|number_format(2) : 'n/a' }}</div>
+                <div>+{{ box.yield.usd is not empty ? box.yield.usd|format_currency : 'n/a' }}</div>
                 <div class="text-muted">+{{ box.yield.balance|format_token }} {{ box.yield.token|default }}</div>
             </div>
         {% endif %}

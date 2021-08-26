@@ -7,7 +7,7 @@
     <div class="container">
         <div class="d-flex pt-3">
             <div class="flex"><img width="32" height="32" class="me-2" src="{{ asset('/assets/platforms/auto.png') }}"></div>
-            <div class="flex-grow-1 align-middle lh-sm">Beefy<div class="text-muted" style="font-size: 0.75em">${{ 484.23|number_format(2) }}</div></div>
+            <div class="flex-grow-1 align-middle lh-sm">Beefy<div class="text-muted" style="font-size: 0.75em">{{ 484.23|format_currency }}</div></div>
 
             <div class="text-end">
                 <div class="d-flex">
@@ -31,7 +31,7 @@
 
                     <div class="d-flex ps-2 ms-2 lh-sm">
                         <div class="lh-sm pe-1" style="font-size: 0.8em;">
-                            <div class="fw-bold">${{ 124453.23|number_format(2) }}</div>
+                            <div class="fw-bold">{{ 124453.23|format_currency }}</div>
                             <div class="text-muted">Total</div>
                         </div>
                     </div>

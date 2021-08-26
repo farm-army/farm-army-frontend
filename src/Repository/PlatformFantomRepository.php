@@ -95,6 +95,27 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/ester.png',
                 'token' => 'est',
             ],
+            [
+                'id' => 'reaper',
+                'label' => 'Reaper',
+                'url' => 'https://www.reaper.farm/',
+                'icon' => '/assets/platforms/reaper.png',
+                'token' => 'unknown',
+            ],
+            [
+                'id' => 'fcream',
+                'label' => 'Cream',
+                'url' => 'https://app.cream.finance/',
+                'icon' => '/assets/platforms/cream.png',
+                'token' => 'cream',
+            ],
+            [
+                'id' => 'scream',
+                'label' => 'Scream',
+                'url' => 'https://scream.sh/',
+                'icon' => '/assets/platforms/scream.png',
+                'token' => 'scream',
+            ],
         ];
     }
 }

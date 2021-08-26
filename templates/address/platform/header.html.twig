@@ -11,7 +11,7 @@
                 <div class="text-muted">
                     {% if platform.token_price|default %}
                         <span title="Token Price" class="text-muted"
-                              style="font-size: 0.75em">${{ platform.token_price|number_format(2) }}</span>
+                              style="font-size: 0.75em">{{ platform.token_price|format_currency }}</span>
                     {% endif %}
 
                     <span title="Your Balance" class="platform-balance">
@@ -24,7 +24,7 @@
                         {% endif %}
 
                         {% if platform.wallet.usd|default > 0 %}
-                            <span style="font-size: 0.75em">(${{ platform.wallet.usd|number_format(2) }})</span>
+                            <span style="font-size: 0.75em">({{ platform.wallet.usd|format_currency }})</span>
                         {% endif %}
                 </span>
                 </div>
@@ -50,7 +50,7 @@
             {% if platform.usd|default(0) > 0 %}
                 <div class="d-flex ps-2 ms-2 lh-sm" title="Deposits">
                     <div class="lh-sm pe-1">
-                        <div class="fw-bold">${{ platform.usd|number_format(2) }}</div>
+                        <div class="fw-bold">{{ platform.usd|format_currency }}</div>
                         <div class="text-muted" style="font-size: 0.8em;">Total</div>
                     </div>
                 </div>

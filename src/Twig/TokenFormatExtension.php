@@ -12,16 +12,30 @@ class TokenFormatExtension extends AbstractExtension
     {
         return [
             new TwigFilter('format_token', [$this, 'formatToken']),
+            new TwigFilter('format_currency', [$this, 'formatCurrency']),
         ];
     }
 
-    public function formatToken($number): string
+    public function formatCurrency($number, string $symbol = '$'): string
     {
         if (!is_numeric($number)) {
             return '';
         }
 
-        $number = abs($number);
+        if ($number < 0) {
+            return '-' . $symbol . number_format($number * -1, 2);
+        }
+
+        return $symbol . number_format((float) $number, 2);
+    }
+
+    public function formatToken($rawNumber): string
+    {
+        if (!is_numeric($rawNumber)) {
+            return '';
+        }
+
+        $number = abs($rawNumber);
 
         $decimals = 8;
 
@@ -45,6 +59,6 @@ class TokenFormatExtension extends AbstractExtension
             $decimals = 7;
         }
 
-        return number_format($number, $decimals);
+        return number_format($rawNumber, $decimals);
     }
 }

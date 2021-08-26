@@ -164,7 +164,7 @@ class AddressController extends AbstractController
      *      "_format"="json",
      * })
      */
-    public function jsonWallet(string $address, NodeClient $nodeClient, Environment $twig): Response
+    public function jsonWallet(string $address, NodeClient $nodeClient, Environment $twig, IconResolver $iconResolver): Response
     {
         $address = '0x' . $address;
 
@@ -173,9 +173,29 @@ class AddressController extends AbstractController
         }
 
         $walletRaw = $nodeClient->getWallet(strtolower($address));
-        $wallet = [...($walletRaw['tokens'] ?? []), ...($walletRaw['liquidityPools'] ?? [])];
+        $tokens = array_map(static function (array $x) use ($iconResolver) {
+            $x['icon'] = $iconResolver->getTokenIconForSymbolAddress([[
+                'address' => $x['token'],
+                'symbol' => $x['symbol'],
+            ]]);
 
-        usort($wallet, function ($a, $b) {
+            return $x;
+        }, $walletRaw['tokens'] ?? []);
+
+        $liquidityPools = array_map(static function (array $x) use ($iconResolver) {
+            $parts = array_map(
+                fn(string $part) => ['symbol' => $part],
+                explode('-', $x['symbol'])
+            );
+
+            $x['icon'] = $iconResolver->getTokenIconForSymbolAddress($parts);
+
+            return $x;
+        }, $walletRaw['liquidityPools'] ?? []);
+
+        $wallet = [...$tokens, ...$liquidityPools];
+
+        usort($wallet, static function ($a, $b) {
             return ($b['usd'] ?? 0) <=> ($a['usd'] ?? 0);
         });
 
@@ -186,8 +206,8 @@ class AddressController extends AbstractController
         ]);
 
         $response = new JsonResponse([
-            'tokens' => $walletRaw['tokens'] ?? [],
-            'liquidityPools' => $walletRaw['liquidityPools'] ?? [],
+            'tokens' => $tokens,
+            'liquidityPools' => $liquidityPools,
             'html' => $html,
         ]);
 

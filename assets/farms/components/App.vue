@@ -25,6 +25,41 @@
           </div>
         </div>
 
+        <!-- navigation -->
+        <div class="d-flex align-items-center pb-3 justify-content-end">
+          <div class="me-2">Total: {{ filteredRows.pagination.count }}</div>
+
+          <nav aria-label="Navigation" class="pagination-sm">
+            <ul class="pagination" style="margin: 0; padding: 0">
+              <li class="page-item disabled" v-if="!filteredRows.pagination.previous">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+              </li>
+
+              <li class="page-item" v-if="filteredRows.pagination.previous">
+                <a class="page-link" href="#" tabindex="-1"
+                   v-on:click="paginate(filteredRows.pagination.previous, $event)">&laquo;</a>
+              </li>
+
+              <li class="page-item">
+                <select :disabled="filteredRows.pagination.pages <= 1" class="form-select form-select-sm" aria-label="Page" @change="onPageChanges($event)">
+                  <option v-for="(pageNum) in Array(filteredRows.pagination.pages).keys()" :value="`${pageNum + 1}`"
+                          v-html="`${pageNum + 1}`" :selected="pageNum + 1 === page">
+                  </option>
+                </select>
+              </li>
+
+              <li class="page-item disabled" v-if="!filteredRows.pagination.next">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a>
+              </li>
+
+              <li class="page-item" v-if="filteredRows.pagination.next">
+                <a class="page-link" href="#" tabindex="-1"
+                   v-on:click="paginate(filteredRows.pagination.next, $event)">&raquo;</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
         <div class="card shadow-sm mb-2 pool-card">
           <div class="card-body">
             <div class="row">
@@ -67,8 +102,43 @@
           </div>
         </div>
 
-        <div v-for="(farm, index) in filteredRows" :key="`farm-${index}`" v-html="farm.content">
+        <div v-for="(farm, index) in filteredRows.items" :key="`farm-${index}`" v-html="farm.content"></div>
+
+        <!-- navigation -->
+        <div class="d-flex align-items-center pt-3 justify-content-end">
+          <div class="me-2">Total: {{ filteredRows.pagination.count }}</div>
+
+          <nav aria-label="Navigation" class="pagination-sm">
+            <ul class="pagination" style="margin: 0; padding: 0">
+              <li class="page-item disabled" v-if="!filteredRows.pagination.previous">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+              </li>
+
+              <li class="page-item" v-if="filteredRows.pagination.previous">
+                <a class="page-link" href="#" tabindex="-1"
+                   v-on:click="paginate(filteredRows.pagination.previous, $event, true)">&laquo;</a>
+              </li>
+
+              <li class="page-item">
+                <select :disabled="filteredRows.pagination.pages <= 1"  class="form-select form-select-sm" aria-label="Page" @change="onPageChanges($event, true)">
+                  <option v-for="(pageNum) in Array(filteredRows.pagination.pages).keys()" :value="`${pageNum + 1}`"
+                          v-html="`${pageNum + 1}`" :selected="pageNum + 1 === page">
+                  </option>
+                </select>
+              </li>
+
+              <li class="page-item disabled" v-if="!filteredRows.pagination.next">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a>
+              </li>
+
+              <li class="page-item" v-if="filteredRows.pagination.next">
+                <a class="page-link" href="#" tabindex="-1"
+                   v-on:click="paginate(filteredRows.pagination.next, $event, true)">&raquo;</a>
+              </li>
+            </ul>
+          </nav>
         </div>
+
       </div>
 
     </div>
@@ -88,6 +158,7 @@ export default {
       cars: [],
       platforms: [],
       providers: [],
+      page: 1,
     };
   },
 
@@ -100,13 +171,31 @@ export default {
 
       this.throttleSearchInput = setTimeout(() => {
         this.search = val;
+        this.page = 1;
       }, 500)
     },
   },
 
   methods: {
+    onPageChanges(event, scroll) {
+      this.page = parseInt(event.target.value);
+
+      if (scroll) {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+    },
+
     togglePlatform(platform, event) {
-      event.preventDefault()
+      event.preventDefault();
+      this.page = 1;
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
 
       if (!platform) {
         this.platforms = [];
@@ -120,8 +209,22 @@ export default {
       }
     },
 
+    paginate(page, event, scroll) {
+      event.preventDefault();
+
+      this.page = parseInt(page);
+
+      if (scroll) {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+    },
+
     toggleSort(field, event) {
-      event.preventDefault()
+      event.preventDefault();
+      this.page = 1;
 
       let [sort, direction] = this.sort.split('_');
 
@@ -197,7 +300,20 @@ export default {
         })
       }
 
-      return Object.freeze(rows);
+      let pages = Math.ceil(rows.length / 100);
+
+      const endItem = this.page * 100
+      let items = Object.freeze(rows.slice(endItem - 100, endItem));
+
+      return {
+        items: items,
+        pagination : {
+          count: rows.length,
+          pages: pages,
+          previous: this.page > 1 ? this.page -1 : undefined,
+          next: this.page < pages ? this.page + 1 : undefined,
+        }
+      };
     }
   },
 

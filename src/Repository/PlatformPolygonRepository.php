@@ -200,6 +200,20 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/pearzap.png',
                 'token' => 'pear',
             ],
+            [
+                'id' => 'pcream',
+                'label' => 'Cream',
+                'url' => 'https://app.cream.finance/',
+                'icon' => '/assets/platforms/cream.png',
+                'token' => 'cream',
+            ],
+            [
+                'id' => 'pfortube',
+                'label' => 'ForTube',
+                'url' => 'https://for.tube/market/index',
+                'icon' => '/assets/platforms/fortube.png',
+                'token' => 'for',
+            ],
         ];
     }
 }

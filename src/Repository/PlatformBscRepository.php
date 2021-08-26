@@ -313,6 +313,11 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/honeyfarm.png',
                 //'token' => 'honey',
                 'token' => 'bear',
+                'tokens' => [
+                    'address' => '0xc3EAE9b061Aa0e1B9BD3436080Dc57D2d63FEdc1',
+                    'symbol' => 'bear',
+                    'decimals'> 18,
+                ]
             ],
             [
                 'id' => 'rabbit',
@@ -320,6 +325,41 @@ class PlatformBscRepository
                 'url' => 'https://rabbitfinance.io',
                 'icon' => '/assets/platforms/rabbit.png',
                 'token' => 'rabbit',
+            ],
+            [
+                'id' => 'qubit',
+                'label' => 'Qubit',
+                'url' => 'https://qbt.fi/app',
+                'icon' => '/assets/platforms/qubit.png',
+                'token' => 'qbt',
+            ],
+            [
+                'id' => 'cream',
+                'label' => 'Cream',
+                'url' => 'https://app.cream.finance/',
+                'icon' => '/assets/platforms/cream.png',
+                'token' => 'cream',
+            ],
+            [
+                'id' => 'venus',
+                'label' => 'Venus',
+                'url' => 'https://app.venus.io/',
+                'icon' => '/assets/platforms/venus.png',
+                'token' => 'xvs',
+            ],
+            [
+                'id' => 'fortress',
+                'label' => 'Fortress',
+                'url' => 'https://bsc.fortress.loans/market',
+                'icon' => '/assets/platforms/fortress.png',
+                'token' => 'fts',
+            ],
+            [
+                'id' => 'fortube',
+                'label' => 'ForTube',
+                'url' => 'https://for.tube/market/index',
+                'icon' => '/assets/platforms/fortube.png',
+                'token' => 'for',
             ],
         ];
     }

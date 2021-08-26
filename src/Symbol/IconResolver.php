@@ -165,9 +165,9 @@ class IconResolver
         return $result;
     }
 
-    public function getTokenIconForSymbolAddress(array $addresses): ?string
+    public function getTokenIconForSymbolAddress(array $tokens): string
     {
-        $cache = $this->cacheItemPool->getItem('icon-v1-addresses-' . md5(json_encode($addresses)) . 'v' . $this->assetVersion);
+        $cache = $this->cacheItemPool->getItem('icon-v6-addresses-' . md5(json_encode($tokens)) . 'v' . $this->assetVersion);
         if ($cache->isHit()) {
             return $cache->get();
         }
@@ -175,20 +175,48 @@ class IconResolver
         $parts = [];
 
         $empty = true;
-        foreach ($addresses as $address) {
-            if (!is_file($icon = ($this->projectDir . '/var/tokens/' . $this->chainGuesser->getChain() . '/address/' . strtolower($address) . '.png'))) {
+        foreach ($tokens as $token) {
+            if (isset($token['address']) && is_file($this->projectDir . '/var/tokens/' . $this->chainGuesser->getChain() . '/address/' . strtolower($token['address']) . '.png')) {
+                $empty = false;
+                $parts[] = $token['address'];
+            } else if(isset($token['symbol']) && is_file($this->projectDir . '/var/tokens/' . $this->chainGuesser->getChain() . '/symbol/' . strtolower($token['symbol']) . '.png')) {
+                $empty = false;
+                $parts[] = strtolower($token['symbol']);
+            } elseif (isset($token['symbol']) && is_file($this->projectDir . '/var/icons/' . strtolower($token['symbol']) . '.png')) {
+                $empty = false;
+                $parts[] = strtolower($token['symbol']);
+            } elseif (isset($token['symbol']) && is_file($this->projectDir . '/var/tokens/' . strtolower($token['symbol']) . '.png')) {
+                $empty = false;
+                $parts[] = strtolower($token['symbol']);
+            } else {
                 $parts[] = 'unknown';
-                continue;
             }
-
-            $empty = false;
-            $parts[] = $address;
         }
 
-        $result = $empty ? null : implode('-', $parts);
+        $icon = null;
+        if ($empty) {
+            $icon = $this->urlGenerator->generate('token_icon', [
+                'symbol' => 'unknown',
+                'format' => 'png',
+                'v' => $this->assetVersion
+            ]);
+        } elseif (count($parts) === 1) {
+            $icon = $this->urlGenerator->generate('token_icon', [
+                'symbol' => $parts[0],
+                'format' => 'png',
+                'v' => $this->assetVersion
+            ]);
+        } else if(count($parts) > 1) {
+            $icon = $this->urlGenerator->generate('token_icon_pair', [
+                'symbolA' => $parts[0],
+                'symbolB' => $parts[1],
+                'format' => 'png',
+                'v' => $this->assetVersion
+            ]);
+        }
 
         $this->cacheItemPool->save($cache->set($icon)->expiresAfter(60 * 60 * 5 + random_int(1, 60)));
 
-        return $result;
+        return $icon;
     }
 }

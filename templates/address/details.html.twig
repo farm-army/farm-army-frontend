@@ -17,7 +17,7 @@
                 <div class="flex-grow-1 align-self-end align-self-stretch text-end">
                     <div>
                             <span class="font-monospace">
-                            {{ details.farm.deposit.amount|format_token }} {% if details.farm.deposit.usd|default %}<span class="fw-bold">${{ details.farm.deposit.usd|number_format(2) }}</span>{% endif %}
+                            {{ details.farm.deposit.amount|format_token }} {% if details.farm.deposit.usd|default %}<span class="fw-bold">{{ details.farm.deposit.usd|format_currency }}</span>{% endif %}
                         </span>
                     </div>
 

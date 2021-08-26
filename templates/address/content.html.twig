@@ -9,9 +9,9 @@
                 <div class="d-flex ps-2">
                     <div class="lh-sm pe-1">
                         {% if loop.last %}
-                            <div class="fw-bold">${{ item|number_format(2) }}</div>
+                            <div class="fw-bold">{{ item|format_currency }}</div>
                         {% else %}
-                            ${{ item|number_format(2) }}
+                            {{ item|format_currency }}
                         {% endif %}
                         <div class="text-muted" style="font-size: 0.8em;">{{ key|capitalize }}</div>
                     </div>

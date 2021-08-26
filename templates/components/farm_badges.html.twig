@@ -1,10 +1,16 @@
-{% if farm.compound|default or farm.leverage|default %}
+{% if farm.compound|default or farm.leverage|default or 'lend' in farm.flags|default([]) or 'borrow' in farm.flags|default([]) %}
     <div class="position-absolute top-0 end-0">
         {% if farm.leverage|default %}
             <span class="badge bg-danger" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">leverage</span>
         {% endif %}
         {% if farm.compound|default %}
             <span class="badge bg-primary" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">auto-compound</span>
+        {% endif %}
+        {% if 'lend' in farm.flags|default([]) %}
+            <span class="badge bg-primary" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">lend</span>
+        {% endif %}
+        {% if 'borrow' in farm.flags|default([]) %}
+            <span class="badge bg-danger" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">borrow</span>
         {% endif %}
     </div>
 {% endif %}

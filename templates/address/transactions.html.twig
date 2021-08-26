@@ -51,7 +51,7 @@
                             {{ transaction.amount|abs|format_token }}
                             {% if transaction.usd|default %}
                                 <br>
-                                <span class="text-muted">${{ transaction.usd|abs|number_format(2) }}</span>
+                                <span class="text-muted">{{ transaction.usd|abs|format_currency }}</span>
                             {% endif %}
                         </div>
 

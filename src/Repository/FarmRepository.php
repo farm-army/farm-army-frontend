@@ -205,11 +205,11 @@ class FarmRepository extends ServiceEntityRepository
         $qb->setParameter('lastFoundAtWindow', $this->findLastSyncWindow());
 
         $qb->orderBy('f.tvl', 'DESC');
-        $qb->setMaxResults(10);
+        $qb->setMaxResults(16);
 
         return $qb->getQuery()
             ->useQueryCache(true)
-            ->setResultCacheLifetime(60 * 5)
+            ->setResultCacheLifetime(60 * 30)
             ->setResultCacheId('tvl-farms-v6-content')
             ->getArrayResult();
     }

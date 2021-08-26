@@ -17,8 +17,8 @@
                                 <div class="d-flex">
                                     <div class="pe-2">
                                         <picture>
-                                            <source srcset="/token/{{ token.symbol|default('unknown') }}.webp" type="image/webp">
-                                            <img loading="lazy" alt="" src="/token/{{ token.symbol|default('unknown') }}.png" title="{{ token.symbol|default('unknown') }}" width="42" height="42">
+                                            <source srcset="{{ token.icon|replace({'.png': '.webp'}) }}" type="image/webp">
+                                            <img loading="lazy" alt="" src="{{ token.icon }}" title="{{ token.symbol|default('unknown') }}" width="42" height="42">
                                         </picture>
                                     </div>
 
@@ -28,7 +28,7 @@
                                     </div>
 
                                     <div class="text-end font-monospace lh-sm">
-                                        <div class="fw-bold">{% if token.usd|default %}${{ token.usd|number_format(2) }}{% else %}n/a{% endif %}</div>
+                                        <div class="fw-bold">{% if token.usd|default %}{{ token.usd|format_currency }}{% else %}n/a{% endif %}</div>
                                         <div class="text-muted" style="font-size: 0.9em;">{{ token.amount|format_token }}</div>
                                     </div>
                                 </div>

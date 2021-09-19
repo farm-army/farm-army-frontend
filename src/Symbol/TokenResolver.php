@@ -48,6 +48,8 @@ class TokenResolver
                 break;
             case 'kcc':
                 $dirs = [];
+            case 'harmony':
+                $dirs = [];
                 break;
             default:
                 throw new \InvalidArgumentException('Invalid chain ' . $chain);

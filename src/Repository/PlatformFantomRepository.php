@@ -116,6 +116,27 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/scream.png',
                 'token' => 'scream',
             ],
+            [
+                'id' => 'tarot',
+                'label' => 'Tarot',
+                'url' => 'https://www.tarot.to/',
+                'icon' => '/assets/platforms/tarot.png',
+                'token' => 'tarot',
+            ],
+            [
+                'id' => 'fwaka',
+                'label' => 'Waka',
+                'url' => 'https://waka.finance/',
+                'icon' => '/assets/platforms/waka.png',
+                'token' => 'waka',
+            ],
+            [
+                'id' => 'fhyperjump',
+                'label' => 'HyperJump',
+                'url' => 'https://ftm.hyperjump.app/farms',
+                'icon' => '/assets/platforms/hyperjump.png',
+                'token' => 'ori',
+            ],
         ];
     }
 }

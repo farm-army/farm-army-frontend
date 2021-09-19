@@ -55,6 +55,25 @@ class IconResolver
             }
         }
 
+        if (preg_match('#^(\w+)-(\w+)$#i', $symbol, $match) || preg_match('#(\w+)-(\w+)\s+#i', $symbol, $match)) {
+            if ($pair = $this->getLocalPair($match[1], $match[2])) {
+                return $pair;
+            }
+        }
+
+        if (preg_match('#^(\w+)-(\w+)-(\w+)$#i', $symbol, $match) || preg_match('#(\w+)-(\w+)-(\w+)\s+#i', $symbol, $match)) {
+            if ($pair = $this->getPair3($match[1], $match[2], $match[3])) {
+                return $pair;
+            }
+        }
+
+        if (preg_match('#^(\w+)-(\w+)-(\w+)-(\w+)$#i', $symbol, $match) || preg_match('#(\w+)-(\w+)-(\w+)-(\w+)\s+#i', $symbol,
+                $match)) {
+            if ($pair = $this->getPair4($match[1], $match[2], $match[3], $match[4])) {
+                return $pair;
+            }
+        }
+
         return $this->urlGenerator->generate('token_icon', [
             'symbol' => 'unknown',
             'format' => 'png',
@@ -82,6 +101,55 @@ class IconResolver
         ]);
     }
 
+    public function getPair3(string $symbolA, string $symbolB, string $symbolC): ?string
+    {
+        $symbolA = strtolower($symbolA);
+        $symbolB = strtolower($symbolB);
+        $symbolC = strtolower($symbolC);
+
+        $iconA = $this->getLocalImage($symbolA);
+        $iconB = $this->getLocalImage($symbolB);
+        $iconC = $this->getLocalImage($symbolC);
+
+        if (!$iconA & !$iconB & !$iconC) {
+            return null;
+        }
+
+        return $this->urlGenerator->generate('token_icon_abc', [
+            'symbolA' => file_exists($iconA) ? $symbolA : 'unknown',
+            'symbolB' => file_exists($iconB) ? $symbolB : 'unknown',
+            'symbolC' => file_exists($iconC) ? $symbolC : 'unknown',
+            'format' => 'png',
+            'v' => $this->assetVersion
+        ]);
+    }
+
+    public function getPair4(string $symbolA, string $symbolB, string $symbolC, string $symbolD): ?string
+    {
+        $symbolA = strtolower($symbolA);
+        $symbolB = strtolower($symbolB);
+        $symbolC = strtolower($symbolC);
+        $symbolD = strtolower($symbolD);
+
+        $iconA = $this->getLocalImage($symbolA);
+        $iconB = $this->getLocalImage($symbolB);
+        $iconC = $this->getLocalImage($symbolC);
+        $iconD = $this->getLocalImage($symbolD);
+
+        if (!$iconA & !$iconB & !$iconC & !$iconD) {
+            return null;
+        }
+
+        return $this->urlGenerator->generate('token_icon_abcd', [
+            'symbolA' => file_exists($iconA) ? $symbolA : 'unknown',
+            'symbolB' => file_exists($iconB) ? $symbolB : 'unknown',
+            'symbolC' => file_exists($iconC) ? $symbolC : 'unknown',
+            'symbolD' => file_exists($iconD) ? $symbolD : 'unknown',
+            'format' => 'png',
+            'v' => $this->assetVersion
+        ]);
+    }
+
     public function getLocalImage(string $symbol): ?string
     {
         if ($symbol === 'weth') {
@@ -94,6 +162,8 @@ class IconResolver
             $symbol = 'ftm';
         } elseif ($symbol === 'wbnb') {
             $symbol = 'bnb';
+        } elseif ($symbol === 'wone') {
+            $symbol = 'one';
         }
 
         $filename = strtolower($symbol) . '.png';
@@ -116,7 +186,7 @@ class IconResolver
         }
 
         // prefixed "iBUSD", "beltUSD"
-        foreach (['belt', 'i', 'ib'] as $prefix) {
+        foreach (['belt', 'i', 'ib', '1', 'bsc'] as $prefix) {
             if (str_starts_with(strtolower($symbol), $prefix)) {
                 $symbol2 = substr($symbol, strlen($prefix));
                 if (strlen($symbol2) >= 3 && $icon = $this->getLocalImage($symbol2)) {

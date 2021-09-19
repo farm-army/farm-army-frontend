@@ -1,6 +1,6 @@
 # farm.army - Frontend
 
-Track your farming and pool performance on the Binance Smart Chain, Polygon, Fantom, KuCoin Community Chain
+Track your farming and pool performance on the Binance Chain, Polygon, Fantom, KuCoin Community Chain, Harmony
 
 ## Tech Stack
 

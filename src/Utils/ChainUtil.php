@@ -14,6 +14,8 @@ class ChainUtil
             return 'https://ftmscan.com';
         } else if($chain === 'kcc') {
             return 'https://explorer.kcc.io/en';
+        } else if($chain === 'harmony') {
+            return 'https://explorer.harmony.one';
         }
 
         return 'https://bscscan.com';

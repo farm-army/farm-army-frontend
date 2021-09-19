@@ -11,18 +11,21 @@ class PlatformRepository implements PlatformRepositoryInterface
     private PlatformFantomRepository $platformFantomRepository;
     private PlatformKccRepository $platformKccRepository;
     private ChainGuesser $chainGuesser;
+    private PlatformHarmonyRepository $platformHarmonyRepository;
 
     public function __construct(
         PlatformBscRepository $bscRepository,
         PlatformPolygonRepository $platformPolygonRepository,
         PlatformFantomRepository $platformFantomRepository,
         PlatformKccRepository $platformKccRepository,
+        PlatformHarmonyRepository $platformHarmonyRepository,
         ChainGuesser $chainGuesser
     ) {
         $this->bscRepository = $bscRepository;
         $this->platformPolygonRepository = $platformPolygonRepository;
         $this->platformFantomRepository = $platformFantomRepository;
         $this->platformKccRepository = $platformKccRepository;
+        $this->platformHarmonyRepository = $platformHarmonyRepository;
         $this->chainGuesser = $chainGuesser;
     }
 
@@ -37,6 +40,8 @@ class PlatformRepository implements PlatformRepositoryInterface
                 return $this->platformFantomRepository->getPlatform($id);
             case 'kcc':
                 return $this->platformKccRepository->getPlatform($id);
+            case 'harmony':
+                return $this->platformHarmonyRepository->getPlatform($id);
             default:
                 throw new \InvalidArgumentException('Invalid platform');
         }
@@ -53,6 +58,8 @@ class PlatformRepository implements PlatformRepositoryInterface
                 return $this->platformFantomRepository->getPlatformChunks();
             case 'kcc':
                 return $this->platformKccRepository->getPlatformChunks();
+            case 'harmony':
+                return $this->platformHarmonyRepository->getPlatformChunks();
             default:
                 throw new \InvalidArgumentException('Invalid platform');
         }
@@ -69,6 +76,8 @@ class PlatformRepository implements PlatformRepositoryInterface
                 return $this->platformFantomRepository->getPlatforms();
             case 'kcc':
                 return $this->platformKccRepository->getPlatforms();
+            case 'harmony':
+                return $this->platformHarmonyRepository->getPlatforms();
             default:
                 throw new \InvalidArgumentException('Invalid platform');
         }

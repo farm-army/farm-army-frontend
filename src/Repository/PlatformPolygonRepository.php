@@ -214,6 +214,20 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/fortube.png',
                 'token' => 'for',
             ],
+            [
+                'id' => 'balancer',
+                'label' => 'Balancer',
+                'url' => 'https://polygon.balancer.fi/',
+                'icon' => '/assets/platforms/balancer.png',
+                'token' => 'bal',
+            ],
+            [
+                'id' => 'impermax',
+                'label' => 'Impermax',
+                'url' => 'https://polygon.impermax.finance/',
+                'icon' => '/assets/platforms/impermax.png',
+                'token' => 'imx',
+            ],
         ];
     }
 }

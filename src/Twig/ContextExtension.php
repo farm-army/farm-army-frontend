@@ -36,6 +36,10 @@ class ContextExtension extends AbstractExtension implements GlobalsInterface
                 $title = 'KuCoin Community Chain';
                 $explorer = 'https://explorer.kcc.io/en';
                 break;
+            case 'harmony':
+                $title = 'Harmony';
+                $explorer = 'https://explorer.harmony.one';
+                break;
             default:
                 throw new \InvalidArgumentException('Invalid chain:' . $chain);
         }

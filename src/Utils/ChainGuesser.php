@@ -31,6 +31,8 @@ class ChainGuesser
             return 'fantom';
         } else if ($host === 'kcc.farm.army') {
             return 'kcc';
+        } else if ($host === 'harmony.farm.army') {
+            return 'harmony';
         }
 
         return $this->chain;

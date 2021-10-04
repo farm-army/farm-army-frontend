@@ -361,6 +361,13 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/fortube.png',
                 'token' => 'for',
             ],
+            [
+                'id' => 'planet',
+                'label' => 'PlanetFinance',
+                'url' => 'https://planetfinance.io',
+                'icon' => '/assets/platforms/planet.png',
+                'token' => 'aqua',
+            ],
         ];
     }
 }

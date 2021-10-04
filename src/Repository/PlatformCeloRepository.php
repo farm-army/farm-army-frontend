@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-class PlatformHarmonyRepository implements PlatformRepositoryInterface
+class PlatformCeloRepository implements PlatformRepositoryInterface
 {
     public function getPlatform(string $id): array
     {
@@ -47,25 +47,11 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
     {
         return [
             [
-                'id' => 'hbeefy',
-                'label' => 'Beefy',
-                'url' => 'https://harmony.beefy.finance/',
-                'icon' => '/assets/platforms/beefy.png',
-                'token' => 'bifi',
-            ],
-            [
-                'id' => 'hsushi',
-                'label' => 'Sushi',
-                'url' => 'https://app.sushi.com/',
-                'icon' => '/assets/platforms/sushi.png',
-                'token' => '1sushi',
-            ],
-            [
-                'id' => 'openswap',
-                'label' => 'OpenSwap',
-                'url' => 'https://app.openswap.one/',
-                'icon' => '/assets/platforms/openswap.png',
-                'token' => 'oswap',
+                'id' => 'ubeswap',
+                'label' => 'Ubeswap',
+                'url' => 'https://app.ubeswap.org/',
+                'icon' => '/assets/platforms/ubeswap.png',
+                'token' => 'ube',
             ],
         ];
     }

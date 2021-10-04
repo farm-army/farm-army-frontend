@@ -55,8 +55,10 @@ class TokenFormatExtension extends AbstractExtension
             $decimals = 6;
         } elseif ($number > 0.01) {
             $decimals = 7;
-        } elseif ($number > 0.01) {
-            $decimals = 7;
+        } elseif ($number > 0.001) {
+            $decimals = 8;
+        } elseif ($number > 0.0001) {
+            $decimals = 9;
         }
 
         return number_format($rawNumber, $decimals);

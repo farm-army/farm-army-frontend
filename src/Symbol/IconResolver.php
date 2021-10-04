@@ -74,6 +74,12 @@ class IconResolver
             }
         }
 
+        if (preg_match('#^(\w+)-(\w+)-(\w+)-(\w+)-(\w+)$#i', $symbol, $match) || preg_match('#(\w+)-(\w+)-(\w+)-(\w+)-(\w+)\s+#i', $symbol, $match)) {
+            if ($pair = $this->getPair5($match[1], $match[2], $match[3], $match[4], $match[5])) {
+                return $pair;
+            }
+        }
+
         return $this->urlGenerator->generate('token_icon', [
             'symbol' => 'unknown',
             'format' => 'png',
@@ -150,21 +156,38 @@ class IconResolver
         ]);
     }
 
+    public function getPair5(string $symbolA, string $symbolB, string $symbolC, string $symbolD, string $symbolE): ?string
+    {
+        $symbolA = strtolower($symbolA);
+        $symbolB = strtolower($symbolB);
+        $symbolC = strtolower($symbolC);
+        $symbolD = strtolower($symbolD);
+        $symbolE = strtolower($symbolE);
+
+        $iconA = $this->getLocalImage($symbolA);
+        $iconB = $this->getLocalImage($symbolB);
+        $iconC = $this->getLocalImage($symbolC);
+        $iconD = $this->getLocalImage($symbolD);
+        $iconE = $this->getLocalImage($symbolE);
+
+        if (!$iconA && !$iconB && !$iconC && !$iconD && !$iconE) {
+            return null;
+        }
+
+        return $this->urlGenerator->generate('token_icon_abcde', [
+            'symbolA' => file_exists($iconA) ? $symbolA : 'unknown',
+            'symbolB' => file_exists($iconB) ? $symbolB : 'unknown',
+            'symbolC' => file_exists($iconC) ? $symbolC : 'unknown',
+            'symbolD' => file_exists($iconD) ? $symbolD : 'unknown',
+            'symbolE' => file_exists($iconE) ? $symbolE : 'unknown',
+            'format' => 'png',
+            'v' => $this->assetVersion
+        ]);
+    }
+
     public function getLocalImage(string $symbol): ?string
     {
-        if ($symbol === 'weth') {
-            $symbol = 'eth';
-        } else if ($symbol === 'wbtc' || $symbol === 'btcb') {
-            $symbol = 'btc';
-        } elseif ($symbol === 'wmatic') {
-            $symbol = 'matic';
-        } elseif ($symbol === 'wftm') {
-            $symbol = 'ftm';
-        } elseif ($symbol === 'wbnb') {
-            $symbol = 'bnb';
-        } elseif ($symbol === 'wone') {
-            $symbol = 'one';
-        }
+        $symbol = $this->getSymbolNormalized($symbol);
 
         $filename = strtolower($symbol) . '.png';
 
@@ -186,7 +209,7 @@ class IconResolver
         }
 
         // prefixed "iBUSD", "beltUSD"
-        foreach (['belt', 'i', 'ib', '1', 'bsc'] as $prefix) {
+        foreach (['belt', 'i', 'ib', '1', 'bsc', 'ele'] as $prefix) {
             if (str_starts_with(strtolower($symbol), $prefix)) {
                 $symbol2 = substr($symbol, strlen($prefix));
                 if (strlen($symbol2) >= 3 && $icon = $this->getLocalImage($symbol2)) {
@@ -237,7 +260,7 @@ class IconResolver
 
     public function getTokenIconForSymbolAddress(array $tokens): string
     {
-        $cache = $this->cacheItemPool->getItem('icon-v6-addresses-' . md5(json_encode($tokens)) . 'v' . $this->assetVersion);
+        $cache = $this->cacheItemPool->getItem('icon-v10-addresses-' . md5(json_encode($tokens)) . 'v' . $this->assetVersion);
         if ($cache->isHit()) {
             return $cache->get();
         }
@@ -249,15 +272,9 @@ class IconResolver
             if (isset($token['address']) && is_file($this->projectDir . '/var/tokens/' . $this->chainGuesser->getChain() . '/address/' . strtolower($token['address']) . '.png')) {
                 $empty = false;
                 $parts[] = $token['address'];
-            } else if(isset($token['symbol']) && is_file($this->projectDir . '/var/tokens/' . $this->chainGuesser->getChain() . '/symbol/' . strtolower($token['symbol']) . '.png')) {
+            } elseif (isset($token['symbol']) && $image = $this->getLocalImage(strtolower($token['symbol']))) {
                 $empty = false;
-                $parts[] = strtolower($token['symbol']);
-            } elseif (isset($token['symbol']) && is_file($this->projectDir . '/var/icons/' . strtolower($token['symbol']) . '.png')) {
-                $empty = false;
-                $parts[] = strtolower($token['symbol']);
-            } elseif (isset($token['symbol']) && is_file($this->projectDir . '/var/tokens/' . strtolower($token['symbol']) . '.png')) {
-                $empty = false;
-                $parts[] = strtolower($token['symbol']);
+                $parts[] = pathinfo($image, PATHINFO_FILENAME);;
             } else {
                 $parts[] = 'unknown';
             }
@@ -288,5 +305,24 @@ class IconResolver
         $this->cacheItemPool->save($cache->set($icon)->expiresAfter(60 * 60 * 5 + random_int(1, 60)));
 
         return $icon;
+    }
+
+    private function getSymbolNormalized(string $symbol): string
+    {
+        if ($symbol === 'weth') {
+            $symbol = 'eth';
+        } else if ($symbol === 'wbtc' || $symbol === 'btcb') {
+            $symbol = 'btc';
+        } elseif ($symbol === 'wmatic') {
+            $symbol = 'matic';
+        } elseif ($symbol === 'wftm') {
+            $symbol = 'ftm';
+        } elseif ($symbol === 'wbnb') {
+            $symbol = 'bnb';
+        } elseif ($symbol === 'wone') {
+            $symbol = 'one';
+        }
+
+        return $symbol;
     }
 }

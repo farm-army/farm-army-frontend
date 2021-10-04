@@ -60,6 +60,9 @@ class IconCollectorCommand extends Command
         $this->tokenList('https://unpkg.com/@sushiswap/default-token-list/build/sushiswap-default.tokenlist.json');
         $this->tokenList('https://unpkg.com/quickswap-default-token-list/build/quickswap-default.tokenlist.json');
 
+        $this->tokenList('https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap.token-list.json');
+        $this->tokenList('https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap-experimental.token-list.json');
+
         return Command::SUCCESS;
     }
 
@@ -120,6 +123,7 @@ class IconCollectorCommand extends Command
             137 => 'polygon',
             250 => 'fantom',
             321 => 'kcc',
+            44787 => 'celo',
         ];
 
         foreach ($decode['tokens'] ?? [] as $token) {

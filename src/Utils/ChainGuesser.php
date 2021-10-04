@@ -33,6 +33,8 @@ class ChainGuesser
             return 'kcc';
         } else if ($host === 'harmony.farm.army') {
             return 'harmony';
+        } elseif ($host === 'celo.farm.army') {
+            return 'celo';
         }
 
         return $this->chain;

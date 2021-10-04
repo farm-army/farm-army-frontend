@@ -16,6 +16,8 @@ class ChainUtil
             return 'https://explorer.kcc.io/en';
         } else if($chain === 'harmony') {
             return 'https://explorer.harmony.one';
+        } elseif ($chain === 'celo') {
+            return 'https://explorer.celo.org';
         }
 
         return 'https://bscscan.com';

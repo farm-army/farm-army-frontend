@@ -51,6 +51,9 @@ class TokenResolver
             case 'harmony':
                 $dirs = [];
                 break;
+            case 'celo':
+                $dirs = [];
+                break;
             default:
                 throw new \InvalidArgumentException('Invalid chain ' . $chain);
         }

@@ -137,6 +137,34 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/hyperjump.png',
                 'token' => 'ori',
             ],
+            [
+                'id' => 'fautofarm',
+                'label' => 'Autofarm',
+                'url' => 'https://autofarm.network/fantom/',
+                'icon' => '/assets/platforms/auto.png',
+                'token' => 'fauto',
+            ],
+            [
+                'id' => 'feleven',
+                'label' => 'eleven',
+                'url' => 'https://eleven.finance',
+                'icon' => '/assets/platforms/eleven.png',
+                'token' => 'ele',
+            ],
+            [
+                'id' => 'fjetswap',
+                'label' => 'JetSwap',
+                'url' => 'https://fantom.jetswap.finance/',
+                'icon' => '/assets/platforms/jetswap.png',
+                'token' => 'fwings',
+            ],
+            [
+                'id' => 'paintswap',
+                'label' => 'PaintSwap',
+                'url' => 'https://paintswap.finance/',
+                'icon' => '/assets/platforms/paintswap.png',
+                'token' => 'brush',
+            ]
         ];
     }
 }

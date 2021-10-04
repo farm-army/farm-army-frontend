@@ -40,6 +40,10 @@ class ContextExtension extends AbstractExtension implements GlobalsInterface
                 $title = 'Harmony';
                 $explorer = 'https://explorer.harmony.one';
                 break;
+            case 'celo':
+                $title = 'Celo';
+                $explorer = 'https://explorer.celo.org';
+                break;
             default:
                 throw new \InvalidArgumentException('Invalid chain:' . $chain);
         }

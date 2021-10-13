@@ -67,6 +67,20 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/openswap.png',
                 'token' => 'oswap',
             ],
+            [
+                'id' => 'viper',
+                'label' => 'Viper',
+                'url' => 'https://viperswap.one/',
+                'icon' => '/assets/platforms/viper.png',
+                'token' => 'viper',
+            ],
+            [
+                'id' => 'hcurve',
+                'label' => 'Curve',
+                'url' => 'https://harmony.curve.fi/',
+                'icon' => '/assets/platforms/curve.png',
+                'token' => 'curve',
+            ],
         ];
     }
 }

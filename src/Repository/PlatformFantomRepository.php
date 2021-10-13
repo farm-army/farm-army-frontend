@@ -164,7 +164,27 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://paintswap.finance/',
                 'icon' => '/assets/platforms/paintswap.png',
                 'token' => 'brush',
-            ]
+            ],
+            [
+                'id' => 'fswamp',
+                'label' => 'Swamp',
+                'url' => 'https://swamp.finance/fantom/',
+                'icon' => '/assets/platforms/swamp.png',
+                'token' => 'fswamp',
+            ],
+            [
+                'id' => 'beethovenx',
+                'label' => 'Beethovenx',
+                'url' => 'https://app.beethovenx.io/#/',
+                'icon' => '/assets/platforms/beethovenx.png',
+                'token' => 'beets',
+            ],
+            [
+                'id' => 'robovault',
+                'label' => 'RoboVault',
+                'url' => 'https://www.robo-vault.com/',
+                'icon' => '/assets/platforms/robovault.png',
+            ],
         ];
     }
 }

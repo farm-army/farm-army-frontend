@@ -25,8 +25,8 @@ class FarmRepository extends ServiceEntityRepository
 
         foreach ($farms as $farm) {
 
-            $sql = "INSERT INTO farm (hash, farm_id, created_at, last_found_at, updated_at, json, name, tvl, token, chain, compound, leverage) VALUES (:hash, :farm_id, :created_at, :last_found_at, :updated_at, :json, :name, :tvl, :token, :chain, :compound, :leverage) "
-                . "ON CONFLICT(farm_id) DO UPDATE SET last_found_at = :last_found_at, json = :json, updated_at = :updated_at, name = :name, tvl = :tvl, token = :token, hash = :hash, chain = :chain, compound = :compound, leverage = :leverage";
+            $sql = "INSERT INTO farm (hash, farm_id, created_at, last_found_at, updated_at, json, name, tvl, token, chain, compound, leverage, inactive, deprecated) VALUES (:hash, :farm_id, :created_at, :last_found_at, :updated_at, :json, :name, :tvl, :token, :chain, :compound, :leverage, :inactive, :deprecated) "
+                . "ON CONFLICT(farm_id) DO UPDATE SET last_found_at = :last_found_at, json = :json, updated_at = :updated_at, name = :name, tvl = :tvl, token = :token, hash = :hash, chain = :chain, compound = :compound, leverage = :leverage, inactive = :inactive, deprecated = :deprecated";
 
             $stmt = $this->connection->prepare($sql);
 
@@ -42,6 +42,10 @@ class FarmRepository extends ServiceEntityRepository
             $stmt->bindValue('updated_at', $currentDate);
             $stmt->bindValue('json', json_encode($farm));
             $stmt->bindValue('token', isset($farm['extra']['transactionToken']) ? strtolower($farm['extra']['transactionToken']) : null);
+
+            $stmt->bindValue('inactive', ($farm['inactive'] ?? false) || ($farm['flags']['inactive'] ?? false));
+            $stmt->bindValue('deprecated', ($farm['deprecated'] ?? false) || ($farm['flags']['deprecated'] ?? false));
+
             $stmt->execute();
         }
 

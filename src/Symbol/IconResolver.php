@@ -107,7 +107,7 @@ class IconResolver
         ]);
     }
 
-    public function getPair3(string $symbolA, string $symbolB, string $symbolC): ?string
+    private function getPair3(string $symbolA, string $symbolB, string $symbolC): ?string
     {
         $symbolA = strtolower($symbolA);
         $symbolB = strtolower($symbolB);
@@ -130,7 +130,7 @@ class IconResolver
         ]);
     }
 
-    public function getPair4(string $symbolA, string $symbolB, string $symbolC, string $symbolD): ?string
+    private function getPair4(string $symbolA, string $symbolB, string $symbolC, string $symbolD): ?string
     {
         $symbolA = strtolower($symbolA);
         $symbolB = strtolower($symbolB);
@@ -156,7 +156,7 @@ class IconResolver
         ]);
     }
 
-    public function getPair5(string $symbolA, string $symbolB, string $symbolC, string $symbolD, string $symbolE): ?string
+    private function getPair5(string $symbolA, string $symbolB, string $symbolC, string $symbolD, string $symbolE): ?string
     {
         $symbolA = strtolower($symbolA);
         $symbolB = strtolower($symbolB);
@@ -185,7 +185,7 @@ class IconResolver
         ]);
     }
 
-    public function getLocalImage(string $symbol): ?string
+    public function getLocalImage(string $symbol, ?string $chain = null): ?string
     {
         $symbol = $this->getSymbolNormalized($symbol);
 
@@ -196,8 +196,12 @@ class IconResolver
             return $icon;
         }
 
+        if (!$chain) {
+            $chain = $this->chainGuesser->getChain();
+        }
+
         $paths = [
-            $this->projectDir . '/var/tokens/' . $this->chainGuesser->getChain() . '/symbol/',
+            $this->projectDir . '/var/tokens/' . $chain . '/symbol/',
             $this->projectDir . '/var/tokens/',
             $this->projectDir . '/remotes/cryptocurrency-icons/128/icon/'
         ];
@@ -212,7 +216,7 @@ class IconResolver
         foreach (['belt', 'i', 'ib', '1', 'bsc', 'ele'] as $prefix) {
             if (str_starts_with(strtolower($symbol), $prefix)) {
                 $symbol2 = substr($symbol, strlen($prefix));
-                if (strlen($symbol2) >= 3 && $icon = $this->getLocalImage($symbol2)) {
+                if (strlen($symbol2) >= 3 && $icon = $this->getLocalImage($symbol2, $chain)) {
                     return $icon;
                 }
             }
@@ -221,9 +225,13 @@ class IconResolver
         return null;
     }
 
-    public function getTokenIconForSymbolAddressReverse(string $icon): ?array
+    public function getTokenIconForSymbolAddressReverse(string $icon, ?string $chain = null): ?array
     {
-        $cache = $this->cacheItemPool->getItem('icon-v1-addresses-' . md5($icon) . 'v' . $this->assetVersion);
+        if (!$chain) {
+            $chain = $this->chainGuesser->getChain();
+        }
+
+        $cache = $this->cacheItemPool->getItem('icon-v1-addresses-' . md5($icon . $chain) . 'v' . $this->assetVersion);
         if ($cache->isHit()) {
             return $cache->get();
         }
@@ -233,18 +241,18 @@ class IconResolver
         $empty = true;
         foreach (explode('-', $icon) as $item) {
             if (str_starts_with($item, '0x')) {
-                if (is_file($icon2 = ($this->projectDir . '/var/tokens/' . $this->chainGuesser->getChain() . '/address/' . strtolower($item) . '.png'))) {
+                if (is_file($icon2 = ($this->projectDir . '/var/tokens/' . $chain . '/address/' . strtolower($item) . '.png'))) {
                     $item = $icon2;
                     $empty = false;
                 } else {
-                    $item = $this->getLocalImage('unknown');
+                    $item = $this->getLocalImage('unknown', $chain);
                 }
             } else {
-                if ($icon2 = $this->getLocalImage($item)) {
+                if ($icon2 = $this->getLocalImage($item, $chain)) {
                     $item = $icon2;
                     $empty = false;
                 } else {
-                    $item = $this->getLocalImage('unknown');
+                    $item = $this->getLocalImage('unknown', $chain);
                 }
             }
 
@@ -253,7 +261,7 @@ class IconResolver
 
         $result = $empty ? null : $files;
 
-        $this->cacheItemPool->save($cache->set($result)->expiresAfter(60 * 60 * 5 + random_int(1, 60)));
+        $this->cacheItemPool->save($cache->set($result)->expiresAfter((60 * 60 * 5) + random_int(10, 60)));
 
         return $result;
     }

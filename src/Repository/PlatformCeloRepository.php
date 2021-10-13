@@ -53,6 +53,13 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/ubeswap.png',
                 'token' => 'ube',
             ],
+            [
+                'id' => 'mobius',
+                'label' => 'Mobius',
+                'url' => 'https://www.mobius.money/#/farm/',
+                'icon' => '/assets/platforms/mobius.png',
+                'token' => 'mobi',
+            ],
         ];
     }
 }

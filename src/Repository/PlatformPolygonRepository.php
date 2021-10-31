@@ -126,7 +126,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
             [
                 'id' => 'pbeefy',
                 'label' => 'Beefy',
-                'url' => 'https://polygon.beefy.finance/',
+                'url' => 'https://app.beefy.finance/#/polygon',
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
             ],
@@ -227,6 +227,34 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'url' => 'https://polygon.impermax.finance/',
                 'icon' => '/assets/platforms/impermax.png',
                 'token' => 'imx',
+            ],
+            [
+                'id' => 'pcafeswap',
+                'label' => 'Cafeswap',
+                'url' => 'https://polygon.cafeswap.finance/',
+                'icon' => '/assets/platforms/cafeswap.png',
+                'token' => 'pbrew',
+            ],
+            [
+                'id' => 'polysage',
+                'label' => 'PolySage',
+                'url' => 'https://www.polysage.finance/',
+                'icon' => '/assets/platforms/polysage.png',
+                'token' => 'sage',
+            ],
+            [
+                'id' => 'paave',
+                'label' => 'Aave',
+                'url' => 'https://app.aave.com/#/markets',
+                'icon' => '/assets/platforms/aave.png',
+                'token' => 'aave',
+            ],
+            [
+                'id' => 'pfulcrum',
+                'label' => 'Fulcrum',
+                'url' => 'https://polygon.fulcrum.trade/lend',
+                'icon' => '/assets/platforms/fulcrum.png',
+                'token' => 'bzrk',
             ],
         ];
     }

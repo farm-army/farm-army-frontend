@@ -54,6 +54,18 @@ class RandomAddress
             ];
 
             $scan = 'https://explorer.kcc.io/api/kcs/address/normal/%s/1/50';
+        } else if ($chain === 'moonriver') {
+            $urls = [
+                '0xf03b75831397D4695a6b9dDdEEA0E578faa30907', // solarbeam
+            ];
+
+            $scan = 'https://blockscout.moonriver.moonbeam.network/address/%s/token-transfers?items_count=20&type=JSON';
+        } else if ($chain === 'celo') {
+            $urls = [
+                '0x0769fd68dFb93167989C6f7254cd0D766Fb2841F', // sushi
+            ];
+
+            $scan = 'https://explorer.celo.org/address/%s/token-transfers?items_count=20&type=JSON';
         } else {
             throw new \RuntimeException('Invalid chain');
         }
@@ -78,6 +90,26 @@ class RandomAddress
 
                 $array = array_values(array_unique(array_map(static fn(array $item) => $item['from'], $array)));
                 $addresses = array_merge($addresses, $array);
+            }
+        } else if ($chain === 'moonriver' || $chain === 'celo')       {
+            $addresses = [];
+
+            foreach ($urls as $url) {
+                if (!@$content = file_get_contents(sprintf($scan, $url))) {
+                    continue;
+                }
+
+                if (!$json = json_decode($content, true)) {
+                    continue;
+                }
+
+                foreach ($json['items'] ?? [] as $item) {
+                    if (preg_match('#address/(0x[a-fA-F0-9]{40})#i', $item, $result)) {
+                        if (!in_array($result[1], $addresses, true)) {
+                            $addresses[] = $result[1];
+                        }
+                    }
+                }
             }
         } else {
             foreach ($urls as $url) {

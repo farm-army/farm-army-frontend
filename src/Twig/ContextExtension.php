@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Utils\ChainGuesser;
+use App\Utils\ChainUtil;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
@@ -17,43 +18,8 @@ class ContextExtension extends AbstractExtension implements GlobalsInterface
 
     public function getGlobals(): array
     {
-        $chain = $this->chainGuesser->getChain();
-
-        switch ($chain) {
-            case 'bsc':
-                $title = 'Binance Smart Chain';
-                $explorer = 'https://bscscan.com';
-                break;
-            case 'polygon':
-                $title = 'Polygon';
-                $explorer = 'https://polygonscan.com';
-                break;
-            case 'fantom':
-                $title = 'Fantom';
-                $explorer = 'https://ftmscan.com';
-                break;
-            case 'kcc':
-                $title = 'KuCoin Community Chain';
-                $explorer = 'https://explorer.kcc.io/en';
-                break;
-            case 'harmony':
-                $title = 'Harmony';
-                $explorer = 'https://explorer.harmony.one';
-                break;
-            case 'celo':
-                $title = 'Celo';
-                $explorer = 'https://explorer.celo.org';
-                break;
-            default:
-                throw new \InvalidArgumentException('Invalid chain:' . $chain);
-        }
-
         return [
-            'chain' => [
-                'id' => $this->chainGuesser->getChain(),
-                'title' => $title,
-                'explorer' => $explorer,
-            ]
+            'chain' => ChainUtil::getChain($this->chainGuesser->getChain()),
         ];
     }
 }

@@ -246,4 +246,57 @@ class AddressController extends AbstractController
             'details' => $details,
         ], $response);
     }
+
+    /**
+     * @Route("/farms/0x{address}/{farmId}/action", name="farm_action")
+     */
+    public function actions(string $address, string $farmId, NodeClient $nodeClient, FarmRepository $farmRepository, NodeClient $client): Response
+    {
+        $farm = $farmRepository->findFarmIdByHash($farmId);
+        if (!$farm) {
+            throw new NotFoundHttpException();
+        }
+
+        $details = $nodeClient->getDetails($address, $farm->getFarmId());
+
+        $response = new Response();
+
+        $response->setPublic();
+        $response->setMaxAge(9);
+
+        $chain = ChainUtil::getChain($details['farm']['farm']['chain']);
+
+        $actions = array_map(function(array $item) {
+            $title = $item['method'];
+
+            if ($item['type'] === 'claim_all') {
+                $title = 'Claim All';
+            } else if ($item['type'] === 'claim') {
+                $title = 'Claim';
+            } else if ($item['type'] === 'claim_fake') {
+                $title = 'Claim';
+            }
+
+            $substr = isset($item['inputs']) && count($item['inputs']) > 0
+                ? substr(json_encode($item['inputs']), 1, -1)
+                : null;
+
+            return [
+                'contract' => $item['contract'],
+                'title' => $title,
+                'signature' => $item['method'] . '(' . $substr . ')',
+                'web3' => $item,
+            ];
+        }, $details['farm']['farm']['actions'] ??  []);
+
+        $prices = $client->getPrices();
+
+        return $this->render('address/actions.html.twig', [
+            'address' => $address,
+            'details' => $details,
+            'chain' => $chain,
+            'gas_price' => $prices[$chain['token']] ?? null,
+            'actions' => $actions,
+        ], $response);
+    }
 }

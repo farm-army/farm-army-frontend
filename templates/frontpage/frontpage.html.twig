@@ -5,7 +5,7 @@
 
 {% block content %}
     <div class="mt-4 pt-4 mx-auto text-center">
-        <p class="lead">Track your farming and pool performance on {% if chain.id == 'polygon' %}Polygon (MATIC){% elseif chain.id == 'fantom' %}Fantom{% elseif chain.id == 'kcc' %}KuCoin Community Chain{% else %}<a target="_blank" class="text-decoration-none text-dark" href="https://www.binance.org/en/smartChain">Binance Smart Chain</a>{% endif %}</p>
+        <p class="lead">Track your farming and pool performance on {% if chain.id == 'polygon' %}Polygon (MATIC){% elseif chain.id == 'fantom' %}Fantom{% elseif chain.id == 'kcc' %}KuCoin Community Chain{% elseif chain.id == 'harmony' %}Harmony{% elseif chain.id == 'celo' %}Celo{% elseif chain.id == 'moonriver' %}Moonriver{% else %}<a target="_blank" class="text-decoration-none text-dark" href="https://www.binance.org/en/smartChain">Binance Smart Chain</a>{% endif %}</p>
     </div>
 
     {% include 'components/address_form.html.twig' %}
@@ -20,6 +20,7 @@
                 <a href="https://kcc.farm.army" title="KuCoin Community Chain" class="btn btn-outline-light text-dark {{ chain.id == 'kcc' ? 'active fw-bold' : '' }}"><img height="24px" alt="KuCoin Chain" src="{{ asset('assets/chains/kcc.png') }}"> KCC</a>
                 <a href="https://harmony.farm.army" title="Harmony" class="btn btn-outline-light text-dark {{ chain.id == 'harmony' ? 'active fw-bold' : '' }}"><img height="24px" alt="Harmony" src="{{ asset('assets/chains/harmony.png') }}"> Harmony</a>
                 <a href="https://celo.farm.army" title="Celo" class="btn btn-outline-light text-dark {{ chain.id == 'celo' ? 'active fw-bold' : '' }}"><img height="24px" alt="Celo" src="{{ asset('assets/chains/celo.png') }}"> Celo</a>
+                <a href="https://moonriver.farm.army" title="Moonriver" class="btn btn-outline-light text-dark {{ chain.id == 'moonriver' ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonriver" src="{{ asset('assets/chains/moonriver.png') }}"> Moonriver</a>
             </div>
         </div>
 

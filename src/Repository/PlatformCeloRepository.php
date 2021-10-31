@@ -60,6 +60,33 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/mobius.png',
                 'token' => 'mobi',
             ],
+            [
+                'id' => 'csushi',
+                'label' => 'Sushi',
+                'url' => 'https://app.sushi.com/',
+                'icon' => '/assets/platforms/sushi.png',
+                'token' => 'sushi',
+            ],
+            [
+                'id' => 'moola',
+                'label' => 'Moola',
+                'url' => 'https://app.moola.market',
+                'icon' => '/assets/platforms/moola.png',
+                'token' => 'moo',
+            ],
+            [
+                'id' => 'cbeefy',
+                'label' => 'Beefy',
+                'url' => 'https://app.beefy.finance/#/celo',
+                'icon' => '/assets/platforms/beefy.png',
+                'token' => 'bifi',
+            ],
+            [
+                'id' => 'cautofarm',
+                'label' => 'Autofarm',
+                'url' => 'https://autofarm.network/celo/',
+                'icon' => '/assets/platforms/auto.png',
+            ],
         ];
     }
 }

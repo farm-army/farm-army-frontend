@@ -70,7 +70,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
             [
                 'id' => 'fbeefy',
                 'label' => 'Beefy',
-                'url' => 'https://fantom.beefy.finance/',
+                'url' => 'https://app.beefy.finance/#/fantom',
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
             ],
@@ -184,6 +184,38 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'label' => 'RoboVault',
                 'url' => 'https://www.robo-vault.com/',
                 'icon' => '/assets/platforms/robovault.png',
+            ],
+            [
+                'id' => 'morpheus',
+                'label' => 'Morpheus',
+                'url' => 'https://morpheusswap.app/',
+                'icon' => '/assets/platforms/morpheus.png',
+                'token' => 'morph',
+            ],
+            [
+                'id' => 'geist',
+                'label' => 'Geist',
+                'url' => 'https://geist.finance/markets',
+                'icon' => '/assets/platforms/geist.png',
+                'token' => 'geist',
+            ],
+            [
+                'id' => 'grim',
+                'label' => 'Grim',
+                'url' => 'https://app.grim.finance/',
+                'icon' => '/assets/platforms/grim.png',
+            ],
+            [
+                'id' => 'zoocoin',
+                'label' => 'Zoocoin',
+                'url' => 'https://dex.zoocoin.cash/',
+                'icon' => '/assets/platforms/zoocoin.png',
+            ],
+            [
+                'id' => 'fpearzap',
+                'label' => 'PearZap',
+                'url' => 'https://fantom.pearzap.com/?r=yv676c7746zC072579641y20709y1y5zC6yA35726F',
+                'icon' => '/assets/platforms/pearzap.png',
             ],
         ];
     }

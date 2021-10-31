@@ -65,8 +65,10 @@ export default {
 
   methods: {
     async fetchChunk(url) {
+      let platforms = {};
+
       const res = await fetch(url);
-      const platforms = await res.json();
+      platforms = await res.json();
 
       const state = Object.values(this.platforms);
 
@@ -194,11 +196,25 @@ export default {
       this.wallet = {};
       this.summary = [];
 
-      const calls = this.context.platform_chunks.map(chunk => this.fetchChunk(chunk));
+      const calls = this.context.platform_chunks.map(chunk => () => {
+        return this.fetchChunk(chunk)
+      });
 
-      calls.push(this.fetchWallet())
+      calls.push(this.fetchWallet);
 
-      await Promise.allSettled([...calls]);
+      const retry = [];
+      (await Promise.allSettled([...calls.map(m => m())])).forEach((p, index) => {
+        if (p.status === 'rejected') {
+          retry.push(calls[index]);
+        }
+      });
+
+      if (retry.length > 0) {
+        console.log(`http chunk retry: ${retry.length}`);
+
+        await new Promise(r => setTimeout(r, 3000));
+        await Promise.allSettled([...calls.map(m => m())]);
+      }
 
       this.calculateSummary();
       this.appendPlatformWalletInfo();

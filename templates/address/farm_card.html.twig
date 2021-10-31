@@ -48,5 +48,11 @@
                 </div>
             </div>
         </div>
+
+        {% if farm.farm.actions|default([])|length > 0 %}
+            <div class="position-absolute bottom-0 end-0">
+                <a class="btn btn-primary" rel="nofollow" data-bs-toggle="modal" data-bs-title="{{ farm.farm.name|u.truncate(20, '...') }} - Actions" data-bs-target="#exampleModal"  style="display:block; font-size: 0.6em; opacity: 0.5; line-height: 0.85em; padding:0.4em" href="{{ path('farm_action', {'address': address, 'farmId': farm.farm.id|md5}) }}">Actions</a>
+            </div>
+        {% endif %}
     </div>
 </div>

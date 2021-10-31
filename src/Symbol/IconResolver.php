@@ -329,6 +329,8 @@ class IconResolver
             $symbol = 'bnb';
         } elseif ($symbol === 'wone') {
             $symbol = 'one';
+        } elseif ($symbol === 'wmovr') {
+            $symbol = 'movr';
         }
 
         return $symbol;

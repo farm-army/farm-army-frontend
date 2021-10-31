@@ -1,0 +1,42 @@
+{% if details.farm.farm.actions|default([])|length == 0 %}
+    No Actions found
+{% endif %}
+
+{% if details.farm.farm.actions|default([])|length > 0 %}
+    <div class="web3-action-container" data-web3-account="{{ address }}" data-web3-chain-id="{{ chain.chainId }}" data-web3-token-price="{{ gas_price }}">
+
+        <div class="card">
+            <ul class="list-group list-group-flush">
+                {% for action in actions %}
+                    <li class="list-group-item">
+                        <div class="d-flex bd-highlight">
+                            <div class="align-self-center flex-grow-1 text-muted">
+                                <span title="{{ action.web3.contract }}">{{ action.web3.contract|truncate_address }}</span> <a target="_blank" href="{{ chain.explorer }}/address/{{ action.web3.contract }}" title="Open Explorer: {{ action.web3.contract }}"><i class="fas fa-external-link-alt"></i></a><br>
+                                <strong>{{ action.signature }}</strong>
+                            </div>
+                            <div class="align-self-center">
+                                <a href="#" class="btn btn-primary web3-action" data-web3="{{ action.web3|json_encode }}">{{ action.title }}</a>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div class="card-footer">
+                <span class="text-muted" style="font-size: 0.8em; line-height: 0.5em">Your are directly interacting with the Vault contract. Possible usable contract methods are extracted automatically, please double check.</span>
+            </div>
+        </div>
+
+        <div class="card mt-3 visually-hidden">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <strong>Transaction</strong>
+                    <div class="web3-spinner spinner-border ms-auto spinner-border-sm visually-hidden" role="status" aria-hidden="true"></div>
+                </div>
+            </div>
+            <div class="card-body">
+                <pre class="my-0"><code class="message"></code></pre>
+            </div>
+        </div>
+    </div>
+{% endif %}

@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import App from './components/App';
+import "./web3.js";
 
 let element = document.querySelector('#app-address');
 

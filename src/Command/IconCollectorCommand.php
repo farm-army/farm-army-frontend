@@ -63,6 +63,8 @@ class IconCollectorCommand extends Command
         $this->tokenList('https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap.token-list.json');
         $this->tokenList('https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap-experimental.token-list.json');
 
+        $this->tokenList('https://charts-bomb.zoocoin.cash/api/tokenlistbot');
+
         return Command::SUCCESS;
     }
 
@@ -123,7 +125,8 @@ class IconCollectorCommand extends Command
             137 => 'polygon',
             250 => 'fantom',
             321 => 'kcc',
-            44787 => 'celo',
+            42220 => 'celo',
+            1285 => 'moonriver',
         ];
 
         foreach ($decode['tokens'] ?? [] as $token) {

@@ -13,6 +13,7 @@ class PlatformRepository implements PlatformRepositoryInterface
     private ChainGuesser $chainGuesser;
     private PlatformHarmonyRepository $platformHarmonyRepository;
     private PlatformCeloRepository $platformCeloRepository;
+    private PlatformMoonriverRepository $platformMoonriverRepository;
 
     public function __construct(
         PlatformBscRepository $bscRepository,
@@ -21,6 +22,7 @@ class PlatformRepository implements PlatformRepositoryInterface
         PlatformKccRepository $platformKccRepository,
         PlatformHarmonyRepository $platformHarmonyRepository,
         PlatformCeloRepository $platformCeloRepository,
+        PlatformMoonriverRepository $platformMoonriverRepository,
         ChainGuesser $chainGuesser
     ) {
         $this->bscRepository = $bscRepository;
@@ -30,6 +32,7 @@ class PlatformRepository implements PlatformRepositoryInterface
         $this->platformHarmonyRepository = $platformHarmonyRepository;
         $this->chainGuesser = $chainGuesser;
         $this->platformCeloRepository = $platformCeloRepository;
+        $this->platformMoonriverRepository = $platformMoonriverRepository;
     }
 
     public function getPlatform(string $id): array
@@ -47,6 +50,8 @@ class PlatformRepository implements PlatformRepositoryInterface
                 return $this->platformHarmonyRepository->getPlatform($id);
             case 'celo':
                 return $this->platformCeloRepository->getPlatform($id);
+            case 'moonriver':
+                return $this->platformMoonriverRepository->getPlatform($id);
             default:
                 throw new \InvalidArgumentException('Invalid platform');
         }
@@ -67,6 +72,8 @@ class PlatformRepository implements PlatformRepositoryInterface
                 return $this->platformHarmonyRepository->getPlatformChunks();
             case 'celo':
                 return $this->platformCeloRepository->getPlatformChunks();
+            case 'moonriver':
+                return $this->platformMoonriverRepository->getPlatformChunks();
             default:
                 throw new \InvalidArgumentException('Invalid platform');
         }
@@ -87,6 +94,8 @@ class PlatformRepository implements PlatformRepositoryInterface
                 return $this->platformHarmonyRepository->getPlatforms();
             case 'celo':
                 return $this->platformCeloRepository->getPlatforms();
+            case 'moonriver':
+                return $this->platformMoonriverRepository->getPlatforms();
             default:
                 throw new \InvalidArgumentException('Invalid platform');
         }

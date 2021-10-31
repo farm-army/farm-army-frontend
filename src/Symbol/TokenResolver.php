@@ -54,6 +54,9 @@ class TokenResolver
             case 'celo':
                 $dirs = [];
                 break;
+            case 'moonriver':
+                $dirs = [];
+                break;
             default:
                 throw new \InvalidArgumentException('Invalid chain ' . $chain);
         }

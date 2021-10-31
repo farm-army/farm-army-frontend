@@ -49,7 +49,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
             [
                 'id' => 'hbeefy',
                 'label' => 'Beefy',
-                'url' => 'https://harmony.beefy.finance/',
+                'url' => 'https://app.beefy.finance/#/harmony',
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
             ],
@@ -65,7 +65,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'label' => 'OpenSwap',
                 'url' => 'https://app.openswap.one/',
                 'icon' => '/assets/platforms/openswap.png',
-                'token' => 'oswap',
+                'token' => 'openx',
             ],
             [
                 'id' => 'viper',
@@ -80,6 +80,27 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://harmony.curve.fi/',
                 'icon' => '/assets/platforms/curve.png',
                 'token' => 'curve',
+            ],
+            [
+                'id' => 'artemis',
+                'label' => 'Artemis',
+                'url' => 'https://app.artemisprotocol.one/',
+                'icon' => '/assets/platforms/artemis.png',
+                'token' => 'mis',
+            ],
+            [
+                'id' => 'defikingdoms',
+                'label' => 'DefiKingdoms',
+                'url' => 'https://app.defikingdoms.com/',
+                'icon' => '/assets/platforms/defikingdoms.png',
+                'token' => 'jewel',
+            ],
+            [
+                'id' => 'farmersonly',
+                'label' => 'FarmersOnly',
+                'url' => 'https://app.farmersonly.fi/',
+                'icon' => '/assets/platforms/farmersonly.png',
+                'token' => 'fox',
             ],
         ];
     }

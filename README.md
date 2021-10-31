@@ -1,6 +1,6 @@
 # farm.army - Frontend
 
-Track your farming and pool performance on the Binance Chain, Polygon, Fantom, KuCoin Community Chain, Harmony, Celo
+Track your farming and pool performance on the Binance Chain, Polygon, Fantom, KuCoin Community Chain, Harmony, Celo, Moonriver
 
 ## Tech Stack
 
@@ -41,6 +41,7 @@ For a running development system run the following command. You can also use ngi
 ```
 symfony server:start
 npm run-script dev-server
+bin/console d:s:u --force
 ```
 
 ```
@@ -48,7 +49,7 @@ http://127.0.0.1:8000
 ```
 
 If you want need a running backend checkout also https://github.com/farm-army/farm-army-backend.
-You can also change backend url via `BACKEND_BASE_URL`
+You can also change backend url via `BACKEND_BASE_URL` or running chain `CHAIN` inside via .env
 
 ## Cache
 
@@ -57,7 +58,6 @@ There are several caches. Clear cache via Symfony command or clear `var/cache/*`
 ## Technical Debt
 
  - Migrate more page content to Vue.js and 3.x
- - Icon extraction handling is tricky
 
 ## Folder Structure
 

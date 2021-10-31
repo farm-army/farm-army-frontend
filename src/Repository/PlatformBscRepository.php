@@ -56,7 +56,7 @@ class PlatformBscRepository
             [
                 'id' => 'beefy',
                 'label' => 'Beefy',
-                'url' => 'https://app.beefy.finance',
+                'url' => 'https://app.beefy.finance/#/bsc',
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
             ],
@@ -367,6 +367,34 @@ class PlatformBscRepository
                 'url' => 'https://planetfinance.io',
                 'icon' => '/assets/platforms/planet.png',
                 'token' => 'aqua',
+            ],
+            [
+                'id' => 'ten',
+                'label' => 'TEN',
+                'url' => 'https://app.ten.finance',
+                'icon' => '/assets/platforms/ten.png',
+                'token' => 'ten',
+            ],
+            [
+                'id' => 'autoshark',
+                'label' => 'AutoShark',
+                'url' => 'https://autoshark.finance',
+                'icon' => '/assets/platforms/autoshark.png',
+                'token' => 'fins',
+            ],
+            [
+                'id' => 'mars',
+                'label' => 'Mars',
+                'url' => 'https://app.marsecosystem.com/',
+                'icon' => '/assets/platforms/mars.png',
+                'token' => 'xms',
+            ],
+            [
+                'id' => 'atlantis',
+                'label' => 'Atlantis',
+                'url' => 'https://atlantis.loans/app',
+                'icon' => '/assets/platforms/atlantis.png',
+                'token' => 'atl',
             ],
         ];
     }

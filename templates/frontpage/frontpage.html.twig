@@ -12,18 +12,17 @@
 
 
     <div class="mt-4 pt-4 border-top text-center">
-        <div class="">
-            <div class="btn-group mb-4 clearfix">
-                <a href="https://farm.army" title="Binance Smart Chain" class="btn btn-outline-light text-dark {{ chain.id == 'bsc' ? 'active fw-bold' : '' }}"><img height="24px" alt="Binance Smart Chain" src="{{ asset('assets/chains/bsc.svg') }}"> BSC</a>
-                <a href="https://polygon.farm.army" title="Polygon" class="btn btn-outline-light text-dark {{ chain.id == 'polygon' ? 'active fw-bold' : '' }}"><img height="24px" alt="Polygon" src="{{ asset('assets/chains/polygon.svg') }}"> Polygon</a>
-                <a href="https://fantom.farm.army" title="Fantom" class="btn btn-outline-light text-dark {{ chain.id == 'fantom' ? 'active fw-bold' : '' }}"><img height="24px" alt="Fantom" src="{{ asset('assets/chains/fantom.svg') }}"> Fantom</a>
-                <a href="https://kcc.farm.army" title="KuCoin Community Chain" class="btn btn-outline-light text-dark {{ chain.id == 'kcc' ? 'active fw-bold' : '' }}"><img height="24px" alt="KuCoin Chain" src="{{ asset('assets/chains/kcc.png') }}"> KCC</a>
-                <a href="https://harmony.farm.army" title="Harmony" class="btn btn-outline-light text-dark {{ chain.id == 'harmony' ? 'active fw-bold' : '' }}"><img height="24px" alt="Harmony" src="{{ asset('assets/chains/harmony.png') }}"> Harmony</a>
-                <a href="https://celo.farm.army" title="Celo" class="btn btn-outline-light text-dark {{ chain.id == 'celo' ? 'active fw-bold' : '' }}"><img height="24px" alt="Celo" src="{{ asset('assets/chains/celo.png') }}"> Celo</a>
-                <a href="https://moonriver.farm.army" title="Moonriver" class="btn btn-outline-light text-dark {{ chain.id == 'moonriver' ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonriver" src="{{ asset('assets/chains/moonriver.png') }}"> Moonriver</a>
-            </div>
+        <div class="btn-group">
+            <a href="https://farm.army" title="Binance Smart Chain" class="btn btn-outline-light text-dark {{ chain.id == 'bsc' ? 'active fw-bold' : '' }}"><img height="24px" alt="Binance Smart Chain" src="{{ asset('assets/chains/bsc.svg') }}"><span class="d-none d-md-inline"> BSC</span></a>
+            <a href="https://polygon.farm.army" title="Polygon" class="btn btn-outline-light text-dark {{ chain.id == 'polygon' ? 'active fw-bold' : '' }}"><img height="24px" alt="Polygon" src="{{ asset('assets/chains/polygon.svg') }}"><span class="d-none d-md-inline"> Polygon</span></a>
+            <a href="https://fantom.farm.army" title="Fantom" class="btn btn-outline-light text-dark {{ chain.id == 'fantom' ? 'active fw-bold' : '' }}"><img height="24px" alt="Fantom" src="{{ asset('assets/chains/fantom.svg') }}"><span class="d-none d-md-inline"> Fantom</span></a>
+            <a href="https://kcc.farm.army" title="KuCoin Community Chain" class="btn btn-outline-light text-dark {{ chain.id == 'kcc' ? 'active fw-bold' : '' }}"><img height="24px" alt="KuCoin Chain" src="{{ asset('assets/chains/kcc.png') }}"><span class="d-none d-md-inline"> KCC</span></a>
+            <a href="https://harmony.farm.army" title="Harmony" class="btn btn-outline-light text-dark {{ chain.id == 'harmony' ? 'active fw-bold' : '' }}"><img height="24px" alt="Harmony" src="{{ asset('assets/chains/harmony.png') }}"><span class="d-none d-md-inline"> Harmony</span></a>
+            <a href="https://celo.farm.army" title="Celo" class="btn btn-outline-light text-dark {{ chain.id == 'celo' ? 'active fw-bold' : '' }}"><img height="24px" alt="Celo" src="{{ asset('assets/chains/celo.png') }}"><span class="d-none d-md-inline"> Celo</span></a>
+            <a href="https://moonriver.farm.army" title="Moonriver" class="btn btn-outline-light text-dark {{ chain.id == 'moonriver' ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonriver" src="{{ asset('assets/chains/moonriver.png') }}"><span class="d-none d-md-inline"> Moonriver</span></a>
         </div>
-
+    </div>
+    <div class="mt-4 pt-4 border-top text-center">
         {% for platform in platforms %}
             <a class="p-1" href="{{ platform.url }}" title="{{ platform.label }}" target="_blank"><img loading="lazy" class="m-1" style="filter: grayscale(30%);" height="32" src="{{ asset(platform.icon) }}" alt="{{ platform.id }}"></a>
         {% endfor %}

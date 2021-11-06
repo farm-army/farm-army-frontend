@@ -81,6 +81,20 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/kukafe.png',
                 'token' => 'kafe',
             ],
+            [
+                'id' => 'mbeefy',
+                'label' => 'Beefy',
+                'url' => 'https://app.beefy.finance/#/moonriver',
+                'icon' => '/assets/platforms/beefy.png',
+                'token' => 'bifi',
+            ],
+            [
+                'id' => 'msushi',
+                'label' => 'Sushi',
+                'url' => 'https://app.sushi.com/',
+                'icon' => '/assets/platforms/sushi.png',
+                'token' => 'sushi',
+            ],
         ];
     }
 }

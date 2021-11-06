@@ -102,6 +102,13 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/farmersonly.png',
                 'token' => 'fox',
             ],
+            [
+                'id' => 'tranquil',
+                'label' => 'Tranquil',
+                'url' => 'https://app.tranquil.finance/markets',
+                'icon' => '/assets/platforms/tranquil.png',
+                'token' => 'tranq',
+            ],
         ];
     }
 }

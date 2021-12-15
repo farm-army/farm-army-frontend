@@ -64,7 +64,7 @@
                             {% if transaction.amount > 0 %}
                                 <a target="_blank" class="text-muted text-decoration-none" href="{{ explorer }}/address/{{ transaction.from }}" title="explorer: {{ transaction.from }}">{{ transaction.from|truncate_address(6) }}</a>
                             {% else %}
-                                <a target="_blank" class="text-muted text-decoration-none text-dark" href="{{ explorer }}/address/{{ transaction.to }}" title="explorer: {{ transaction.to }}">{{ transaction.to|truncate_address(6) }}</a>
+                                <a target="_blank" class="text-muted text-decoration-none" href="{{ explorer }}/address/{{ transaction.to }}" title="explorer: {{ transaction.to }}">{{ transaction.to|truncate_address(6) }}</a>
                             {% endif %}
                         </div>
 

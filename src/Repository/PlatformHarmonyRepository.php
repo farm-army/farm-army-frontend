@@ -109,6 +109,20 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/tranquil.png',
                 'token' => 'tranq',
             ],
+            [
+                'id' => 'hsynapse',
+                'label' => 'Synapse',
+                'url' => 'https://synapseprotocol.com/pools',
+                'icon' => '/assets/platforms/synapse.png',
+                'token' => 'syn',
+            ],
+            [
+                'id' => 'hautofarm',
+                'label' => 'Autofarm',
+                'url' => 'https://autofarm.network/harmony',
+                'icon' => '/assets/platforms/auto.png',
+                'token' => 'auto',
+            ],
         ];
     }
 }

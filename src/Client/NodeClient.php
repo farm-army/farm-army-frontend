@@ -334,7 +334,7 @@ class NodeClient
                 $prices = $this->getPrices();
             }
 
-            if (isset($prices[$result[$platform]['token']])) {
+            if (isset($result[$platform]['token'], $prices[$result[$platform]['token']])) {
                 $result[$platform]['token_price'] = $prices[$result[$platform]['token']];
             }
 

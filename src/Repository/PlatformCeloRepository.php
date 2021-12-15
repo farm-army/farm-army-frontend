@@ -87,6 +87,13 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'url' => 'https://autofarm.network/celo/',
                 'icon' => '/assets/platforms/auto.png',
             ],
+            [
+                'id' => 'celodex',
+                'label' => 'Celodex',
+                'url' => 'https://www.celodex.org/?referral=2v9mkob4akJHESUqU14ZegxgBh2N',
+                'icon' => '/assets/platforms/celodex.png',
+                'token' => 'clx',
+            ],
         ];
     }
 }

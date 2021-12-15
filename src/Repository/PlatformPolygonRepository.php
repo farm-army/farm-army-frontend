@@ -256,6 +256,19 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/fulcrum.png',
                 'token' => 'bzrk',
             ],
+            [
+                'id' => 'psynapse',
+                'label' => 'Synapse',
+                'url' => 'https://synapseprotocol.com/pools',
+                'icon' => '/assets/platforms/synapse.png',
+                'token' => 'syn',
+            ],
+            [
+                'id' => 'market',
+                'label' => 'Market',
+                'url' => 'https://polygon.market.xyz/',
+                'icon' => '/assets/platforms/market.png',
+            ],
         ];
     }
 }

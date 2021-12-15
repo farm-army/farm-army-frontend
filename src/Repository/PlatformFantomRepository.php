@@ -217,6 +217,13 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://fantom.pearzap.com/?r=yv676c7746zC072579641y20709y1y5zC6yA35726F',
                 'icon' => '/assets/platforms/pearzap.png',
             ],
+            [
+                'id' => 'fsynapse',
+                'label' => 'Synapse',
+                'url' => 'https://synapseprotocol.com/pools',
+                'icon' => '/assets/platforms/synapse.png',
+                'token' => 'syn',
+            ],
         ];
     }
 }

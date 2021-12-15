@@ -15,14 +15,29 @@
     }
 }
 
-[data-theme="dark"] .fa  {
+html .theme-toggle .fas {
     display: none
 }
 
-[data-theme="dark"] .light {
-    display: none
+html .theme-toggle .fas.light {
+    display: inline-block;
 }
 
-[data-theme="light"] .dark {
-    display: none
+html.light .light,
+html.dark .dark {
+    display: inline-block !important;
+}
+
+html.light .dark,
+html.dark .light {
+    display: none !important;
+}
+
+html.dark .btn-outline-dark {
+    color: #fff;
+    border-color: #3b3b3b;
+}
+
+html.dark .text-dark {
+    color: #fff !important;
 }

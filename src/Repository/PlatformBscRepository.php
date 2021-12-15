@@ -396,6 +396,20 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/atlantis.png',
                 'token' => 'atl',
             ],
+            [
+                'id' => 'synapse',
+                'label' => 'Synapse',
+                'url' => 'https://synapseprotocol.com/pools',
+                'icon' => '/assets/platforms/synapse.png',
+                'token' => 'syn',
+            ],
+            [
+                'id' => 'annex',
+                'label' => 'Annex',
+                'url' => 'https://app.annex.finance',
+                'icon' => '/assets/platforms/annex.png',
+                'token' => 'ann',
+            ],
         ];
     }
 }

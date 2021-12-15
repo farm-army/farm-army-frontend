@@ -47,7 +47,7 @@ class RandomAddress
                 '0x2b2929e785374c651a81a63878ab22742656dcdd', // spookyswap
             ];
 
-            $scan = 'https://polygonscan.com/txs?a=%s&f=3';
+            $scan = 'https://ftmscan.com/txs?a=%s&f=3';
         } else if ($chain === 'kcc') {
             $urls = [
                 '0x0cc7fb3626c55ce4eff79045e8e7cb52434431d4', // kuswap
@@ -66,6 +66,12 @@ class RandomAddress
             ];
 
             $scan = 'https://explorer.celo.org/address/%s/token-transfers?items_count=20&type=JSON';
+        } else if ($chain === 'cronos') {
+            $urls = [
+                '0xDccd6455AE04b03d785F12196B492b18129564bc', // vvs chef
+            ];
+
+            $scan = 'https://cronos.crypto.org/explorer/address/%s/token-transfers?items_count=20&type=JSON';
         } else {
             throw new \RuntimeException('Invalid chain');
         }
@@ -91,7 +97,7 @@ class RandomAddress
                 $array = array_values(array_unique(array_map(static fn(array $item) => $item['from'], $array)));
                 $addresses = array_merge($addresses, $array);
             }
-        } else if ($chain === 'moonriver' || $chain === 'celo')       {
+        } else if ($chain === 'moonriver' || $chain === 'celo' || $chain === 'cronos') {
             $addresses = [];
 
             foreach ($urls as $url) {

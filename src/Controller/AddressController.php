@@ -230,10 +230,12 @@ class AddressController extends AbstractController
 
         $details = $nodeClient->getDetails($address, $farm->getFarmId());
 
-        if (isset($details['lpTokens'])) {
-            foreach ($details['lpTokens'] as $key => $lpToken) {
-                $details['lpTokens'][$key]['icon'] = $iconResolver->getIcon($lpToken['symbol']);
-            }
+        foreach ($details['lpTokens'] ?? [] as $key => $lpToken) {
+            $details['lpTokens'][$key]['icon'] = $iconResolver->getIcon($lpToken['symbol']);
+        }
+
+        foreach ($details['yield']['lpTokens'] ?? [] as $key => $lpToken) {
+            $details['yield']['lpTokens'][$key]['icon'] = $iconResolver->getIcon($lpToken['symbol']);
         }
 
         $response = new Response();

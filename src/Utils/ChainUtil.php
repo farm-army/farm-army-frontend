@@ -20,6 +20,8 @@ class ChainUtil
             return 'https://explorer.celo.org';
         } elseif ($chain === 'moonriver') {
             return 'https://blockscout.moonriver.moonbeam.network';
+        } elseif ($chain === 'cronos') {
+            return 'https://cronos.crypto.org/explorer';
         }
 
         return 'https://bscscan.com';
@@ -83,6 +85,14 @@ class ChainUtil
                     'explorer' => 'https://blockscout.moonriver.moonbeam.network',
                     'chainId' => 1285,
                     'token' => 'wmovr',
+                ];
+            case 'cronos':
+                return [
+                    'id' => $chain,
+                    'title' => 'Crypto.com: Cronos',
+                    'explorer' => 'https://cronos.crypto.org/explorer',
+                    'chainId' => 25,
+                    'token' => 'wcro',
                 ];
         }
 

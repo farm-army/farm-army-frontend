@@ -34,20 +34,6 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/theme", name="theme_toggle", methods={"POST"})
-     */
-    public function theme(Request $request): Response
-    {
-        $response = new Response();
-
-        $theme = $request->get('theme', 'light');
-
-        $response->headers->setCookie(new Cookie('theme', $theme, date_create()->modify('+180 days')));
-
-        return $response;
-    }
-
-    /**
      * @Route("/", name="frontpage", methods={"GET"})
      */
     public function index(Request $request)

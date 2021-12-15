@@ -5,11 +5,10 @@
 
 {% block content %}
     <div class="mt-4 pt-4 mx-auto text-center">
-        <p class="lead">Track your farming and pool performance on {% if chain.id == 'polygon' %}Polygon (MATIC){% elseif chain.id == 'fantom' %}Fantom{% elseif chain.id == 'kcc' %}KuCoin Community Chain{% elseif chain.id == 'harmony' %}Harmony{% elseif chain.id == 'celo' %}Celo{% elseif chain.id == 'moonriver' %}Moonriver{% else %}<a target="_blank" class="text-decoration-none text-dark" href="https://www.binance.org/en/smartChain">Binance Smart Chain</a>{% endif %}</p>
+        <p class="lead">Track your farming and pool performance on {% if chain.id == 'polygon' %}Polygon (MATIC){% elseif chain.id == 'fantom' %}Fantom{% elseif chain.id == 'kcc' %}KuCoin Community Chain{% elseif chain.id == 'harmony' %}Harmony{% elseif chain.id == 'celo' %}Celo{% elseif chain.id == 'moonriver' %}Moonriver{% elseif chain.id == 'cronos' %}Crypto.com: Cronos{% else %}<a target="_blank" class="text-decoration-none" href="https://www.binance.org/en/smartChain">Binance Smart Chain</a>{% endif %}</p>
     </div>
 
     {% include 'components/address_form.html.twig' %}
-
 
     <div class="mt-4 pt-4 border-top text-center">
         <div class="btn-group">
@@ -20,6 +19,7 @@
             <a href="https://harmony.farm.army" title="Harmony" class="btn btn-outline-light text-dark {{ chain.id == 'harmony' ? 'active fw-bold' : '' }}"><img height="24px" alt="Harmony" src="{{ asset('assets/chains/harmony.png') }}"><span class="d-none d-md-inline"> Harmony</span></a>
             <a href="https://celo.farm.army" title="Celo" class="btn btn-outline-light text-dark {{ chain.id == 'celo' ? 'active fw-bold' : '' }}"><img height="24px" alt="Celo" src="{{ asset('assets/chains/celo.png') }}"><span class="d-none d-md-inline"> Celo</span></a>
             <a href="https://moonriver.farm.army" title="Moonriver" class="btn btn-outline-light text-dark {{ chain.id == 'moonriver' ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonriver" src="{{ asset('assets/chains/moonriver.png') }}"><span class="d-none d-md-inline"> Moonriver</span></a>
+            <a href="https://cronos.farm.army" title="Crypto.com: Cronos" class="btn btn-outline-light text-dark {{ chain.id == 'cronos' ? 'active fw-bold' : '' }}"><img height="24px" alt="Crypto.com: Cronos" src="{{ asset('assets/chains/cronos.png') }}"><span class="d-none d-md-inline"> Cronos</span></a>
         </div>
     </div>
     <div class="mt-4 pt-4 border-top text-center">

@@ -331,6 +331,8 @@ class IconResolver
             $symbol = 'one';
         } elseif ($symbol === 'wmovr') {
             $symbol = 'movr';
+        } elseif ($symbol === 'wcro') {
+            $symbol = 'cro';
         }
 
         return $symbol;

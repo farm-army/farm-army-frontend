@@ -121,6 +121,7 @@ class IconCollectorCommand extends Command
         }
 
         $chains = [
+            25 => 'cronos',
             56 => 'bsc',
             137 => 'polygon',
             250 => 'fantom',

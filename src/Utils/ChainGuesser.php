@@ -37,6 +37,8 @@ class ChainGuesser
             return 'celo';
         } elseif ($host === 'moonriver.farm.army') {
             return 'moonriver';
+        } elseif ($host === 'cronos.farm.army') {
+            return 'cronos';
         }
 
         return $this->chain;

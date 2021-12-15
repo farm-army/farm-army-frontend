@@ -1,5 +1,4 @@
 import '../css/main.css';
-import '../css/dark.css';
 
 $(function() {
     var $chainInput = $("#chain-address-input");
@@ -82,13 +81,7 @@ $(function() {
         $darkMode.on("click", function(e) {
             e.preventDefault();
 
-            let theme = $(document.body).attr('data-theme');
-
-            let isDark = theme === 'dark'
-            let newTheme = isDark ? 'light' : 'dark';
-
-            $(document.body).attr('data-theme', newTheme);
-            $.post($(document.body).attr('data-theme-toggle'), {theme: newTheme});
+            darkmode.toggleDarkMode();
         });
     }
 

@@ -121,7 +121,7 @@ class TokenResolver
 
         preg_match_all(
             "#symbol:\s*'(?<symbol>\w+)',\s*address:\s*{\s*56:\s*'(?<address>\w+)'#m",
-            $content,
+            $content ?? '',
             $matches,
             PREG_SET_ORDER
         );

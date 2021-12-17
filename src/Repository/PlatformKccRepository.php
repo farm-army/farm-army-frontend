@@ -74,6 +74,13 @@ class PlatformKccRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/boneswap.png',
                 'token' => 'bone',
             ],
+            [
+                'id' => 'mojito',
+                'label' => 'Mojito',
+                'url' => 'https://app.mojitoswap.finance/referral?code=5CD2F29F',
+                'icon' => '/assets/platforms/mojito.png',
+                'token' => 'mjt',
+            ],
         ];
     }
 }

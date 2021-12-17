@@ -41,9 +41,9 @@ class IconResolver
     {
         $symbol = strtolower($symbol);
 
-        if ($this->getLocalImage($symbol)) {
+        if ($result = $this->getLocalImage($symbol)) {
             return $this->urlGenerator->generate('token_icon', [
-                'symbol' => $symbol,
+                'symbol' => pathinfo(basename($result), PATHINFO_FILENAME),
                 'format' => 'png',
                 'v' => $this->assetVersion
             ]);
@@ -100,8 +100,8 @@ class IconResolver
         }
 
         return $this->urlGenerator->generate('token_icon_pair', [
-            'symbolA' => file_exists($iconA) ? $symbolA : 'unknown',
-            'symbolB' => file_exists($iconB) ? $symbolB : 'unknown',
+            'symbolA' => file_exists($iconA) ? pathinfo(basename($iconA), PATHINFO_FILENAME) : 'unknown',
+            'symbolB' => file_exists($iconB) ? pathinfo(basename($iconB), PATHINFO_FILENAME) : 'unknown',
             'format' => 'png',
             'v' => $this->assetVersion
         ]);
@@ -122,9 +122,9 @@ class IconResolver
         }
 
         return $this->urlGenerator->generate('token_icon_abc', [
-            'symbolA' => file_exists($iconA) ? $symbolA : 'unknown',
-            'symbolB' => file_exists($iconB) ? $symbolB : 'unknown',
-            'symbolC' => file_exists($iconC) ? $symbolC : 'unknown',
+            'symbolA' => file_exists($iconA) ? pathinfo(basename($iconA), PATHINFO_FILENAME) : 'unknown',
+            'symbolB' => file_exists($iconB) ? pathinfo(basename($iconB), PATHINFO_FILENAME) : 'unknown',
+            'symbolC' => file_exists($iconC) ? pathinfo(basename($iconC), PATHINFO_FILENAME) : 'unknown',
             'format' => 'png',
             'v' => $this->assetVersion
         ]);
@@ -147,10 +147,10 @@ class IconResolver
         }
 
         return $this->urlGenerator->generate('token_icon_abcd', [
-            'symbolA' => file_exists($iconA) ? $symbolA : 'unknown',
-            'symbolB' => file_exists($iconB) ? $symbolB : 'unknown',
-            'symbolC' => file_exists($iconC) ? $symbolC : 'unknown',
-            'symbolD' => file_exists($iconD) ? $symbolD : 'unknown',
+            'symbolA' => file_exists($iconA) ? pathinfo(basename($iconA), PATHINFO_FILENAME) : 'unknown',
+            'symbolB' => file_exists($iconB) ? pathinfo(basename($iconB), PATHINFO_FILENAME) : 'unknown',
+            'symbolC' => file_exists($iconC) ? pathinfo(basename($iconC), PATHINFO_FILENAME) : 'unknown',
+            'symbolD' => file_exists($iconD) ? pathinfo(basename($iconD), PATHINFO_FILENAME) : 'unknown',
             'format' => 'png',
             'v' => $this->assetVersion
         ]);
@@ -175,11 +175,11 @@ class IconResolver
         }
 
         return $this->urlGenerator->generate('token_icon_abcde', [
-            'symbolA' => file_exists($iconA) ? $symbolA : 'unknown',
-            'symbolB' => file_exists($iconB) ? $symbolB : 'unknown',
-            'symbolC' => file_exists($iconC) ? $symbolC : 'unknown',
-            'symbolD' => file_exists($iconD) ? $symbolD : 'unknown',
-            'symbolE' => file_exists($iconE) ? $symbolE : 'unknown',
+            'symbolA' => file_exists($iconA) ? pathinfo(basename($iconA), PATHINFO_FILENAME) : 'unknown',
+            'symbolB' => file_exists($iconB) ? pathinfo(basename($iconB), PATHINFO_FILENAME) : 'unknown',
+            'symbolC' => file_exists($iconC) ? pathinfo(basename($iconC), PATHINFO_FILENAME) : 'unknown',
+            'symbolD' => file_exists($iconD) ? pathinfo(basename($iconD), PATHINFO_FILENAME) : 'unknown',
+            'symbolE' => file_exists($iconE) ? pathinfo(basename($iconE), PATHINFO_FILENAME) : 'unknown',
             'format' => 'png',
             'v' => $this->assetVersion
         ]);
@@ -216,6 +216,16 @@ class IconResolver
         foreach (['belt', 'i', 'ib', '1', 'bsc', 'ele'] as $prefix) {
             if (str_starts_with(strtolower($symbol), $prefix)) {
                 $symbol2 = substr($symbol, strlen($prefix));
+                if (strlen($symbol2) >= 3 && $icon = $this->getLocalImage($symbol2, $chain)) {
+                    return $icon;
+                }
+            }
+        }
+
+        // prefixed "iBUSD", "beltUSD"
+        foreach (['.m'] as $suffix) {
+            if (str_ends_with(strtolower($symbol), $suffix)) {
+                $symbol2 = substr($symbol, 0, -2);
                 if (strlen($symbol2) >= 3 && $icon = $this->getLocalImage($symbol2, $chain)) {
                     return $icon;
                 }

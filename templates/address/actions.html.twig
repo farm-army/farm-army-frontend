@@ -12,7 +12,7 @@
                         <div class="d-flex bd-highlight">
                             <div class="align-self-center flex-grow-1 text-muted">
                                 <span title="{{ action.web3.contract }}">{{ action.web3.contract|truncate_address }}</span> <a target="_blank" href="{{ chain.explorer }}/address/{{ action.web3.contract }}" title="Open Explorer: {{ action.web3.contract }}"><i class="fas fa-external-link-alt"></i></a><br>
-                                <strong>{{ action.signature }}</strong>
+                                <strong>{{ action.signature }}</strong>{% if action.named_signature|default %} <span class="text-muted fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ action.named_signature }}"></span>{% endif %}
                             </div>
                             <div class="align-self-center">
                                 <a href="#" class="btn btn-primary web3-action" data-web3="{{ action.web3|json_encode }}">{{ action.title }}</a>

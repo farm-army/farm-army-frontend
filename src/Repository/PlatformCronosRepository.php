@@ -95,7 +95,7 @@ class PlatformCronosRepository implements PlatformRepositoryInterface
             ],
             [
                 'id' => 'mmf',
-                'label' => 'MMFinance',
+                'label' => 'mmf',
                 'url' => 'https://mm.finance/?ref=MHg4OThlOTk2ODFDMjk0NzliODYzMDQyOTJiMDMwNzFDODBBNTc5NDhG',
                 'icon' => '/assets/platforms/mmf.png',
                 'token' => 'mmf',

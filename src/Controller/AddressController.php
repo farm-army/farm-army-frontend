@@ -268,7 +268,7 @@ class AddressController extends AbstractController
 
         $chain = ChainUtil::getChain($details['farm']['farm']['chain']);
 
-        $actions = array_map(function(array $item) {
+        $actions = array_map(static function(array $item) {
             $title = $item['method'];
 
             if ($item['type'] === 'claim_all') {
@@ -279,16 +279,33 @@ class AddressController extends AbstractController
                 $title = 'Claim';
             }
 
-            $substr = isset($item['inputs']) && count($item['inputs']) > 0
-                ? substr(json_encode($item['inputs']), 1, -1)
-                : null;
+            $substr = '';
+            if (isset($item['inputs']) && count($item['inputs']) > 0) {
+                $items = array_map(static function($item) {
+                    if (is_string($item) && str_starts_with($item, '0x')) {
+                        return substr($item, 0, 3) . '...' . substr($item, -3);
+                    }
 
-            return [
+                    return $item;
+                }, $item['inputs']);
+
+                $string = json_encode($items);
+                $substr = substr($string, 1, -1);
+            }
+
+            $arr = [
                 'contract' => $item['contract'],
                 'title' => $title,
                 'signature' => $item['method'] . '(' . $substr . ')',
                 'web3' => $item,
+                'arguments' => $item['arguments'] ?? [],
             ];
+
+            if (isset($item['arguments']) && count($item['arguments']) > 0) {
+                $arr['named_signature'] = sprintf("%s(%s)", $item['method'], implode(', ', $item['arguments']));
+            }
+
+            return $arr;
         }, $details['farm']['farm']['actions'] ??  []);
 
         $prices = $client->getPrices();

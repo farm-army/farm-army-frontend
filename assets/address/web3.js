@@ -2,21 +2,35 @@
     $(function(){
         const sendAction = async (web3Data, accountAddress, accountChainId, tokenPrice, msgCallback) => {
             const inputs = (web3Data.inputs || []).map((input, index) => {
+                let item = {
+                    name: '_parameter_' + index,
+                };
+
                 if (input === true || input === false) {
-                    return {
-                        "internalType": "bool",
-                        "name": "_parameter_" + index,
-                        "type": "bool"
+                    item = {
+                        internalType: "bool",
+                        type: "bool"
                     }
                 } else if (Number.isInteger(input)) {
-                    return {
-                        "internalType": "uint256",
-                        "name": "_parameter_" + index,
-                        "type": "uint256"
+                    item = {
+                        internalType: "uint256",
+                        type: "uint256"
                     }
+                } else if (typeof input === 'string' && input.toLowerCase().startsWith('0x')) {
+                    item = {
+                        internalType: "address",
+                        type: "address"
+                    }
+                } else {
+                    console.log('Error: Unknown contract format...');
                 }
 
-                return {};
+                // not displayed; but provide it if possible
+                if (web3Data.arguments && web3Data.arguments[index]) {
+                    item.name = web3Data.arguments[index];
+                }
+
+                return item;
             });
 
             const ABI = [

@@ -49,7 +49,7 @@
 
     <div class="col-2">
         <div class="float-end">
-            <a href="{{ farm.link is defined ? farm.link : farm.provider.url|default('#') }}" target="_blank"><img width="48" height="48" alt="{{ farm.provider.label }}" title="{{ farm.provider.label }}" src="{{ farm.provider.icon }}"></a>
+            <a href="{{ farm.link is defined ? farm.link|default('#') : farm.provider.url|default('#') }}" target="_blank"><img width="48" height="48" alt="{{ farm.provider.label }}" title="{{ farm.provider.label }}" src="{{ farm.provider.icon }}"></a>
         </div>
     </div>
 </div>

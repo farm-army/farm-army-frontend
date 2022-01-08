@@ -6,7 +6,7 @@
                     <h5 class="modal-title" id="wallet-modal-title">
                         Wallet -
                         <span class="text-muted">{{ address_truncate }}</span> -
-                        <a class="text-muted" target="_blank" href="{{ chain.explorer }}/address/{{ address }}" title="explorer: Address"><i class="fas fa-external-link-alt"></i></a>
+                        <a class="text-muted" target="_blank" href="{{ chain_context.explorer }}/address/{{ address }}" title="explorer: Address"><i class="fas fa-external-link-alt"></i></a>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -24,7 +24,7 @@
 
                                     <div class="flex-grow-1 lh-sm">
                                         <div class="fw-bold">{{ token.symbol|default('?')|upper }}</div>
-                                        <div style="font-size: 0.9em;"><a class="text-muted" target="_blank" href="{{ chain.explorer }}/token/{{ token.token }}" title="explorer: Token"><i class="fas fa-external-link-alt"></i></a></div>
+                                        <div style="font-size: 0.9em;"><a class="text-muted" target="_blank" href="{{ chain_context.explorer }}/token/{{ token.token }}" title="explorer: Token"><i class="fas fa-external-link-alt"></i></a></div>
                                     </div>
 
                                     <div class="text-end font-monospace lh-sm">

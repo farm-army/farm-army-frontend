@@ -1,4 +1,4 @@
-<form method="post" action="{{ path('frontpage') }}">
+<form method="post" action="">
     <div class="row justify-content-md-center">
         <div class="col-md-auto col-lg-5">
             <div class="input-group">
@@ -13,7 +13,7 @@
                     Please provide a valid chain address format
                 </div>
             </div>
-            <div class="form-text">No address? <a class="text-decoration-none" href="{{ path('random_address') }}">Open random address</a></div>
+            <div class="form-text">No address? <a class="text-decoration-none" href="{{ chain_context.id == 'bsc' ? path('random_address') : path('random_address_chain', {'chain': chain_context.id }) }}">Open random address</a></div>
         </div>
     </div>
 </form>

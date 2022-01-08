@@ -40,7 +40,7 @@
                         'reward': {
                             'amount': reward.amount,
                             'usd': reward.usd|default,
-                            'icon': '/token/' ~ reward.symbol|lower ~ '.png',
+                            'icon': reward.icon|default,
                             'token': reward.symbol
                         }
                     } %}

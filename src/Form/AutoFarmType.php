@@ -2,8 +2,10 @@
 
 namespace App\Form;
 
+use App\Utils\ChainUtil;
 use App\Utils\Web3Util;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -26,6 +28,22 @@ class AutoFarmType extends AbstractType
                 new NotBlank(),
                 new Callback([$this, 'validateAddress']),
             ]
+        ]);
+
+        $chains = [];
+        foreach(ChainUtil::getChains() as $chain) {
+            $chains[$chain['title']] = $chain['id'];
+        }
+
+        $builder->add('chain', ChoiceType::class, [
+            'label' => false,
+            'required' => true,
+            'help' => 'Chain to use',
+            'placeholder' => 'Select a Chain',
+            'choices' => $chains,
+            'constraints' => [
+                new NotBlank(),
+            ],
         ]);
 
         $builder->add('address', TextType::class, [

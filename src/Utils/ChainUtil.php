@@ -27,75 +27,95 @@ class ChainUtil
         return 'https://bscscan.com';
     }
 
-    public static function getChain(string $chain): array
+    public static function getChains(): array
     {
-        switch ($chain) {
-            case 'bsc':
-                return [
-                    'id' => $chain,
-                    'title' => 'Binance Smart Chain',
-                    'explorer' => 'https://bscscan.com',
-                    'chainId' => 56,
-                    'token' => 'bnb',
-                ];
-            case 'polygon':
-                return [
-                    'id' => $chain,
-                    'title' => 'Polygon',
-                    'explorer' => 'https://polygonscan.com',
-                    'chainId' => 137,
-                    'token' => 'wmatic',
-                ];
-            case 'fantom':
-                return [
-                    'id' => $chain,
-                    'title' => 'Fantom',
-                    'explorer' => 'https://ftmscan.com',
-                    'chainId' => 250,
-                    'token' => 'wftm',
-                ];
-            case 'kcc':
-                return [
-                    'id' => $chain,
-                    'title' => 'KuCoin Community Chain',
-                    'explorer' => 'https://explorer.kcc.io/en',
-                    'chainId' => 321,
-                    'token' => 'kcs',
-                ];
-            case 'harmony':
-                return [
-                    'id' => $chain,
-                    'title' => 'Harmony',
-                    'explorer' => 'https://explorer.harmony.one',
-                    'chainId' => 1666600000,
-                    'token' => 'wone',
-                ];
-            case 'celo':
-                return [
-                    'id' => $chain,
-                    'title' => 'Celo',
-                    'explorer' => 'https://explorer.celo.org',
-                    'chainId' => 42220,
-                    'token' => 'celo',
-                ];
-            case 'moonriver':
-                return [
-                    'id' => $chain,
-                    'title' => 'Moonriver',
-                    'explorer' => 'https://blockscout.moonriver.moonbeam.network',
-                    'chainId' => 1285,
-                    'token' => 'wmovr',
-                ];
-            case 'cronos':
-                return [
-                    'id' => $chain,
-                    'title' => 'Crypto.com: Cronos',
-                    'explorer' => 'https://cronos.crypto.org/explorer',
-                    'chainId' => 25,
-                    'token' => 'wcro',
-                ];
+        return [
+            [
+                'id' => 'bsc',
+                'title' => 'Binance Smart Chain',
+                'explorer' => 'https://bscscan.com',
+                'chainId' => 56,
+                'token' => 'bnb',
+                'icon' => 'assets/chains/bsc.svg',
+            ],
+            [
+                'id' => 'polygon',
+                'title' => 'Polygon',
+                'explorer' => 'https://polygonscan.com',
+                'chainId' => 137,
+                'token' => 'wmatic',
+                'icon' => 'assets/chains/polygon.svg',
+            ],
+            [
+                'id' => 'fantom',
+                'title' => 'Fantom',
+                'explorer' => 'https://ftmscan.com',
+                'chainId' => 250,
+                'token' => 'wftm',
+                'icon' => 'assets/chains/fantom.svg',
+            ],
+            [
+                'id' => 'kcc',
+                'title' => 'KuCoin Community Chain',
+                'explorer' => 'https://explorer.kcc.io/en',
+                'chainId' => 321,
+                'token' => 'kcs',
+                'icon' => 'assets/chains/kcc.png',
+            ],
+            [
+                'id' => 'harmony',
+                'title' => 'Harmony',
+                'explorer' => 'https://explorer.harmony.one',
+                'chainId' => 1666600000,
+                'token' => 'wone',
+                'icon' => 'assets/chains/harmony.png',
+            ],
+            [
+                'id' => 'celo',
+                'title' => 'Celo',
+                'explorer' => 'https://explorer.celo.org',
+                'chainId' => 42220,
+                'token' => 'celo',
+                'icon' => 'assets/chains/celo.png',
+            ],
+            [
+                'id' => 'moonriver',
+                'title' => 'Moonriver',
+                'explorer' => 'https://blockscout.moonriver.moonbeam.network',
+                'chainId' => 1285,
+                'token' => 'wmovr',
+                'icon' => 'assets/chains/moonriver.png',
+            ],
+            [
+                'id' => 'cronos',
+                'title' => 'Crypto.com: Cronos',
+                'explorer' => 'https://cronos.crypto.org/explorer',
+                'chainId' => 25,
+                'token' => 'wcro',
+                'icon' => 'assets/chains/cronos.png',
+            ]
+        ];
+    }
+
+    public static function getChainOrNull(string $chainId): ?array
+    {
+        foreach (self::getChains() as $chain) {
+            if ($chain['id'] === $chainId) {
+                return $chain;
+            }
         }
 
-        throw new \InvalidArgumentException('Invalid chain:' . $chain);
+        return null;
+    }
+
+    public static function getChain(string $chainId): array
+    {
+        foreach(self::getChains() as $chain) {
+            if ($chain['id'] === $chainId) {
+                return $chain;
+            }
+        }
+
+        throw new \InvalidArgumentException('Invalid chain:' . $chainId);
     }
 }

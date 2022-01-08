@@ -2,33 +2,31 @@
 
 namespace App\Repository;
 
-use App\Entity\Farm;
+use App\Entity\CrossFarm;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
 
-class FarmRepository extends ServiceEntityRepository
+class CrossFarmRepository extends ServiceEntityRepository
 {
-    private Connection $connection;
-
-    public function __construct(ManagerRegistry $registry, Connection $connection)
+    public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Farm::class);
-        $this->connection = $connection;
+        parent::__construct($registry, CrossFarm::class);
     }
 
     public function update(array $farms): void
     {
-        $this->connection->beginTransaction();
+        $connection = $this->_em->getConnection();
+        $connection->beginTransaction();
 
         $currentDate = date_create()->format('Y-m-d H:i:00');
 
+        $index = 0;
         foreach ($farms as $farm) {
 
-            $sql = "INSERT INTO farm (hash, farm_id, created_at, last_found_at, updated_at, json, name, tvl, token, chain, compound, leverage, inactive, deprecated) VALUES (:hash, :farm_id, :created_at, :last_found_at, :updated_at, :json, :name, :tvl, :token, :chain, :compound, :leverage, :inactive, :deprecated) "
+            $sql = "INSERT INTO cross_farm (hash, farm_id, created_at, last_found_at, updated_at, json, name, tvl, token, chain, compound, leverage, inactive, deprecated) VALUES (:hash, :farm_id, :created_at, :last_found_at, :updated_at, :json, :name, :tvl, :token, :chain, :compound, :leverage, :inactive, :deprecated) "
                 . "ON CONFLICT(farm_id) DO UPDATE SET last_found_at = :last_found_at, json = :json, updated_at = :updated_at, name = :name, tvl = :tvl, token = :token, hash = :hash, chain = :chain, compound = :compound, leverage = :leverage, inactive = :inactive, deprecated = :deprecated";
 
-            $stmt = $this->connection->prepare($sql);
+            $stmt = $connection->prepare($sql);
 
             $stmt->bindValue('farm_id', $farm['id']);
             $stmt->bindValue('hash', md5($farm['id']));
@@ -47,14 +45,28 @@ class FarmRepository extends ServiceEntityRepository
             $stmt->bindValue('deprecated', ($farm['deprecated'] ?? false) || ($farm['flags']['deprecated'] ?? false));
 
             $stmt->execute();
+
+            if ($index++ % 100 == 0 && $connection->isTransactionActive()) {
+                $connection->commit();
+            }
         }
 
-        $this->connection->commit();
+        if ($connection->isTransactionActive()) {
+            $connection->commit();
+        }
     }
 
-    public function getNewFarmsTimeline(): array
+    public function getNewFarmsTimeline(array $chains = []): array
     {
+        $sortedChains = $chains;
+        asort($sortedChains);
+
         $qb = $this->createQueryBuilder('f', 'f.farmId');
+
+        if (count($sortedChains) > 0) {
+            $qb->andWhere('f.chain IN (:chains)');
+            $qb->setParameter('chains', $sortedChains);
+        }
 
         $qb->orderBy('f.createdAt', 'DESC');
         $qb->setMaxResults(300);
@@ -62,16 +74,19 @@ class FarmRepository extends ServiceEntityRepository
         return $qb->getQuery()
             ->useQueryCache(true)
             ->setResultCacheLifetime(60 * 10)
-            ->setResultCacheId('new-farms-v2-timeline')
+            ->setResultCacheId('new-crossfarms-v2-timeline-' . md5(json_encode($chains)))
             ->getArrayResult();
     }
 
     /**
      * @return string[]
      */
-    public function getNewFarm(): array
+    public function getNewFarm(string $chain): array
     {
         $qb = $this->createQueryBuilder('f');
+
+        $qb->andWhere('f.chain = :chain');
+        $qb->setParameter('chain', $chain);
 
         $qb->orderBy('f.createdAt', 'DESC');
         $qb->setMaxResults(20);
@@ -79,7 +94,24 @@ class FarmRepository extends ServiceEntityRepository
         return $qb->getQuery()
             ->useQueryCache(true)
             ->setResultCacheLifetime(60 * 5)
-            ->setResultCacheId('new-farms-v4-content')
+            ->setResultCacheId('new-crossfarms-v5-content-' . $chain)
+            ->getArrayResult();
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAllNewFarm(int $max): array
+    {
+        $qb = $this->createQueryBuilder('f');
+
+        $qb->orderBy('f.createdAt', 'DESC');
+        $qb->setMaxResults($max);
+
+        return $qb->getQuery()
+            ->useQueryCache(true)
+            ->setResultCacheLifetime(60 * 5)
+            ->setResultCacheId('new-crossfarms-v4-content-' . $max)
             ->getArrayResult();
     }
 
@@ -97,7 +129,7 @@ class FarmRepository extends ServiceEntityRepository
         return $qb->getQuery()
             ->useQueryCache(true)
             ->setResultCacheLifetime(60 * 60)
-            ->setResultCacheId('getFarmHashes')
+            ->setResultCacheId('getFarmHashes-cross')
             ->getArrayResult();
     }
 
@@ -105,7 +137,7 @@ class FarmRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('f');
 
-        $qb->select('f.token', 'f.updatedAt');
+        $qb->select('f.token', 'f.updatedAt', 'f.chain');
         $qb->andWhere('f.token is not null');
         $qb->andWhere('f.lastFoundAt <= :now');
         $qb->andWhere('f.lastFoundAt >= :lastFoundAtWindow');
@@ -118,7 +150,7 @@ class FarmRepository extends ServiceEntityRepository
         return $qb->getQuery()
             ->useQueryCache(true)
             ->setResultCacheLifetime(60 * 60)
-            ->setResultCacheId('getFarmHashes')
+            ->setResultCacheId('getFarmHashes-cross')
             ->getArrayResult();
     }
 
@@ -134,12 +166,12 @@ class FarmRepository extends ServiceEntityRepository
 
         $result = $qb->getQuery()
             ->useQueryCache(true)
-            ->setResultCacheLifetime(60 * 5)
-            ->setResultCacheId('last-sync-window')
+            ->setResultCacheLifetime(60 * 30)
+            ->setResultCacheId('last-sync-window-cross')
             ->getSingleScalarResult();
 
         if (!$result) {
-            $result = date_create()->modify('-3 days');
+            $result = date_create()->modify('-5 days');
         } else {
             $result = new \DateTimeImmutable($result);
         }
@@ -171,11 +203,11 @@ class FarmRepository extends ServiceEntityRepository
         return $qb->getQuery()
             ->useQueryCache(true)
             ->setResultCacheLifetime(60 * 10)
-            ->setResultCacheId('farm-by-v2-token' . md5($token))
+            ->setResultCacheId('farm-by-v2-token-cross' . md5($token))
             ->getArrayResult();
     }
 
-    public function findFarmIdByHash(string $hash): ?Farm
+    public function findFarmIdByHash(string $hash): ?CrossFarm
     {
         $qb = $this->createQueryBuilder('f', 'f.farmId');
 
@@ -190,7 +222,7 @@ class FarmRepository extends ServiceEntityRepository
         $result = $qb->getQuery()
             ->useQueryCache(true)
             ->setResultCacheLifetime(60 * 10)
-            ->setResultCacheId('farm-by-v3-hash' . md5($hash))
+            ->setResultCacheId('farm-by-v3-hash-cross' . md5($hash))
             ->getOneOrNullResult();
 
         return $result;
@@ -199,7 +231,7 @@ class FarmRepository extends ServiceEntityRepository
     /**
      * @return array[]
      */
-    public function getTvl(): array
+    public function getTvl(string $chain): array
     {
         $qb = $this->createQueryBuilder('f');
 
@@ -208,20 +240,23 @@ class FarmRepository extends ServiceEntityRepository
         $qb->andWhere('f.lastFoundAt >= :lastFoundAtWindow');
         $qb->setParameter('lastFoundAtWindow', $this->findLastSyncWindow());
 
+        $qb->andWhere('f.chain = :chain');
+        $qb->setParameter('chain', $chain);
+
         $qb->orderBy('f.tvl', 'DESC');
         $qb->setMaxResults(16);
 
         return $qb->getQuery()
             ->useQueryCache(true)
             ->setResultCacheLifetime(60 * 30)
-            ->setResultCacheId('tvl-farms-v6-content')
+            ->setResultCacheId('tvl-crossfarms-v6-content-' . $chain)
             ->getArrayResult();
     }
 
     /**
      * @return array[]
      */
-    public function getAllValid(): array
+    public function getAllValid(string $chain): array
     {
         $qb = $this->createQueryBuilder('f');
 
@@ -230,10 +265,13 @@ class FarmRepository extends ServiceEntityRepository
         $qb->andWhere('f.lastFoundAt >= :lastFoundAtWindow');
         $qb->setParameter('lastFoundAtWindow', $this->findLastSyncWindow());
 
+        $qb->andWhere('f.chain = :chain');
+        $qb->setParameter('chain', $chain);
+
         return $qb->getQuery()
             ->useQueryCache(true)
-            ->setResultCacheLifetime(60 * 5)
-            ->setResultCacheId('all-valid-farms-v2-content')
+            ->setResultCacheLifetime(60 * 30)
+            ->setResultCacheId('all-valid-crossfarms-v3-content-' . $chain)
             ->getArrayResult();
     }
 }

@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Client\NodeClient;
-use App\Entity\Farm;
+use App\Entity\CrossFarm;
 use App\Pools\FarmPools;
-use App\Repository\FarmRepository;
-use App\Repository\PlatformRepository;
+use App\Repository\CrossFarmRepository;
 use App\Symbol\IconResolver;
+use App\Utils\ChainUtil;
 use App\Utils\Web3Util;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -16,27 +17,29 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TokenController extends AbstractController
 {
-    private FarmRepository $farmRepository;
     private FarmPools $farmPools;
     private NodeClient $nodeClient;
     private IconResolver $iconResolver;
+    private CrossFarmRepository $crossFarmRepository;
 
     public function __construct(
-        FarmRepository $farmRepository,
         FarmPools $farmPools,
         NodeClient $nodeClient,
-        IconResolver $iconResolver
+        IconResolver $iconResolver,
+        CrossFarmRepository $crossFarmRepository
     ) {
-        $this->farmRepository = $farmRepository;
         $this->farmPools = $farmPools;
         $this->nodeClient = $nodeClient;
         $this->iconResolver = $iconResolver;
+        $this->crossFarmRepository = $crossFarmRepository;
     }
 
     /**
-     * @Route("/token/{token}", name="token_address", methods={"GET"})
+     * @Route("/token/{chain}/{token}", name="chain_token_address", methods={"GET"}, requirements={
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos"
+     * })
      */
-    public function token(string $token)
+    public function token(string $token, string $chain)
     {
         $token = strtolower($token);
 
@@ -44,7 +47,14 @@ class TokenController extends AbstractController
             throw new NotFoundHttpException('invalid token address');
         }
 
-        $vaults = $this->farmRepository->findFarmIdsByToken($token);
+        try {
+            ChainUtil::getChain($chain);
+        } catch (\InvalidArgumentException $e) {
+            throw $this->createNotFoundException('invalid chain');
+        }
+
+        $vaults = $this->crossFarmRepository->findFarmIdsByToken($token);
+
         if (count($vaults) === 0) {
             throw new NotFoundHttpException('token not found');
         }
@@ -59,18 +69,17 @@ class TokenController extends AbstractController
         $response->setPublic();
         $response->setMaxAge(60 * 10);
 
-        $info = $this->nodeClient->getTokenInfo($token);
+        $info = $this->nodeClient->getTokenInfo($chain, $token);
 
         $samePairs = [];
         foreach ($info['equalLiquidityPools'] ?? [] as $pool) {
             $item = [
-                'info' => $this->getTokenCardInfo($pool),
-                'vaults' => [],
+                'info' => $this->getTokenCardInfo($pool, $chain),
             ];
 
             $item['vaults'] = array_map(
                 fn(array $i) => $this->farmPools->enrichFarmData($i['json']),
-                $this->farmRepository->findFarmIdsByToken(strtolower($pool['address']))
+                $this->crossFarmRepository->findFarmIdsByToken(strtolower($pool['address']))
             );
 
             $samePairs[] = $item;
@@ -79,8 +88,9 @@ class TokenController extends AbstractController
         $parameters = [
             'token' => $token,
             'vaults' => $others,
-            'token_card' => $this->getTokenCard($token),
+            'token_card' => $this->getTokenCard($token, $chain),
             'same_pairs' => $samePairs,
+            'chain_context' => ChainUtil::getChain($chain),
         ];
 
         $candles = [];
@@ -99,9 +109,9 @@ class TokenController extends AbstractController
         return $this->render('vault/token.html.twig', $parameters, $response);
     }
 
-    private function getTokenCardInfo(array $info): array
+    private function getTokenCardInfo(array $info, string $chain): array
     {
-        $symbol = implode('-', array_map(fn($item) => $item['symbol'], $info['tokens']));
+        $symbol = implode('-', array_map(static fn($item) => $item['symbol'], $info['tokens']));
 
         $icon = $this->iconResolver->getIcon($symbol);
 
@@ -110,12 +120,13 @@ class TokenController extends AbstractController
             'price' => $info['price'] ?? null,
             'symbol' => strtoupper($symbol),
             'address'=> $info['address'],
+            'chain' => $chain,
         ];
     }
 
-    private function getTokenCard(string $token): array
+    private function getTokenCard(string $token, string $chain): array
     {
-        $info = $this->nodeClient->getTokenInfo($token);
+        $info = $this->nodeClient->getTokenInfo($chain, $token);
 
         $symbol = 'unknown';
         if (isset($info['liquidityPool']['tokens']) && is_array($info['liquidityPool']['tokens'])) {
@@ -131,6 +142,7 @@ class TokenController extends AbstractController
             'price' => $info['price'] ?? null,
             'symbol' => strtoupper($symbol),
             'address'=> $token,
+            'chain' => $chain,
         ];
     }
 
@@ -144,8 +156,8 @@ class TokenController extends AbstractController
         $response->setPublic();
         $response->setMaxAge(60 * 10);
 
-        /** @var Farm|null $farmDb */
-        $farmDb = $this->farmRepository->findOneBy([
+        /** @var \App\Entity\CrossFarm|null $farmDb */
+        $farmDb = $this->crossFarmRepository->findOneBy([
             'hash' => $hash,
         ]);
 
@@ -155,7 +167,7 @@ class TokenController extends AbstractController
 
         $others = array_map(
             fn(array $i) => $this->farmPools->enrichFarmData($i['json']),
-            $farmDb->getToken() ? $this->farmRepository->findFarmIdsByToken($farmDb->getToken(), $farmDb->getFarmId()) : []
+            $farmDb->getToken() ? $this->crossFarmRepository->findFarmIdsByToken($farmDb->getToken(), $farmDb->getFarmId()) : []
         );
 
         $json = $farmDb->getJson();
@@ -165,7 +177,8 @@ class TokenController extends AbstractController
             'json' => $json,
             'others' => $others,
             'farm_db' => $farmDb,
-            'token_card' => $farmDb->getToken() ? $this->getTokenCard($farmDb->getToken()) : null,
+            'token_card' => $farmDb->getToken() ? $this->getTokenCard($farmDb->getToken(), $farmDb->getChain()) : null,
+            'chain_context' => ChainUtil::getChain($farmDb->getChain()),
         ], $response);
     }
 }

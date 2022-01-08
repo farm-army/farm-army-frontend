@@ -9,23 +9,19 @@ use Symfony\Component\DomCrawler\Crawler;
 class RandomAddress
 {
     private CacheItemPoolInterface $cacheItemPool;
-    private ChainGuesser $chainGuesser;
 
     public function __construct(CacheItemPoolInterface $cacheItemPool, ChainGuesser $chainGuesser)
     {
         $this->cacheItemPool = $cacheItemPool;
-        $this->chainGuesser = $chainGuesser;
     }
 
-    public function getRandomAddresses(): array
+    public function getRandomAddresses(string $chain): array
     {
-        $cache = $this->cacheItemPool->getItem('random-address');
+        $cache = $this->cacheItemPool->getItem('random-address-' . $chain);
 
         if ($cache->isHit()) {
             return $cache->get();
         }
-
-        $chain = $this->chainGuesser->getChain();
 
         if ($chain === 'bsc') {
             $urls = [

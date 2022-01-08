@@ -87,7 +87,7 @@
                             'reward': {
                                 'amount': reward.amount,
                                 'usd': reward.usd|default,
-                                'icon': '/token/' ~ reward.symbol|lower ~ '.png',
+                                'icon': reward.icon|default,
                                 'token': reward.symbol
                             }
                         } %}
@@ -118,7 +118,7 @@
                 <tbody>
                 {% for transation in details.transactions|default([]) %}
                     <tr>
-                        <td><a target="_blank" href="{{ chain.explorer }}/tx/{{ transation.hash }}" title="explorer: Transaction"><i class="fas fa-external-link-alt"></i></a></td>
+                        <td><a target="_blank" href="{{ chain_context.explorer }}/tx/{{ transation.hash }}" title="explorer: Transaction"><i class="fas fa-external-link-alt"></i></a></td>
                         <td>{{ transation.timestamp|date('Y-m-d') }}</td>
                         <td>{{ transation.amount|abs|format_token }}</td>
                         <td>

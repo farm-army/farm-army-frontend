@@ -22,72 +22,78 @@ class IconResolver
         $this->chainGuesser = $chainGuesser;
     }
 
-    public function getIcon(string $symbol): string
+    public function getIcon(string $symbol, string $chain = null): string
     {
-        $cache = $this->cacheItemPool->getItem('icon-' . md5($symbol) . 'v' . $this->assetVersion);
+        $cache = $this->cacheItemPool->getItem('icon-' . md5($symbol . $chain) . 'v' . $this->assetVersion);
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
-        $icon = $this->getIconInner($symbol);
+        if (!$chain) {
+            $chain = $this->chainGuesser->getChain();
+        }
+
+        $icon = $this->getIconInner($symbol, $chain);
 
         $this->cacheItemPool->save($cache->set($icon)->expiresAfter(60 * 60 * 5 + random_int(1, 60)));
 
         return $icon;
     }
 
-    private function getIconInner(string $symbol): string
+    private function getIconInner(string $symbol, string $chain): string
     {
         $symbol = strtolower($symbol);
 
-        if ($result = $this->getLocalImage($symbol)) {
-            return $this->urlGenerator->generate('token_icon', [
+        if ($result = $this->getLocalImage($symbol, $chain)) {
+            return $this->urlGenerator->generate('chain_token_icon', [
                 'symbol' => pathinfo(basename($result), PATHINFO_FILENAME),
                 'format' => 'png',
+                'chain' => $chain,
                 'v' => $this->assetVersion
             ]);
         }
 
         if (preg_match('#^(\w+)-(\w+)$#i', $symbol, $match) || preg_match('#(\w+)-(\w+)\s+#i', $symbol, $match)) {
-            if ($pair = $this->getLocalPair($match[1], $match[2])) {
+            if ($pair = $this->getPair2($match[1], $match[2], $chain)) {
                 return $pair;
             }
         }
 
         if (preg_match('#^(\w+)-(\w+)$#i', $symbol, $match) || preg_match('#(\w+)-(\w+)\s+#i', $symbol, $match)) {
-            if ($pair = $this->getLocalPair($match[1], $match[2])) {
+            if ($pair = $this->getPair2($match[1], $match[2], $chain)) {
                 return $pair;
             }
         }
 
         if (preg_match('#^(\w+)-(\w+)-(\w+)$#i', $symbol, $match) || preg_match('#(\w+)-(\w+)-(\w+)\s+#i', $symbol, $match)) {
-            if ($pair = $this->getPair3($match[1], $match[2], $match[3])) {
+            if ($pair = $this->getPair3($match[1], $match[2], $match[3], $chain)) {
                 return $pair;
             }
         }
 
         if (preg_match('#^(\w+)-(\w+)-(\w+)-(\w+)$#i', $symbol, $match) || preg_match('#(\w+)-(\w+)-(\w+)-(\w+)\s+#i', $symbol,
                 $match)) {
-            if ($pair = $this->getPair4($match[1], $match[2], $match[3], $match[4])) {
+            if ($pair = $this->getPair4($match[1], $match[2], $match[3], $match[4], $chain)) {
                 return $pair;
             }
         }
 
         if (preg_match('#^(\w+)-(\w+)-(\w+)-(\w+)-(\w+)$#i', $symbol, $match) || preg_match('#(\w+)-(\w+)-(\w+)-(\w+)-(\w+)\s+#i', $symbol, $match)) {
-            if ($pair = $this->getPair5($match[1], $match[2], $match[3], $match[4], $match[5])) {
+            if ($pair = $this->getPair5($match[1], $match[2], $match[3], $match[4], $match[5], $chain)) {
                 return $pair;
             }
         }
 
-        return $this->urlGenerator->generate('token_icon', [
+        return $this->urlGenerator->generate('chain_token_icon', [
             'symbol' => 'unknown',
             'format' => 'png',
+            'chain' => $chain,
             'v' => $this->assetVersion
         ]);
     }
 
-    public function getLocalPair(string $symbolA, string $symbolB): ?string
+    private function getPair2(string $symbolA, string $symbolB, string $chain): ?string
     {
         $symbolA = strtolower($symbolA);
         $symbolB = strtolower($symbolB);
@@ -99,15 +105,16 @@ class IconResolver
             return null;
         }
 
-        return $this->urlGenerator->generate('token_icon_pair', [
+        return $this->urlGenerator->generate('chain_token_icon_pair', [
             'symbolA' => file_exists($iconA) ? pathinfo(basename($iconA), PATHINFO_FILENAME) : 'unknown',
             'symbolB' => file_exists($iconB) ? pathinfo(basename($iconB), PATHINFO_FILENAME) : 'unknown',
             'format' => 'png',
+            'chain' => $chain,
             'v' => $this->assetVersion
         ]);
     }
 
-    private function getPair3(string $symbolA, string $symbolB, string $symbolC): ?string
+    private function getPair3(string $symbolA, string $symbolB, string $symbolC, string $chain): ?string
     {
         $symbolA = strtolower($symbolA);
         $symbolB = strtolower($symbolB);
@@ -121,16 +128,17 @@ class IconResolver
             return null;
         }
 
-        return $this->urlGenerator->generate('token_icon_abc', [
+        return $this->urlGenerator->generate('chain_token_icon_abc', [
             'symbolA' => file_exists($iconA) ? pathinfo(basename($iconA), PATHINFO_FILENAME) : 'unknown',
             'symbolB' => file_exists($iconB) ? pathinfo(basename($iconB), PATHINFO_FILENAME) : 'unknown',
             'symbolC' => file_exists($iconC) ? pathinfo(basename($iconC), PATHINFO_FILENAME) : 'unknown',
             'format' => 'png',
+            'chain' => $chain,
             'v' => $this->assetVersion
         ]);
     }
 
-    private function getPair4(string $symbolA, string $symbolB, string $symbolC, string $symbolD): ?string
+    private function getPair4(string $symbolA, string $symbolB, string $symbolC, string $symbolD, string $chain): ?string
     {
         $symbolA = strtolower($symbolA);
         $symbolB = strtolower($symbolB);
@@ -146,17 +154,18 @@ class IconResolver
             return null;
         }
 
-        return $this->urlGenerator->generate('token_icon_abcd', [
+        return $this->urlGenerator->generate('chain_token_icon_abcd', [
             'symbolA' => file_exists($iconA) ? pathinfo(basename($iconA), PATHINFO_FILENAME) : 'unknown',
             'symbolB' => file_exists($iconB) ? pathinfo(basename($iconB), PATHINFO_FILENAME) : 'unknown',
             'symbolC' => file_exists($iconC) ? pathinfo(basename($iconC), PATHINFO_FILENAME) : 'unknown',
             'symbolD' => file_exists($iconD) ? pathinfo(basename($iconD), PATHINFO_FILENAME) : 'unknown',
             'format' => 'png',
+            'chain' => $chain,
             'v' => $this->assetVersion
         ]);
     }
 
-    private function getPair5(string $symbolA, string $symbolB, string $symbolC, string $symbolD, string $symbolE): ?string
+    private function getPair5(string $symbolA, string $symbolB, string $symbolC, string $symbolD, string $symbolE, string $chain): ?string
     {
         $symbolA = strtolower($symbolA);
         $symbolB = strtolower($symbolB);
@@ -174,13 +183,14 @@ class IconResolver
             return null;
         }
 
-        return $this->urlGenerator->generate('token_icon_abcde', [
+        return $this->urlGenerator->generate('chain_token_icon_abcde', [
             'symbolA' => file_exists($iconA) ? pathinfo(basename($iconA), PATHINFO_FILENAME) : 'unknown',
             'symbolB' => file_exists($iconB) ? pathinfo(basename($iconB), PATHINFO_FILENAME) : 'unknown',
             'symbolC' => file_exists($iconC) ? pathinfo(basename($iconC), PATHINFO_FILENAME) : 'unknown',
             'symbolD' => file_exists($iconD) ? pathinfo(basename($iconD), PATHINFO_FILENAME) : 'unknown',
             'symbolE' => file_exists($iconE) ? pathinfo(basename($iconE), PATHINFO_FILENAME) : 'unknown',
             'format' => 'png',
+            'chain' => $chain,
             'v' => $this->assetVersion
         ]);
     }
@@ -276,9 +286,9 @@ class IconResolver
         return $result;
     }
 
-    public function getTokenIconForSymbolAddress(array $tokens): string
+    public function getTokenIconForSymbolAddress(string $chain, array $tokens): string
     {
-        $cache = $this->cacheItemPool->getItem('icon-v10-addresses-' . md5(json_encode($tokens)) . 'v' . $this->assetVersion);
+        $cache = $this->cacheItemPool->getItem('icon-v10-addresses-' . md5($chain . json_encode($tokens)) . 'v' . $this->assetVersion);
         if ($cache->isHit()) {
             return $cache->get();
         }
@@ -300,21 +310,24 @@ class IconResolver
 
         $icon = null;
         if ($empty) {
-            $icon = $this->urlGenerator->generate('token_icon', [
+            $icon = $this->urlGenerator->generate('chain_token_icon', [
                 'symbol' => 'unknown',
                 'format' => 'png',
+                'chain' => $chain,
                 'v' => $this->assetVersion
             ]);
         } elseif (count($parts) === 1) {
-            $icon = $this->urlGenerator->generate('token_icon', [
+            $icon = $this->urlGenerator->generate('chain_token_icon', [
                 'symbol' => $parts[0],
                 'format' => 'png',
+                'chain' => $chain,
                 'v' => $this->assetVersion
             ]);
         } else if(count($parts) > 1) {
-            $icon = $this->urlGenerator->generate('token_icon_pair', [
+            $icon = $this->urlGenerator->generate('chain_token_icon_pair', [
                 'symbolA' => $parts[0],
                 'symbolB' => $parts[1],
+                'chain' => $chain,
                 'format' => 'png',
                 'v' => $this->assetVersion
             ]);

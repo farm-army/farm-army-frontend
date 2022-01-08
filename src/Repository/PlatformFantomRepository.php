@@ -13,9 +13,10 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
         }
 
         return [
-            'id' => 'unknown',
-            'label' => 'Unknown',
+            'id' => $id,
+            'label' => ucfirst($id),
             'icon' => '/assets/platforms/unknown.png',
+            'chain' => 'fantom',
         ];
     }
 
@@ -52,6 +53,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.spiritswap.finance/',
                 'icon' => '/assets/platforms/spiritswap.png',
                 'token' => 'spirit',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'spookyswap',
@@ -59,6 +61,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://spookyswap.finance/',
                 'icon' => '/assets/platforms/spookyswap.png',
                 'token' => 'boo',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'liquiddriver',
@@ -66,6 +69,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://www.liquiddriver.finance/',
                 'icon' => '/assets/platforms/liquiddriver.png',
                 'token' => 'lqdr',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'fbeefy',
@@ -73,6 +77,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.beefy.finance/#/fantom',
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'fcurve',
@@ -80,6 +85,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://ftm.curve.fi/',
                 'icon' => '/assets/platforms/curve.png',
                 'token' => 'crv',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'frankenstein',
@@ -87,6 +93,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://frankenstein.finance/?ref=0x898e99681C29479b86304292b03071C80A57948F',
                 'icon' => '/assets/platforms/frankenstein.png',
                 'token' => 'frank',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'ester',
@@ -94,6 +101,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.ester.finance/',
                 'icon' => '/assets/platforms/ester.png',
                 'token' => 'est',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'reaper',
@@ -101,6 +109,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://www.reaper.farm/',
                 'icon' => '/assets/platforms/reaper.png',
                 'token' => 'unknown',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'fcream',
@@ -108,6 +117,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.cream.finance/',
                 'icon' => '/assets/platforms/cream.png',
                 'token' => 'cream',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'scream',
@@ -115,6 +125,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://scream.sh/',
                 'icon' => '/assets/platforms/scream.png',
                 'token' => 'scream',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'tarot',
@@ -122,6 +133,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://www.tarot.to/',
                 'icon' => '/assets/platforms/tarot.png',
                 'token' => 'tarot',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'fwaka',
@@ -129,6 +141,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://waka.finance/',
                 'icon' => '/assets/platforms/waka.png',
                 'token' => 'waka',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'fhyperjump',
@@ -136,6 +149,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://ftm.hyperjump.app/farms',
                 'icon' => '/assets/platforms/hyperjump.png',
                 'token' => 'ori',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'fautofarm',
@@ -143,6 +157,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://autofarm.network/fantom/',
                 'icon' => '/assets/platforms/auto.png',
                 'token' => 'fauto',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'feleven',
@@ -150,6 +165,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://eleven.finance',
                 'icon' => '/assets/platforms/eleven.png',
                 'token' => 'ele',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'fjetswap',
@@ -157,6 +173,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://fantom.jetswap.finance/',
                 'icon' => '/assets/platforms/jetswap.png',
                 'token' => 'fwings',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'paintswap',
@@ -164,6 +181,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://paintswap.finance/',
                 'icon' => '/assets/platforms/paintswap.png',
                 'token' => 'brush',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'fswamp',
@@ -171,6 +189,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://swamp.finance/fantom/',
                 'icon' => '/assets/platforms/swamp.png',
                 'token' => 'fswamp',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'beethovenx',
@@ -178,12 +197,14 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.beethovenx.io/#/',
                 'icon' => '/assets/platforms/beethovenx.png',
                 'token' => 'beets',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'robovault',
                 'label' => 'RoboVault',
                 'url' => 'https://www.robo-vault.com/',
                 'icon' => '/assets/platforms/robovault.png',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'morpheus',
@@ -191,6 +212,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://morpheusswap.app/',
                 'icon' => '/assets/platforms/morpheus.png',
                 'token' => 'morph',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'geist',
@@ -198,24 +220,28 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://geist.finance/markets',
                 'icon' => '/assets/platforms/geist.png',
                 'token' => 'geist',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'grim',
                 'label' => 'Grim',
                 'url' => 'https://app.grim.finance/',
                 'icon' => '/assets/platforms/grim.png',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'zoocoin',
                 'label' => 'Zoocoin',
                 'url' => 'https://dex.zoocoin.cash/',
                 'icon' => '/assets/platforms/zoocoin.png',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'fpearzap',
                 'label' => 'PearZap',
                 'url' => 'https://fantom.pearzap.com/?r=yv676c7746zC072579641y20709y1y5zC6yA35726F',
                 'icon' => '/assets/platforms/pearzap.png',
+                'chain' => 'fantom',
             ],
             [
                 'id' => 'fsynapse',
@@ -223,6 +249,31 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://synapseprotocol.com/pools',
                 'icon' => '/assets/platforms/synapse.png',
                 'token' => 'syn',
+                'chain' => 'fantom',
+            ],
+            [
+                'id' => 'hectordao',
+                'label' => 'Hector',
+                'url' => 'https://app.hectordao.com/#/dashboard',
+                'icon' => '/assets/platforms/hectordao.png',
+                'token' => 'hec',
+                'chain' => 'fantom',
+            ],
+            [
+                'id' => 'fantohm',
+                'label' => 'FantOHM',
+                'url' => 'https://app.hectordao.com/#/dashboard',
+                'icon' => '/assets/platforms/fantohm.png',
+                'token' => 'fhm',
+                'chain' => 'fantom',
+            ],
+            [
+                'id' => 'hundred',
+                'label' => 'Hundred',
+                'url' => 'https://hundred.finance',
+                'icon' => '/assets/platforms/hundred.png',
+                'token' => 'hnd',
+                'chain' => 'fantom',
             ],
         ];
     }

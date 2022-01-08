@@ -3,22 +3,30 @@
     or farm.leverage|default
     or farm.deprecated|default
     or farm.inactive|default
+    or farm.bond|default
     or 'lend' in farm.flags|default([])
     or 'borrow' in farm.flags|default([])
     or 'deprecated' in farm.flags|default([])
     or 'inactive' in farm.flags|default([])
+    or 'bond' in farm.flags|default([])
 %}
     <div class="position-absolute top-0 end-0">
         {% if 'inactive' in farm.flags|default([]) or farm.inactive|default %}
             <span class="badge bg-danger" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">inactive</span>
         {% endif %}
+
         {% if 'deprecated' in farm.flags|default([]) or farm.deprecated|default %}
             <span class="badge bg-danger" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">deprecated</span>
+        {% endif %}
+
+        {% if 'bond' in farm.flags|default([]) or farm.bond|default %}
+            <span class="badge bg-info" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">bond</span>
         {% endif %}
 
         {% if farm.leverage|default %}
             <span class="badge bg-danger" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">leverage</span>
         {% endif %}
+
         {% if farm.compound|default %}
             <span class="badge bg-primary" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">auto-compound</span>
         {% endif %}
@@ -26,6 +34,7 @@
         {% if 'lend' in farm.flags|default([]) %}
             <span class="badge bg-primary" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">lend</span>
         {% endif %}
+
         {% if 'borrow' in farm.flags|default([]) %}
             <span class="badge bg-danger" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">borrow</span>
         {% endif %}

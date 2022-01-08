@@ -34,10 +34,14 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    GuzzleHttp\ClientInterface: '@eight_points_guzzle.client.default'
+    GuzzleHttp\Client:
+        arguments:
+            - { timeout: '10', connect_timeout: '10' }
+
+    #GuzzleHttp\ClientInterface: '@eight_points_guzzle.client.default'
+    GuzzleHttp\ClientInterface: '@GuzzleHttp\Client'
     Imagine\Image\ImagineInterface: '@liip_imagine.gd'
 
     App\Client\NodeClient:
         arguments:
-            $baseUrl: '%env(BACKEND_BASE_URL)%'
-
+            $crossBaseUrl: '%env(CROSS_BACKEND_BASE_URL)%'

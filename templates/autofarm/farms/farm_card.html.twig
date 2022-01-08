@@ -2,7 +2,7 @@
     <div class="col-5">
         <div class="d-flex">
             <div class="pe-2 position-relative">
-                <a href="{{ path('token_address', {'token': box.extra.transactionToken}) }}" title="Token: {{ box.name }}">
+                <a href="{{ path('chain_token_address', {'token': box.extra.transactionToken, 'chain': box.chain}) }}" title="Token: {{ box.name }}">
                     <picture>
                         <source srcset="{{ box.icon|replace({'.png': '.webp'}) }}" type="image/webp">
                         <img loading="lazy" width="42" height="42" src="{{ box.icon }}" title="{{ box.name }}" alt="">
@@ -39,10 +39,10 @@
 
     <div class="col-2 text-center">
         {% if box.earns|default([])|length > 0 %}
-            {% for earn in box.earns|default([]) %}
+            {% for earn in box.earn|default([]) %}
                 <picture>
-                    <source srcset="{{ path('token_icon', {'symbol': earn, 'format': 'webp'}) }}" type="image/webp">
-                    <img loading="lazy" width="16" height="16" src="{{ path('token_icon', {'symbol': earn, 'format': 'png'}) }}" title="Earn {{ earn }}" alt="Earn {{ earn }}">
+                    <source srcset="{{ earn.icon|replace({'.png': '.webp'}) }}" type="image/webp">
+                    <img loading="lazy" width="16" height="16" src="{{ earn.icon }}" title="Earn {{ earn.symbol|default }}" alt="Earn {{ earn.symbol|default }}">
                 </picture>
             {% endfor %}
             <div class="text-muted">Earn</div>

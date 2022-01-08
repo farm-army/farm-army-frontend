@@ -6,6 +6,7 @@ use App\Utils\ChainGuesser;
 use App\Utils\ChainUtil;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
+use Twig\TwigFunction;
 
 class ContextExtension extends AbstractExtension implements GlobalsInterface
 {
@@ -16,10 +17,27 @@ class ContextExtension extends AbstractExtension implements GlobalsInterface
         $this->chainGuesser = $chainGuesser;
     }
 
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction('chain_icon', [$this, 'chainIcon']),
+        ];
+    }
+
     public function getGlobals(): array
     {
         return [
             'chain' => ChainUtil::getChain($this->chainGuesser->getChain()),
         ];
+    }
+
+    public function chainIcon(string $chain): ?string
+    {
+        try {
+            $chain = ChainUtil::getChain($chain);
+        } catch (\InvalidArgumentException $e) {
+        }
+
+        return $chain['icon'] ?? null;
     }
 }

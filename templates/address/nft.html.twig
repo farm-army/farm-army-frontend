@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'NFTs - ' ~ address|truncate_address %}
+
+{% block meta %}
+    <meta name="robots" content="noindex">
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="text-center mb-3">
+        <div class="btn-group">
+            <a href="{{ path('app_farm_nfts', {'address': address[2:]}) }}" title="Binance Smart Chain" class="btn btn-outline-light text-dark {{ chain_context.id == 'bsc' ? 'active fw-bold' : '' }}"><img height="24px" alt="Binance Smart Chain" src="{{ asset('assets/chains/bsc.svg') }}"></a>
+            <a href="{{ path('app_farm_nfts_chain', {'chain': 'polygon', 'address': address[2:]}) }}" title="Polygon" class="btn btn-outline-light text-dark {{ chain_context.id == 'polygon' ? 'active fw-bold' : '' }}"><img height="24px" alt="Polygon" src="{{ asset('assets/chains/polygon.svg') }}"></a>
+            <a href="{{ path('app_farm_nfts_chain', {'chain': 'fantom', 'address': address[2:]}) }}" title="Fantom" class="btn btn-outline-light text-dark {{ chain_context.id == 'fantom' ? 'active fw-bold' : '' }}"><img height="24px" alt="Fantom" src="{{ asset('assets/chains/fantom.svg') }}"></a>
+            <a href="{{ path('app_farm_nfts_chain', {'chain': 'kcc', 'address': address[2:]}) }}" title="KuCoin Community Chain" class="btn btn-outline-light text-dark {{ chain_context.id == 'kcc'? 'active fw-bold' : '' }}"><img height="24px" alt="KuCoin Chain" src="{{ asset('assets/chains/kcc.png') }}"></a>
+            <a href="{{ path('app_farm_nfts_chain', {'chain': 'harmony', 'address': address[2:]}) }}" title="Harmony" class="btn btn-outline-light text-dark {{ chain_context.id == 'harmony' ? 'active fw-bold' : '' }}"><img height="24px" alt="Harmony" src="{{ asset('assets/chains/harmony.png') }}"></a>
+            <a href="{{ path('app_farm_nfts_chain', {'chain': 'celo', 'address': address[2:]}) }}" title="Celo" class="btn btn-outline-light text-dark {{ chain_context.id == 'celo' ? 'active fw-bold' : '' }}"><img height="24px" alt="Celo" src="{{ asset('assets/chains/celo.png') }}"></a>
+            <a href="{{ path('app_farm_nfts_chain', {'chain': 'moonriver', 'address': address[2:]}) }}" title="Moonriver" class="btn btn-outline-light text-dark {{ chain_context.id == 'moonriver' ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonriver" src="{{ asset('assets/chains/moonriver.png') }}"></a>
+            <a href="{{ path('app_farm_nfts_chain', {'chain': 'cronos', 'address': address[2:]}) }}" title="Crypto.com: Cronos" class="btn btn-outline-light text-dark {{ chain_context.id == 'cronos'? 'active fw-bold' : '' }}"><img height="24px" alt="Cronos" src="{{ asset('assets/chains/cronos.png') }}"></a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="text-center pb-3">
+            <span class="fw-bold">NFTs</span> -
+            <a class="text-muted text-small text-decoration-none">{{ address|truncate_address }}</a>
+            -
+            <a class="text-muted text-small" target="_blank" href="{{ explorer }}/address/{{ address }}"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+    </div>
+
+    {% if nfts|default([])|length == 0 %}
+<div class="text-center mb-3">
+<div class="text-muted">Nothing found :(</div>
+</div>
+    {% endif %}
+
+    {% for nft in nfts|default() %}
+        <div class="row">
+            <div class="col">
+                <div class="d-flex">
+                    <div class="flex">
+                        {% if nft.url|default %}
+                            <a target="_blank" href="{{ nft.url }}" title="Visit: {{ nft.url }}">
+                        {% endif %}
+                        {% if nft.icon|default %}
+                            <img loading="lazy" alt="{{ nft.name }}" class="me-2" width="32px" height="32px" src="{{ nft.icon starts with 'http' ? nft.icon : asset(nft.icon) }}">
+                        {% else %}
+                            <img loading="lazy" alt="{{ nft.name }}" class="me-2" width="32px" height="32px" src="{{ asset('/token/unknown.png') }}">
+                        {% endif %}
+                        {% if nft.url|default %}
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <div class="flex-grow-1 align-middle lh-sm">
+                        {{ nft.name }}
+                        <div class="text-muted" style="font-size: 0.8em">{{ nft.address|truncate_address }} <a class="text-muted text-small" target="_blank" href="{{ explorer }}/address/{{ nft.address }}"><i class="fas fa-external-link-alt"></i></a></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-auto text-end">
+                <div class="d-flex">
+                    <div class="d-flex ps-2 ms-2 lh-sm" title="Balances">
+                        <div class="lh-sm pe-1">
+                            <div class="fw-bold">{{ nft.balance }}</div>
+                            <div class="text-muted" style="font-size: 0.8em;">Balance</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row row-cols-1 row-cols-sm-1 row-cols-lg-2 g-3 pb-5">
+            {% for items in nft.tokens|batch(2) %}
+                {% for item in items %}
+                    <div class="col">
+                        {% include 'components/nft_card.html.twig' with {'nft': item} only %}
+                    </div>
+                {% endfor %}
+
+            {% endfor %}
+        </div>
+
+
+    {% endfor %}
+
+
+{% endblock %}
+
+{% block javascript %}
+    {{ encore_entry_script_tags('nft') }}
+{% endblock javascript %}
+

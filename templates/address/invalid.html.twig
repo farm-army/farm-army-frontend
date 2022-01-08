@@ -6,7 +6,7 @@
 
     <div class="alert alert-danger text-center">Please provide a valid chain address format</div>
 
-    {% include 'components/address_form.html.twig' %}
+    {% include 'components/address_form.html.twig' with {'chain_context': chain_context}  %}
 
 {% endblock %}
 

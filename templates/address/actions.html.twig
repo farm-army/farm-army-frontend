@@ -3,7 +3,7 @@
 {% endif %}
 
 {% if details.farm.farm.actions|default([])|length > 0 %}
-    <div class="web3-action-container" data-web3-account="{{ address }}" data-web3-chain-id="{{ chain.chainId }}" data-web3-token-price="{{ gas_price }}">
+    <div class="web3-action-container" data-web3-account="{{ address }}" data-web3-chain-id="{{ chain_context.chainId }}" data-web3-token-price="{{ gas_price }}">
 
         <div class="card">
             <ul class="list-group list-group-flush">
@@ -11,7 +11,7 @@
                     <li class="list-group-item">
                         <div class="d-flex bd-highlight">
                             <div class="align-self-center flex-grow-1 text-muted">
-                                <span title="{{ action.web3.contract }}">{{ action.web3.contract|truncate_address }}</span> <a target="_blank" href="{{ chain.explorer }}/address/{{ action.web3.contract }}" title="Open Explorer: {{ action.web3.contract }}"><i class="fas fa-external-link-alt"></i></a><br>
+                                <span title="{{ action.web3.contract }}">{{ action.web3.contract|truncate_address }}</span> <a target="_blank" href="{{ chain_context.explorer }}/address/{{ action.web3.contract }}" title="Open Explorer: {{ action.web3.contract }}"><i class="fas fa-external-link-alt"></i></a><br>
                                 <strong>{{ action.signature }}</strong>{% if action.named_signature|default %} <span class="text-muted fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ action.named_signature }}"></span>{% endif %}
                             </div>
                             <div class="align-self-center">

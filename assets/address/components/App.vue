@@ -24,7 +24,8 @@
           <a class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#wallet-modal"><i class="fas fa-wallet" title="Token & Liquidity Pools"></i><span class="d-none d-md-inline"> Wallet</span></a>
         </template>
 
-        <a class="btn btn-outline-dark" :href="`${context.address}/transactions`"><i class="fas fa-exchange-alt"></i><span class="d-none d-md-inline"> Transactions</span></a>
+        <a class="btn btn-outline-dark" :href="`${context.transaction_url}`"><i class="fas fa-exchange-alt"></i><span class="d-none d-md-inline"> Transactions</span></a>
+        <a class="btn btn-outline-dark" :href="`${context.nft_url}`"><i class="fas fa-portrait"></i><span class="d-none d-md-inline"> NFTs</span></a>
       </div>
 
       <div class="col-md-auto text-end">

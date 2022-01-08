@@ -1,7 +1,22 @@
 (function($){
     $(function(){
         const sendAction = async (web3Data, accountAddress, accountChainId, tokenPrice, msgCallback) => {
-            const inputs = (web3Data.inputs || []).map((input, index) => {
+            const inputsFormatted = (web3Data.inputs || []).map(input => {
+                let result = input;
+
+                // placeholders
+                if (typeof result === 'string' && result.startsWith('%') && result.startsWith('%')) {
+                    if (result.toLowerCase() === '%account%') {
+                        result = accountAddress
+                    } else {
+                        console.error('Invalid placeholder', result);
+                    }
+                }
+
+                return result;
+            });
+
+            const inputs = inputsFormatted.map((input, index) => {
                 let item = {
                     name: '_parameter_' + index,
                 };
@@ -93,7 +108,7 @@
 
             let tx;
             try {
-                tx = await contract.methods[web3Data.method](...(web3Data.inputs || []));
+                tx = await contract.methods[web3Data.method](...inputsFormatted);
             } catch (e) {
                 console.log('error', e)
                 return;

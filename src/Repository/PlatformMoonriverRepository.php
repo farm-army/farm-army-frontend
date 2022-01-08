@@ -13,9 +13,10 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
         }
 
         return [
-            'id' => 'unknown',
-            'label' => 'Unknown',
+            'id' => $id,
+            'label' => ucfirst($id),
             'icon' => '/assets/platforms/unknown.png',
+            'chain' => 'moonriver',
         ];
     }
 
@@ -52,6 +53,7 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'url' => 'https://autofarm.network/moonriver/',
                 'icon' => '/assets/platforms/auto.png',
                 'token' => 'fauto',
+                'chain' => 'moonriver',
             ],
             [
                 'id' => 'solarbeam',
@@ -59,6 +61,7 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.solarbeam.io/farm',
                 'icon' => '/assets/platforms/solarbeam.png',
                 'token' => 'solar',
+                'chain' => 'moonriver',
             ],
             [
                 'id' => 'huckleberry',
@@ -66,6 +69,7 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'url' => 'https://www.huckleberry.finance/',
                 'icon' => '/assets/platforms/huckleberry.png',
                 'token' => 'finn',
+                'chain' => 'moonriver',
             ],
             [
                 'id' => 'moonfarm',
@@ -73,6 +77,7 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'url' => 'https://v2.moonfarm.in/',
                 'icon' => '/assets/platforms/moonfarm.png',
                 'token' => 'moon',
+                'chain' => 'moonriver',
             ],
             [
                 'id' => 'moonkafe',
@@ -80,6 +85,7 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'url' => 'https://moon.kafe.finance/#/',
                 'icon' => '/assets/platforms/kukafe.png',
                 'token' => 'kafe',
+                'chain' => 'moonriver',
             ],
             [
                 'id' => 'mbeefy',
@@ -87,6 +93,7 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.beefy.finance/#/moonriver',
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
+                'chain' => 'moonriver',
             ],
             [
                 'id' => 'msushi',
@@ -94,6 +101,15 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.sushi.com/',
                 'icon' => '/assets/platforms/sushi.png',
                 'token' => 'sushi',
+                'chain' => 'moonriver',
+            ],
+            [
+                'id' => 'mtemplar',
+                'label' => 'Templar',
+                'url' => 'https://templar.finance/#/bonds',
+                'icon' => '/assets/platforms/templar.png',
+                'token' => 'tem',
+                'chain' => 'moonriver',
             ],
         ];
     }

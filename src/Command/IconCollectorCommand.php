@@ -65,6 +65,8 @@ class IconCollectorCommand extends Command
 
         $this->tokenList('https://charts-bomb.zoocoin.cash/api/tokenlistbot');
 
+        $this->tokenList('https://www.huckleberry.finance/huckleberry.tokenlist.json');
+
         return Command::SUCCESS;
     }
 
@@ -173,7 +175,7 @@ class IconCollectorCommand extends Command
                 }
             }
 
-            if (isset($token['symbol']) && preg_match('#^[\w-]+$#', $token['symbol'])) {
+            if (isset($token['symbol']) && preg_match('#^[\w.-]+$#', $token['symbol'])) {
                 $targetSymbolIcon = $targetDir . '/symbol/' . strtolower($token['symbol']) . '.png';
                 if (!is_file($targetSymbolIcon) && $img = $createImage()) {
                     $img->save($targetSymbolIcon, ['quality' => 75]);

@@ -13,9 +13,10 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
         }
 
         return [
-            'id' => 'unknown',
-            'label' => 'Unknown',
+            'id' => $id,
+            'label' => ucfirst($id),
             'icon' => '/assets/platforms/unknown.png',
+            'chain' => 'celo',
         ];
     }
 
@@ -52,6 +53,7 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.ubeswap.org/',
                 'icon' => '/assets/platforms/ubeswap.png',
                 'token' => 'ube',
+                'chain' => 'celo',
             ],
             [
                 'id' => 'mobius',
@@ -59,6 +61,7 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'url' => 'https://www.mobius.money/#/farm/',
                 'icon' => '/assets/platforms/mobius.png',
                 'token' => 'mobi',
+                'chain' => 'celo',
             ],
             [
                 'id' => 'csushi',
@@ -66,6 +69,7 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.sushi.com/',
                 'icon' => '/assets/platforms/sushi.png',
                 'token' => 'sushi',
+                'chain' => 'celo',
             ],
             [
                 'id' => 'moola',
@@ -73,6 +77,7 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.moola.market',
                 'icon' => '/assets/platforms/moola.png',
                 'token' => 'moo',
+                'chain' => 'celo',
             ],
             [
                 'id' => 'cbeefy',
@@ -80,12 +85,14 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.beefy.finance/#/celo',
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
+                'chain' => 'celo',
             ],
             [
                 'id' => 'cautofarm',
                 'label' => 'Autofarm',
                 'url' => 'https://autofarm.network/celo/',
                 'icon' => '/assets/platforms/auto.png',
+                'chain' => 'celo',
             ],
             [
                 'id' => 'celodex',
@@ -93,6 +100,7 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'url' => 'https://www.celodex.org/?referral=2v9mkob4akJHESUqU14ZegxgBh2N',
                 'icon' => '/assets/platforms/celodex.png',
                 'token' => 'clx',
+                'chain' => 'celo',
             ],
         ];
     }

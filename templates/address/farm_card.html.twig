@@ -26,28 +26,32 @@
             }
         } %}
 
-        <div class="d-flex pt-2">
-            <div class="flex-grow-1 align-self-end">
-                {% if farm.farm.platform|default %}
-                    <div title="Origin Platform" class="align-self-end text-muted" style="font-size: 0.8em">{{ farm.farm.platform|capitalize }}</div>
+        {% if farm.farm.platform|default or farm.rewards|default([])|length > 0 %}
+            <div class="d-flex pt-1">
+                <div class="flex-grow-1 align-self-end">
+                    {% if farm.farm.platform|default %}
+                        <div title="Origin Platform" class="align-self-end text-muted" style="font-size: 0.8em">{{ farm.farm.platform|capitalize }}</div>
+                    {% endif %}
+                </div>
+
+                {% if farm.rewards|default([])|length > 0 %}
+                    <div class="text-end">
+                        <div class="d-flex" title="Rewards (Pending Harvest)">
+                            {% for reward in farm.rewards|default([]) %}
+                                {% include 'components/reward.html.twig' with {
+                                    'reward': {
+                                        'amount': reward.amount,
+                                        'usd': reward.usd|default,
+                                        'icon': reward.icon|default,
+                                        'token': reward.symbol
+                                    }
+                                } %}
+                            {% endfor %}
+                        </div>
+                    </div>
                 {% endif %}
             </div>
-
-            <div class="text-end">
-                <div class="d-flex" title="Rewards (Pending Harvest)">
-                    {% for reward in farm.rewards|default([]) %}
-                        {% include 'components/reward.html.twig' with {
-                            'reward': {
-                                'amount': reward.amount,
-                                'usd': reward.usd|default,
-                                'icon': '/token/' ~ reward.symbol|lower ~ '.png',
-                                'token': reward.symbol
-                            }
-                        } %}
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
+        {% endif %}
 
         {% if farm.farm.actions|default([])|length > 0 %}
             <div class="position-absolute bottom-0 end-0">

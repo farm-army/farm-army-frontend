@@ -13,9 +13,10 @@ class PlatformCronosRepository implements PlatformRepositoryInterface
         }
 
         return [
-            'id' => 'unknown',
-            'label' => 'Unknown',
+            'id' => $id,
+            'label' => ucfirst($id),
             'icon' => '/assets/platforms/unknown.png',
+            'chain' => 'cronos',
         ];
     }
 
@@ -52,6 +53,7 @@ class PlatformCronosRepository implements PlatformRepositoryInterface
                 'url' => 'https://vvs.finance/',
                 'icon' => '/assets/platforms/vvs.png',
                 'token' => 'vvs',
+                'chain' => 'cronos',
             ],
             [
                 'id' => 'cronaswap',
@@ -59,6 +61,7 @@ class PlatformCronosRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.cronaswap.org',
                 'icon' => '/assets/platforms/cronaswap.png',
                 'token' => 'crona',
+                'chain' => 'cronos',
             ],
             [
                 'id' => 'crodex',
@@ -66,18 +69,21 @@ class PlatformCronosRepository implements PlatformRepositoryInterface
                 'url' => 'https://swap.crodex.app',
                 'icon' => '/assets/platforms/crodex.png',
                 'token' => 'crx',
+                'chain' => 'cronos',
             ],
             [
                 'id' => 'crokafe',
                 'label' => 'Crokafe',
                 'url' => 'https://cro.kafe.finance/#/',
                 'icon' => '/assets/platforms/kukafe.png',
+                'chain' => 'cronos',
             ],
             [
                 'id' => 'crautofarm',
                 'label' => 'Autofarm',
                 'url' => 'https://autofarm.network/cronos',
                 'icon' => '/assets/platforms/auto.png',
+                'chain' => 'cronos',
             ],
             [
                 'id' => 'crbeefy',
@@ -85,6 +91,7 @@ class PlatformCronosRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.beefy.finance/#/cronos',
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
+                'chain' => 'cronos',
             ],
             [
                 'id' => 'crannex',
@@ -92,13 +99,31 @@ class PlatformCronosRepository implements PlatformRepositoryInterface
                 'url' => 'https://cronosapp.annex.finance/',
                 'icon' => '/assets/platforms/annex.png',
                 'token' => 'ann',
+                'chain' => 'cronos',
             ],
             [
                 'id' => 'mmf',
-                'label' => 'mmf',
+                'label' => 'MMFinance',
                 'url' => 'https://mm.finance/?ref=MHg4OThlOTk2ODFDMjk0NzliODYzMDQyOTJiMDMwNzFDODBBNTc5NDhG',
                 'icon' => '/assets/platforms/mmf.png',
                 'token' => 'mmf',
+                'chain' => 'cronos',
+            ],
+            [
+                'id' => 'tectonic',
+                'label' => 'Tectonic',
+                'url' => 'https://app.tectonic.finance/markets/',
+                'icon' => '/assets/platforms/tectonic.png',
+                'token' => 'tonic',
+                'chain' => 'cronos',
+            ],
+            [
+                'id' => 'mmo',
+                'label' => 'Mmo',
+                'url' => 'https://vaults.mm.finance',
+                'icon' => '/assets/platforms/mmo.png',
+                'token' => 'mmo',
+                'chain' => 'cronos',
             ],
         ];
     }

@@ -17,7 +17,7 @@ class ChainGuesser
 
     public function getChain(): string
     {
-        if (!$request = $this->requestStack->getMasterRequest()) {
+        if (!$request = $this->requestStack->getMainRequest()) {
             return $this->chain;
         }
 

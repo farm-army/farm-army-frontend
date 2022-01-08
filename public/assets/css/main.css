@@ -41,3 +41,7 @@ html.dark .btn-outline-dark {
 html.dark .text-dark {
     color: #fff !important;
 }
+
+.table-small-padding td {
+    padding: .125rem .125rem;
+}

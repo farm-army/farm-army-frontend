@@ -29,7 +29,7 @@
 
 {% for token in tokens %}
     <url>
-        <loc>{{ absolute_url(path('token_address', {'token': token.token|lower})) }}</loc>
+        <loc>{{ absolute_url(path('chain_token_address', {'token': token.token|lower, 'chain': token.chain })) }}</loc>
         <lastmod>{{ token.updatedAt|date('Y-m-d') }}</lastmod>
     </url>
 {% endfor %}

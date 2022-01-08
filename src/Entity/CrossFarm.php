@@ -2,31 +2,31 @@
 
 namespace App\Entity;
 
+use App\Repository\CrossFarmRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\FarmRepository;
 
 /**
- * @ORM\Entity(repositoryClass=FarmRepository::class)
- * @ORM\Table(name="farm",
+ * @ORM\Entity(repositoryClass=CrossFarmRepository::class)
+ * @ORM\Table(name="cross_farm",
  *     indexes={
- *        @ORM\Index(name="farm_created_at", columns={"created_at"}),
- *        @ORM\Index(name="farm_last_found_at", columns={"last_found_at"}),
- *        @ORM\Index(name="farm_tvl", columns={"tvl"}),
- *        @ORM\Index(name="farm_hash", columns={"hash"}),
- *        @ORM\Index(name="farm_farm_id", columns={"farm_id"}),
- *        @ORM\Index(name="farm_token", columns={"token"}),
- *        @ORM\Index(name="farm_chain", columns={"chain"}),
- *        @ORM\Index(name="farm_compound", columns={"compound"}),
- *        @ORM\Index(name="farm_leverage", columns={"leverage"}),
- *        @ORM\Index(name="inactive", columns={"inactive"}),
- *        @ORM\Index(name="deprecated", columns={"deprecated"}),
- *        @ORM\Index(name="farm_token_last_found_at", columns={"token", "last_found_at"}),
+ *        @ORM\Index(name="crossfarm_created_at", columns={"created_at"}),
+ *        @ORM\Index(name="crossfarm_last_found_at", columns={"last_found_at"}),
+ *        @ORM\Index(name="crossfarm_tvl", columns={"tvl"}),
+ *        @ORM\Index(name="crossfarm_hash", columns={"hash"}),
+ *        @ORM\Index(name="crossfarm_farm_id", columns={"farm_id"}),
+ *        @ORM\Index(name="crossfarm_token", columns={"token"}),
+ *        @ORM\Index(name="crossfarm_chain", columns={"chain"}),
+ *        @ORM\Index(name="crossfarm_compound", columns={"compound"}),
+ *        @ORM\Index(name="crossfarm_leverage", columns={"leverage"}),
+ *        @ORM\Index(name="crossfarm_inactive", columns={"inactive"}),
+ *        @ORM\Index(name="crossfarm_deprecated", columns={"deprecated"}),
+ *        @ORM\Index(name="crossfarm_token_last_found_at", columns={"token", "last_found_at"}),
  *     },
  *     uniqueConstraints={
- *        @ORM\UniqueConstraint(name="farm_farm_id", columns={"farm_id"})
+ *        @ORM\UniqueConstraint(name="crossfarm_farm_id", columns={"farm_id"})
  *    })
  */
-class Farm
+class CrossFarm
 {
     /**
      * @ORM\Id
@@ -130,4 +130,8 @@ class Farm
         return $this->farmId;
     }
 
+    public function getChain(): ?string
+    {
+        return $this->chain;
+    }
 }

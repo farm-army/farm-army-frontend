@@ -1,25 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% set title = 'Farm & Liquidity Pools - ' ~ chain.title %}
-{% set description = 'Searching and tracking farming and liqudify pools on ' ~ chain.title %}
+{% set title = 'Farm & Liquidity Pools - ' ~ chain_context.title %}
+{% set description = 'Searching and tracking farming and liqudify pools on ' ~ chain_context.title %}
 
 {% block content %}
     <div class="mt-4 pt-4 mx-auto text-center">
-        <p class="lead">Track your farming and pool performance on {% if chain.id == 'polygon' %}Polygon (MATIC){% elseif chain.id == 'fantom' %}Fantom{% elseif chain.id == 'kcc' %}KuCoin Community Chain{% elseif chain.id == 'harmony' %}Harmony{% elseif chain.id == 'celo' %}Celo{% elseif chain.id == 'moonriver' %}Moonriver{% elseif chain.id == 'cronos' %}Crypto.com: Cronos{% else %}<a target="_blank" class="text-decoration-none" href="https://www.binance.org/en/smartChain">Binance Smart Chain</a>{% endif %}</p>
+        <p class="lead">Track your farming and pool performance on {% if chain_context.id == 'polygon' %}Polygon (MATIC){% elseif chain_context.id == 'fantom' %}Fantom{% elseif chain_context.id == 'kcc' %}KuCoin Community Chain{% elseif chain_context.id == 'harmony' %}Harmony{% elseif chain_context.id == 'celo' %}Celo{% elseif chain_context.id == 'moonriver' %}Moonriver{% elseif chain_context.id == 'cronos' %}Crypto.com: Cronos{% else %}<a target="_blank" class="text-decoration-none" href="https://www.binance.org/en/smartChain">Binance Smart Chain</a>{% endif %}</p>
     </div>
 
-    {% include 'components/address_form.html.twig' %}
+    {% include 'components/address_form.html.twig' with {'chain_context': chain_context} %}
 
     <div class="mt-4 pt-4 border-top text-center">
         <div class="btn-group">
-            <a href="https://farm.army" title="Binance Smart Chain" class="btn btn-outline-light text-dark {{ chain.id == 'bsc' ? 'active fw-bold' : '' }}"><img height="24px" alt="Binance Smart Chain" src="{{ asset('assets/chains/bsc.svg') }}"><span class="d-none d-md-inline"> BSC</span></a>
-            <a href="https://polygon.farm.army" title="Polygon" class="btn btn-outline-light text-dark {{ chain.id == 'polygon' ? 'active fw-bold' : '' }}"><img height="24px" alt="Polygon" src="{{ asset('assets/chains/polygon.svg') }}"><span class="d-none d-md-inline"> Polygon</span></a>
-            <a href="https://fantom.farm.army" title="Fantom" class="btn btn-outline-light text-dark {{ chain.id == 'fantom' ? 'active fw-bold' : '' }}"><img height="24px" alt="Fantom" src="{{ asset('assets/chains/fantom.svg') }}"><span class="d-none d-md-inline"> Fantom</span></a>
-            <a href="https://kcc.farm.army" title="KuCoin Community Chain" class="btn btn-outline-light text-dark {{ chain.id == 'kcc' ? 'active fw-bold' : '' }}"><img height="24px" alt="KuCoin Chain" src="{{ asset('assets/chains/kcc.png') }}"><span class="d-none d-md-inline"> KCC</span></a>
-            <a href="https://harmony.farm.army" title="Harmony" class="btn btn-outline-light text-dark {{ chain.id == 'harmony' ? 'active fw-bold' : '' }}"><img height="24px" alt="Harmony" src="{{ asset('assets/chains/harmony.png') }}"><span class="d-none d-md-inline"> Harmony</span></a>
-            <a href="https://celo.farm.army" title="Celo" class="btn btn-outline-light text-dark {{ chain.id == 'celo' ? 'active fw-bold' : '' }}"><img height="24px" alt="Celo" src="{{ asset('assets/chains/celo.png') }}"><span class="d-none d-md-inline"> Celo</span></a>
-            <a href="https://moonriver.farm.army" title="Moonriver" class="btn btn-outline-light text-dark {{ chain.id == 'moonriver' ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonriver" src="{{ asset('assets/chains/moonriver.png') }}"><span class="d-none d-md-inline"> Moonriver</span></a>
-            <a href="https://cronos.farm.army" title="Crypto.com: Cronos" class="btn btn-outline-light text-dark {{ chain.id == 'cronos' ? 'active fw-bold' : '' }}"><img height="24px" alt="Crypto.com: Cronos" src="{{ asset('assets/chains/cronos.png') }}"><span class="d-none d-md-inline"> Cronos</span></a>
+            <a href="{{ path('frontpage') }}" title="Binance Smart Chain" class="btn btn-outline-light text-dark {{ chain_context.id == 'bsc' ? 'active fw-bold' : '' }}"><img height="24px" alt="Binance Smart Chain" src="{{ asset('assets/chains/bsc.svg') }}"><span class="d-none d-md-inline"> BSC</span></a>
+            <a href="{{ path('frontpage_chain', {'chain': 'polygon'}) }}" title="Polygon" class="btn btn-outline-light text-dark {{ chain_context.id == 'polygon' ? 'active fw-bold' : '' }}"><img height="24px" alt="Polygon" src="{{ asset('assets/chains/polygon.svg') }}"><span class="d-none d-md-inline"> Polygon</span></a>
+            <a href="{{ path('frontpage_chain', {'chain': 'fantom'}) }}" title="Fantom" class="btn btn-outline-light text-dark {{ chain_context.id == 'fantom' ? 'active fw-bold' : '' }}"><img height="24px" alt="Fantom" src="{{ asset('assets/chains/fantom.svg') }}"><span class="d-none d-md-inline"> Fantom</span></a>
+            <a href="{{ path('frontpage_chain', {'chain': 'kcc'}) }}" title="KuCoin Community Chain" class="btn btn-outline-light text-dark {{ chain_context.id == 'kcc' ? 'active fw-bold' : '' }}"><img height="24px" alt="KuCoin Chain" src="{{ asset('assets/chains/kcc.png') }}"><span class="d-none d-md-inline"> KCC</span></a>
+            <a href="{{ path('frontpage_chain', {'chain': 'harmony'}) }}" title="Harmony" class="btn btn-outline-light text-dark {{ chain_context.id == 'harmony' ? 'active fw-bold' : '' }}"><img height="24px" alt="Harmony" src="{{ asset('assets/chains/harmony.png') }}"><span class="d-none d-md-inline"> Harmony</span></a>
+            <a href="{{ path('frontpage_chain', {'chain': 'celo'}) }}" title="Celo" class="btn btn-outline-light text-dark {{ chain_context.id == 'celo' ? 'active fw-bold' : '' }}"><img height="24px" alt="Celo" src="{{ asset('assets/chains/celo.png') }}"><span class="d-none d-md-inline"> Celo</span></a>
+            <a href="{{ path('frontpage_chain', {'chain': 'moonriver'}) }}" title="Moonriver" class="btn btn-outline-light text-dark {{ chain_context.id == 'moonriver' ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonriver" src="{{ asset('assets/chains/moonriver.png') }}"><span class="d-none d-md-inline"> Moonriver</span></a>
+            <a href="{{ path('frontpage_chain', {'chain': 'cronos'}) }}" title="Crypto.com: Cronos" class="btn btn-outline-light text-dark {{ chain_context.id == 'cronos' ? 'active fw-bold' : '' }}"><img height="24px" alt="Crypto.com: Cronos" src="{{ asset('assets/chains/cronos.png') }}"><span class="d-none d-md-inline"> Cronos</span></a>
         </div>
     </div>
     <div class="mt-4 pt-4 border-top text-center">
@@ -33,7 +33,11 @@
     </div>
 
     <div class="container text-center">
-        <a class="p-2 text-dark btn btn-outline-primary" href="{{ path('pools') }}"><i class="fas fa-fire text-danger"></i> Show All Pools And Vaults</a>
+        {% if chain_context.id == 'bsc' %}
+            <a class="p-2 text-dark btn btn-outline-primary" href="{{ path('pools') }}"><i class="fas fa-fire text-danger"></i> Show All Pools And Vaults</a>
+        {% else %}
+            <a class="p-2 text-dark btn btn-outline-primary" href="{{ path('pools_chain', {'chain': chain_context.id}) }}"><i class="fas fa-fire text-danger"></i> Show All Pools And Vaults</a>
+        {% endif %}
     </div>
 
     <div class="mt-4 pt-4 border-top">
@@ -41,7 +45,11 @@
             <h3 class="text-center">New Arrivals</h3>
 
             <div class="container text-center pb-3">
-                <a href="{{ path('arrivals') }}" class="text-decoration-none">Show Timeline</a>
+                {% if chain_context.id == 'bsc' %}
+                    <a href="{{ path('arrivals') }}" class="text-decoration-none">Show Timeline</a>
+                {% else %}
+                    <a href="{{ path('arrivals', {'chain': chain_context.id}) }}" class="text-decoration-none">Show Timeline</a>
+                {% endif %}
             </div>
 
             {% for farms in new|batch(2) %}
@@ -59,6 +67,19 @@
         {% if tvl|default([])|length > 0 %}
             <h3 class="p-2 pt-5  text-center">Top TVL</h3>
             {% for farms in tvl|batch(2) %}
+                <div class="row">
+                    {% for farm in farms %}
+                        <div class="col-12 col-lg-6">
+                            {{ farm.content|raw }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if cross_new|default([])|length > 0 %}
+            <h3 class="p-2 pt-5 text-center">New Arrivals (Cross-Chain)</h3>
+            {% for farms in cross_new|batch(2) %}
                 <div class="row">
                     {% for farm in farms %}
                         <div class="col-12 col-lg-6">

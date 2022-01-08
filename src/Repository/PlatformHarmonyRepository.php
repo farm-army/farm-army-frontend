@@ -13,9 +13,10 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
         }
 
         return [
-            'id' => 'unknown',
-            'label' => 'Unknown',
+            'id' => $id,
+            'label' => ucfirst($id),
             'icon' => '/assets/platforms/unknown.png',
+            'chain' => 'harmony',
         ];
     }
 
@@ -52,6 +53,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.beefy.finance/#/harmony',
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
+                'chain' => 'harmony',
             ],
             [
                 'id' => 'hsushi',
@@ -59,6 +61,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.sushi.com/',
                 'icon' => '/assets/platforms/sushi.png',
                 'token' => '1sushi',
+                'chain' => 'harmony',
             ],
             [
                 'id' => 'openswap',
@@ -66,6 +69,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.openswap.one/',
                 'icon' => '/assets/platforms/openswap.png',
                 'token' => 'openx',
+                'chain' => 'harmony',
             ],
             [
                 'id' => 'viper',
@@ -73,6 +77,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://viperswap.one/',
                 'icon' => '/assets/platforms/viper.png',
                 'token' => 'viper',
+                'chain' => 'harmony',
             ],
             [
                 'id' => 'hcurve',
@@ -80,6 +85,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://harmony.curve.fi/',
                 'icon' => '/assets/platforms/curve.png',
                 'token' => 'curve',
+                'chain' => 'harmony',
             ],
             [
                 'id' => 'artemis',
@@ -87,6 +93,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.artemisprotocol.one/',
                 'icon' => '/assets/platforms/artemis.png',
                 'token' => 'mis',
+                'chain' => 'harmony',
             ],
             [
                 'id' => 'defikingdoms',
@@ -94,6 +101,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.defikingdoms.com/',
                 'icon' => '/assets/platforms/defikingdoms.png',
                 'token' => 'jewel',
+                'chain' => 'harmony',
             ],
             [
                 'id' => 'farmersonly',
@@ -101,6 +109,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.farmersonly.fi/',
                 'icon' => '/assets/platforms/farmersonly.png',
                 'token' => 'fox',
+                'chain' => 'harmony',
             ],
             [
                 'id' => 'tranquil',
@@ -108,6 +117,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.tranquil.finance/markets',
                 'icon' => '/assets/platforms/tranquil.png',
                 'token' => 'tranq',
+                'chain' => 'harmony',
             ],
             [
                 'id' => 'hsynapse',
@@ -115,6 +125,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://synapseprotocol.com/pools',
                 'icon' => '/assets/platforms/synapse.png',
                 'token' => 'syn',
+                'chain' => 'harmony',
             ],
             [
                 'id' => 'hautofarm',
@@ -122,6 +133,23 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'url' => 'https://autofarm.network/harmony',
                 'icon' => '/assets/platforms/auto.png',
                 'token' => 'auto',
+                'chain' => 'harmony',
+            ],
+            [
+                'id' => 'euphoria',
+                'label' => 'Euphoria',
+                'url' => 'https://app.euphoria.money',
+                'icon' => '/assets/platforms/euphoria.png',
+                'token' => 'wagmi',
+                'chain' => 'harmony',
+            ],
+            [
+                'id' => 'hundred',
+                'label' => 'Hundred',
+                'url' => 'https://hundred.finance',
+                'icon' => '/assets/platforms/hundred.png',
+                'token' => 'hnd',
+                'chain' => 'harmony',
             ],
         ];
     }

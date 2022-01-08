@@ -2,9 +2,11 @@
 
 namespace App\Client;
 
-use App\Repository\FarmRepository;
-use App\Repository\PlatformRepository;
+use App\Entity\CrossFarm;
+use App\Repository\CrossFarmRepository;
+use App\Repository\CrossPlatformRepository;
 use App\Symbol\IconResolver;
+use App\Utils\ChainUtil;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Cache\CacheItemPoolInterface;
@@ -13,59 +15,34 @@ use Psr\Log\LoggerInterface;
 class NodeClient
 {
     private ClientInterface $client;
-    private string $baseUrl;
-    private PlatformRepository $platformRepository;
     private CacheItemPoolInterface $cacheItemPool;
     private IconResolver $iconResolver;
     private LoggerInterface $logger;
-    private FarmRepository $farmRepository;
+    private string $crossBaseUrl;
+    private CrossPlatformRepository $crossPlatformRepository;
+    private CrossFarmRepository $crossFarmRepository;
 
-    public function __construct(ClientInterface $client,
-        PlatformRepository $platformRepository,
+    public function __construct(
+        ClientInterface $client,
+        CrossPlatformRepository $crossPlatformRepository,
         CacheItemPoolInterface $cacheItemPool,
         IconResolver $iconResolver,
-        string $baseUrl,
+        string $crossBaseUrl,
         LoggerInterface $logger,
-        FarmRepository $farmRepository
+        CrossFarmRepository $crossFarmRepository
     ) {
         $this->client = $client;
-        $this->baseUrl = $baseUrl;
-        $this->platformRepository = $platformRepository;
         $this->cacheItemPool = $cacheItemPool;
         $this->iconResolver = $iconResolver;
         $this->logger = $logger;
-        $this->farmRepository = $farmRepository;
+        $this->crossBaseUrl = $crossBaseUrl;
+        $this->crossPlatformRepository = $crossPlatformRepository;
+        $this->crossFarmRepository = $crossFarmRepository;
     }
 
-    public function getFarms(bool $force = false): array
+    public function getAutofarm(string $chain, string $masterChef, string $address = null): ?array
     {
-        $cache = $this->cacheItemPool->getItem('farms');
-
-        if (!$force && $cache->isHit()) {
-            return $cache->get();
-        }
-
-        $farms = [];
-
-        try {
-            $farms = json_decode($this->client->request('GET', $this->baseUrl . '/farms', [
-                'timeout' => 60,
-            ])->getBody()->getContents(), true);
-        } catch (GuzzleException $e) {
-            $this->logger->error('fetch farm error: ' . $e->getMessage());
-        }
-
-        $this->farmRepository->update($farms);
-
-        $cache->expiresAfter(60 * 5)->set($farms);
-        $this->cacheItemPool->save($cache);
-
-        return $farms;
-    }
-
-    public function getAutofarm(string $masterChef, string $address = null): ?array
-    {
-        $cache = $this->cacheItemPool->getItem('farms-' . md5(json_encode([strtolower($masterChef), strtolower($address ?? '')])));
+        $cache = $this->cacheItemPool->getItem('farms-'. md5($chain . json_encode([strtolower($masterChef), strtolower($address ?? '')])));
 
         if ($cache->isHit()) {
             return $cache->get();
@@ -76,13 +53,13 @@ class NodeClient
             'address' => $address,
         ];
 
-        $uri = $this->baseUrl . '/autofarm?' . http_build_query(array_filter($parameters));
+        $uri = $this->crossBaseUrl. '/' . $chain . '/autofarm?' . http_build_query(array_filter($parameters));
 
         $result = null;
 
         try {
             $result = json_decode($this->client->request('GET', $uri, [
-                'timeout' => 10,
+                'timeout' => 25,
             ])->getBody()->getContents(), true);
         } catch (GuzzleException $e) {
             $this->logger->error('fetch farm error: ' . $e->getMessage());
@@ -94,16 +71,16 @@ class NodeClient
         return $result;
     }
 
-    public function getPrices(): array
+    public function getPrices(string $chain): array
     {
-        $cache = $this->cacheItemPool->getItem('price');
+        $cache = $this->cacheItemPool->getItem('price-' . $chain);
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
         try {
-            $prices = json_decode($this->client->request('GET', $this->baseUrl . '/prices')->getBody()->getContents(), true);
+            $prices = json_decode($this->client->request('GET', $this->crossBaseUrl . '/' . $chain . '/prices')->getBody()->getContents(), true);
 
             $cache->expiresAfter(60 * 3)->set($prices);
             $this->cacheItemPool->save($cache);
@@ -115,16 +92,18 @@ class NodeClient
         return [];
     }
 
-    public function getTokenInfo(string $address): array
+    public function getTokenInfo(string $chain, string $address): array
     {
-        $cache = $this->cacheItemPool->getItem('token-info-v1-' . $address);
+        $cache = $this->cacheItemPool->getItem('token-info-v1-' . md5($address . $chain));
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
+        $url = $this->crossBaseUrl . '/' . $chain . '/token/' . urlencode($address);
+
         try {
-            $prices = json_decode($this->client->request('GET', $this->baseUrl . '/token/' . urlencode($address))->getBody()->getContents(), true);
+            $prices = json_decode($this->client->request('GET', $url)->getBody()->getContents(), true);
 
             $cache->expiresAfter(60 * 5)->set($prices);
             $this->cacheItemPool->save($cache);
@@ -136,18 +115,18 @@ class NodeClient
         return [];
     }
 
-    public function getTokens(): array
+    public function getTokens(string $chain): array
     {
-        $cache = $this->cacheItemPool->getItem('tokens');
+        $cache = $this->cacheItemPool->getItem('tokens-' . $chain);
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
         try {
-            $content = json_decode($this->client->request('GET', $this->baseUrl . '/tokens')->getBody()->getContents(), true);
+            $content = json_decode($this->client->request('GET', $this->crossBaseUrl . '/' . $chain . '/tokens')->getBody()->getContents(), true);
 
-            $cache->expiresAfter(60 * 3)->set($content);
+            $cache->expiresAfter(60 * 10)->set($content);
             $this->cacheItemPool->save($cache);
 
             return $content;
@@ -157,18 +136,18 @@ class NodeClient
         return [];
     }
 
-    public function getLiquidityTokens(): array
+    public function getLiquidityTokens(string $chain): array
     {
-        $cache = $this->cacheItemPool->getItem('liquidity-tokens');
+        $cache = $this->cacheItemPool->getItem('liquidity-tokens-' . $chain);
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
         try {
-            $content = json_decode($this->client->request('GET', $this->baseUrl . '/liquidity-tokens')->getBody()->getContents(), true);
+            $content = json_decode($this->client->request('GET', $this->crossBaseUrl . '/' . $chain . '/liquidity-tokens')->getBody()->getContents(), true);
 
-            $cache->expiresAfter(60 * 3)->set($content);
+            $cache->expiresAfter(60 * 10)->set($content);
             $this->cacheItemPool->save($cache);
 
             return $content;
@@ -178,16 +157,16 @@ class NodeClient
         return [];
     }
 
-    public function getBalances(string $address): array
+    public function getBalances(string $chain, string $address): array
     {
-        $cache = $this->cacheItemPool->getItem('balances-' . $address);
+        $cache = $this->cacheItemPool->getItem('balances-' . $chain . '-' . $address);
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
         try {
-            $balances = json_decode($this->client->request('GET', $this->baseUrl . '/balances/' . $address)->getBody()->getContents(), true);
+            $balances = json_decode($this->client->request('GET', $this->crossBaseUrl . '/' . $chain . '/balances/' . $address)->getBody()->getContents(), true);
 
             $cache->expiresAfter(60 * 5)->set($balances);
             $this->cacheItemPool->save($cache);
@@ -199,18 +178,16 @@ class NodeClient
         return [];
     }
 
-    public function getAddressFarms(string $address): array
+    public function getAddressFarms(string $chain, string $address): array
     {
-        $cache = $this->cacheItemPool->getItem('farms-v4-' . $address);
+        $cache = $this->cacheItemPool->getItem('farms-v4-' . $address . '-' . $chain);
         if ($cache->isHit()) {
             return $cache->get();
         }
 
-        $prices = $this->getPrices();
-
         try {
-            $content = $this->client->request('GET', $this->baseUrl . '/all/yield/' . $address, [
-                'timeout' => 20,
+            $content = $this->client->request('GET', $this->crossBaseUrl . '/' . $chain . '/all/yield/' . $address, [
+                'timeout' => 40,
             ]);
         } catch (GuzzleException $e) {
             return [];
@@ -225,9 +202,18 @@ class NodeClient
 
         $content = $body['platforms'];
 
+        $priceMap = [];
+
         $result = [];
         foreach ($content as $platform => $farms) {
-            $result[$platform] = $this->platformRepository->getPlatform($platform);
+            $result[$platform] = $this->crossPlatformRepository->getPlatform($platform);
+
+            $chain = $result[$platform]['chain'];
+            if (!array_key_exists($chain, $priceMap)) {
+                $priceMap[$chain] = $this->getPrices($chain);
+            }
+
+            $prices = $priceMap[$chain];
 
             if (isset($prices[$result[$platform]['token']])) {
                 $result[$platform]['token_price'] = $prices[$result[$platform]['token']];
@@ -236,7 +222,7 @@ class NodeClient
             $result[$platform]['name'] = $platform;
             $result[$platform]['farms'] = $this->formatFarms($farms);
 
-            $result[$platform]['rewards'] = $this->getTotalRewards($farms);
+            $result[$platform]['rewards'] = $this->getTotalRewards($result[$platform]['farms']);
 
             $result[$platform]['rewards_total'] = array_sum(array_map(static function (array $obj) {
                 return $obj['usd'] ?? 0;
@@ -304,18 +290,18 @@ class NodeClient
         return $values;
     }
 
-    public function getAddressFarmsForPlatforms(string $address, array $platforms): array
+    public function getAddressFarmsForPlatforms(string $chain, string $address, array $platforms): array
     {
-        $cache = $this->cacheItemPool->getItem('farms-v1-platforms-' . $address . '-' . json_encode($platforms));
+        $cache = $this->cacheItemPool->getItem('farms-v2-platforms-' . $address . '-'   . $chain . '-' . json_encode($platforms));
         if ($cache->isHit()) {
             return $cache->get();
         }
 
-        $uri = $this->baseUrl . '/yield/' . urlencode($address) . '?' . http_build_query(['p' => implode(',', $platforms)]);
+        $uri = $this->crossBaseUrl . '/' . $chain . '/yield/' . urlencode($address) . '?' . http_build_query(['p' => implode(',', $platforms)]);
 
         try {
             $content = $this->client->request('GET', $uri, [
-                'timeout' => 20,
+                'timeout' => 40,
             ]);
         } catch (GuzzleException $e) {
             return [];
@@ -325,14 +311,18 @@ class NodeClient
 
         $result = [];
 
-        $prices = false;
+        $priceMap = [];
 
         foreach ($content as $platform => $farms) {
-            $result[$platform] = $this->platformRepository->getPlatform($platform);
+            $result[$platform] = $this->crossPlatformRepository->getPlatform($platform);
 
-            if ($prices === false) {
-                $prices = $this->getPrices();
+
+            $chain = $result[$platform]['chain'];
+            if (!array_key_exists($chain, $priceMap)) {
+                $priceMap[$chain] = $this->getPrices($chain);
             }
+
+            $prices = $priceMap[$chain];
 
             if (isset($result[$platform]['token'], $prices[$result[$platform]['token']])) {
                 $result[$platform]['token_price'] = $prices[$result[$platform]['token']];
@@ -341,7 +331,7 @@ class NodeClient
             $result[$platform]['name'] = $platform;
             $result[$platform]['farms'] = $this->formatFarms($farms);
 
-            $result[$platform]['rewards'] = $this->getTotalRewards($farms);
+            $result[$platform]['rewards'] = $this->getTotalRewards($result[$platform]['farms']);
 
             $result[$platform]['rewards_total'] = array_sum(array_map(static function (array $obj) {
                 return $obj['usd'] ?? 0;
@@ -365,18 +355,18 @@ class NodeClient
         return $result;
     }
 
-    public function getWallet(string $address): array
+    public function getWallet(string $chain, string $address): array
     {
-        $cache = $this->cacheItemPool->getItem('wallet-v1-' . $address);
+        $cache = $this->cacheItemPool->getItem('wallet-v1-' . md5($address . $chain));
         if ($cache->isHit()) {
             return $cache->get();
         }
 
-        $uri = $this->baseUrl . '/wallet/' . urlencode($address);
+        $uri = $this->crossBaseUrl . '/' . $chain . '/wallet/' . urlencode($address);
 
         try {
             $content = $this->client->request('GET', $uri, [
-                'timeout' => 20,
+                'timeout' => 40,
             ]);
         } catch (GuzzleException $e) {
             return [];
@@ -395,18 +385,17 @@ class NodeClient
      * @param $farms1
      * @return array
      */
-    private function getTotalRewards($farms1): array
+    private function getTotalRewards(array $farms1): array
     {
         $allRewards = [];
 
         foreach ($farms1 as $farm) {
             foreach ($farm['rewards'] ?? [] as $reward) {
                 if (!isset($allRewards[$reward['symbol']])) {
-                    $allRewards[$reward['symbol']] = [
-                        'symbol' => $reward['symbol'],
+                    $allRewards[$reward['symbol']] = array_merge($reward, [
                         'amount' => 0,
                         'usd' => 0,
-                    ];
+                    ]);
                 }
 
                 $allRewards[$reward['symbol']]['amount'] += $reward['amount'] ?? 0;
@@ -431,6 +420,12 @@ class NodeClient
             $usd += ($farm['deposit']['usd'] ?? 0.0);
         }
 
+        foreach ($farms as $farm) {
+            foreach ($farm['rewards'] ?? [] as $reward) {
+                $usd += ($reward['usd'] ?? 0.0);
+            }
+        }
+
         return $usd;
     }
 
@@ -443,7 +438,14 @@ class NodeClient
                 $token = $farm['farm']['token'];
             }
 
-            $farms[$key]['icon'] = $this->iconResolver->getIcon($token);
+            $farms[$key]['icon'] = $this->iconResolver->getIcon($token, $farm['farm']['chain']);
+
+            if (isset($farm['rewards'])) {
+                $farms[$key]['rewards'] = array_map(function (array $reward) use ($farm) {
+                    $reward['icon'] = $this->iconResolver->getIcon($reward['symbol'] ?? 'unknown', $farm['farm']['chain']);
+                    return $reward;
+                }, $farm['rewards']);
+            }
 
             $farms[$key]['farm_rewards'] = array_sum(array_map(static function (array $obj) {
                 return $obj['usd'] ?? 0;
@@ -460,17 +462,17 @@ class NodeClient
         return array_values($farms);
     }
 
-    public function getDetails(string $address, string $farmId): array
+    public function getDetails(string $chain, string $address, string $farmId): array
     {
-        $cache = $this->cacheItemPool->getItem('farms-details-' . md5($address . $farmId));
+        $cache = $this->cacheItemPool->getItem('farms-v1-details-' . md5($address . $farmId . $chain));
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
         try {
-            $content = $this->client->request('GET', $this->baseUrl . '/details/' . $address . '/' . $farmId, [
-                'timeout' => 25,
+            $content = $this->client->request('GET', $this->crossBaseUrl . '/' . $chain . '/details/' . $address . '/' . $farmId, [
+                'timeout' => 40,
             ]);
         } catch (GuzzleException $e) {
             return [];
@@ -485,15 +487,15 @@ class NodeClient
 
     public function getTransactions(string $address, string $chain): array
     {
-        $cache = $this->cacheItemPool->getItem('address-transactions-' . $chain .  '-' . md5($address));
+        $cache = $this->cacheItemPool->getItem('address-transactions-v1-' . $chain .  '-' . md5($address));
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
         try {
-            $content = $this->client->request('GET', $this->baseUrl . '/transactions/' . $address, [
-                'timeout' => 16,
+            $content = $this->client->request('GET', $this->crossBaseUrl . '/' . $chain . '/transactions/' . $address, [
+                'timeout' => 25,
             ]);
         } catch (GuzzleException $e) {
             return [];
@@ -504,11 +506,11 @@ class NodeClient
         $groupedHash = [];
         foreach ($transactions as $key => $transaction) {
             if (isset($transaction['vault']['provider'])) {
-                $transactions[$key]['provider'] = $this->platformRepository->getPlatform($transaction['vault']['provider']);
+                $transactions[$key]['provider'] = $this->crossPlatformRepository->getPlatform($transaction['vault']['provider']);
             }
 
             if (isset($transaction['symbol'])) {
-                $transactions[$key]['icon'] = $this->iconResolver->getIcon($transaction['symbol']);
+                $transactions[$key]['icon'] = $this->iconResolver->getIcon($transaction['symbol'], $chain);
             }
 
             if (!isset($groupedHash[$transaction['hash']])) {
@@ -523,5 +525,63 @@ class NodeClient
         $this->cacheItemPool->save($cache->set($groupedHash)->expiresAfter(60));
 
         return $groupedHash;
+    }
+
+    public function getNfts(string $address, string $chain): array
+    {
+        $cache = $this->cacheItemPool->getItem('address-nfts-v1-' . $chain .  '-' . md5($address));
+
+        if ($cache->isHit()) {
+            return $cache->get();
+        }
+
+        try {
+            $content = $this->client->request('GET', $this->crossBaseUrl . '/' . $chain . '/nft/' . $address, [
+                'timeout' => 25,
+            ]);
+        } catch (GuzzleException $e) {
+            return [];
+        }
+
+        $transactions = json_decode($content->getBody()->getContents(), true);
+
+        $collections = $transactions['collections'] ?? [];
+
+        usort($collections, function ($a, $b) {
+            return ($b['balance'] ?? 0) <=> ($a['balance'] ?? 0);
+        });
+
+        $this->cacheItemPool->save($cache->set($collections)->expiresAfter(60 * 15));
+
+        return $collections;
+    }
+
+    public function updateFarms(bool $force = false): void
+    {
+        $cache = $this->cacheItemPool->getItem('crossfarms-v1');
+
+        if (!$force && $cache->isHit()) {
+            return;
+        }
+
+        foreach (ChainUtil::getChains() as $chain) {
+            $uri = sprintf("%s/%s/farms", $this->crossBaseUrl, $chain['id']);
+
+            $this->logger->info('fetching: ' . $uri);
+
+            try {
+                $content = json_decode($this->client->request('GET', $uri, [
+                    'timeout' => 60,
+                ])->getBody()->getContents(), true);
+            } catch (GuzzleException $e) {
+                $this->logger->error('fetch farm error: ' . $e->getMessage());
+                continue;
+            }
+
+            $this->crossFarmRepository->update($content);
+        }
+
+        $cache->expiresAfter(60 * 60)->set(['success' => true]);
+        $this->cacheItemPool->save($cache);
     }
 }

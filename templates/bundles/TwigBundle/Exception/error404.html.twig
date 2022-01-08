@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Page not found' %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="py-5">
+
+            <div class="text-center text-danger">
+                <i class="fas fa-tractor pb-2 error-glow" style="font-size: 64px"></i>
+            </div>
+
+            <h2 class="text-center">404 - Page not found</h2>
+
+            <p class="text-center">
+                The requested page couldn't be located. Checkout for any URL
+                misspelling or <a href="{{ path('frontpage') }}">return to the homepage</a>.
+            </p>
+        </div>
+    </div>
+
+    <style>
+        .error-glow {
+            animation: glow 1s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+            }
+        }
+    </style>
+{% endblock %}

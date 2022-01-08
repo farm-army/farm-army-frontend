@@ -26,8 +26,9 @@ class IconController
      * @Route("/token/{symbolA}-{symbolB}-{symbolC}-{symbolD}-{symbolE}.{format}", name="token_icon_abcde", methods={"GET"}, requirements={
      *  "format"="png|webp"
      * })
-     * @Route("/{chain}/token/{symbolA}-{symbolB}-{symbolC}-{symbolD}-{symbolE}.{format}", name="chain_token_icon_abcde", methods={"GET"}, requirements={
-     *  "format"="png|webp"
+     * @Route("/token/{chain}/{symbolA}-{symbolB}-{symbolC}-{symbolD}-{symbolE}.{format}", name="chain_token_icon_abcde", methods={"GET"}, requirements={
+     *  "format"="png|webp",
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
      * })
      */
     public function icon5(
@@ -102,8 +103,9 @@ class IconController
      * @Route("/token/{symbolA}-{symbolB}-{symbolC}-{symbolD}.{format}", name="token_icon_abcd", methods={"GET"}, requirements={
      *  "format"="png|webp"
      * })
-     * @Route("/{chain}/token/{symbolA}-{symbolB}-{symbolC}-{symbolD}.{format}", name="chain_token_icon_abcd", methods={"GET"}, requirements={
-     *  "format"="png|webp"
+     * @Route("/token/{chain}/{symbolA}-{symbolB}-{symbolC}-{symbolD}.{format}", name="chain_token_icon_abcd", methods={"GET"}, requirements={
+     *  "format"="png|webp",
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
      * })
      */
     public function icon4(
@@ -172,8 +174,9 @@ class IconController
      * @Route("/token/{symbolA}-{symbolB}-{symbolC}.{format}", name="token_icon_abc", methods={"GET"}, requirements={
      *  "format"="png|webp"
      * })
-     * @Route("/{chain}/token/{symbolA}-{symbolB}-{symbolC}.{format}", name="chain_token_icon_abc", methods={"GET"}, requirements={
-     *  "format"="png|webp"
+     * @Route("/token/{chain}/{symbolA}-{symbolB}-{symbolC}.{format}", name="chain_token_icon_abc", methods={"GET"}, requirements={
+     *  "format"="png|webp",
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
      * })
      */
     public function icon3(
@@ -236,8 +239,9 @@ class IconController
      * @Route("/token/{symbolA}-{symbolB}.{format}", name="token_icon_pair", methods={"GET"}, requirements={
      *  "format"="png|webp"
      * })
-     * @Route("/{chain}/token/{symbolA}-{symbolB}.{format}", name="chain_token_icon_pair", methods={"GET"}, requirements={
-     *  "format"="png|webp"
+     * @Route("/token/{chain}/{symbolA}-{symbolB}.{format}", name="chain_token_icon_pair", methods={"GET"}, requirements={
+     *  "format"="png|webp",
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
      * })
      */
     public function iconPair(string $symbolA, string $symbolB, string $format, ?string $chain, IconResolver $iconResolver, ImagineInterface $imagine, string $projectDir): Response
@@ -289,11 +293,12 @@ class IconController
      * })
      * @Route("/{chain}/token/{symbol}.{format}", name="chain_token_icon", methods={"GET"}, requirements={
      *  "format"="png|webp",
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
      * })
      */
     public function icon(string $symbol, string $format, ?string $chain, ImagineInterface $imagine, IconResolver $iconResolver, string $projectDir): Response
     {
-        if (strlen($symbol) > 42) {
+        if (strlen($symbol) > 42 && !str_contains($symbol, '0x')) {
             throw new NotFoundHttpException('Invalid symbol');
         }
 

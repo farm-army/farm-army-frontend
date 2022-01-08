@@ -2,62 +2,56 @@
 
 namespace App\Pools;
 
-use App\Client\NodeClient;
-use App\Repository\FarmRepository;
-use App\Repository\PlatformRepository;
+use App\Repository\CrossFarmRepository;
+use App\Repository\CrossPlatformRepository;
 use App\Symbol\IconResolver;
 use App\Utils\InterestUtil;
+use Doctrine\Persistence\ManagerRegistry;
 use Psr\Cache\CacheItemPoolInterface;
 use Twig\Environment;
 
 class FarmPools
 {
-    private $nodeClient;
     private $iconResolver;
-    private $platformRepository;
     private $cacheItemPool;
     private Environment $environment;
-    private FarmRepository $farmRepository;
+    private CrossPlatformRepository $crossPlatformRepository;
+    private CrossFarmRepository $crossFarmRepository;
 
     public function __construct(
-        NodeClient $nodeClient,
         IconResolver $iconResolver,
-        PlatformRepository $platformRepository,
         CacheItemPoolInterface $cacheItemPool,
         Environment $environment,
-        FarmRepository $farmRepository
-    )
-    {
-        $this->nodeClient = $nodeClient;
+        CrossPlatformRepository $crossPlatformRepository,
+        CrossFarmRepository $crossFarmRepository
+    ) {
         $this->iconResolver = $iconResolver;
-        $this->platformRepository = $platformRepository;
         $this->cacheItemPool = $cacheItemPool;
         $this->environment = $environment;
-        $this->farmRepository = $farmRepository;
+        $this->crossPlatformRepository = $crossPlatformRepository;
+        $this->crossFarmRepository = $crossFarmRepository;
     }
 
-    public function renderAllFarms(string $template = 'components/farms_mini.html.twig'): array
+    public function renderAllFarms(string $chain, string $template = 'components/farms_mini.html.twig'): array
     {
-        $this->triggerFetchUpdate();
-
         return $this->renderFarms(
-            array_map(static fn(array $f) => $f['json'], $this->farmRepository->getAllValid()),
+            array_map(static fn(array $f) => $f['json'], $this->crossFarmRepository->getAllValid($chain)),
             $template
         );
     }
 
-    public function renderFarms(array $farms, string $template = 'components/farms_mini.html.twig'): array
+    public function renderFarms(array $farms, string $template = 'components/farms_mini.html.twig', array $arguments = []): array
     {
-        return array_map(function (array $farm) use ($template): array {
+        return array_map(function (array $farm) use ($template, $arguments): array {
             $farm = $this->enrichFarmData($farm);
 
             $arr = [
                 'id' => $farm['id'],
                 'name' => $farm['name'],
                 'platform' => $farm['provider']['id'],
-                'content' => $this->environment->render($template, [
+                'content' => $this->environment->render($template, array_merge($arguments, [
                     'farm' => $farm,
-                ])
+                ]))
             ];
 
             if (isset($farm['tvl']['usd'])) {
@@ -76,23 +70,16 @@ class FarmPools
         }, $farms);
     }
 
-    public function triggerFetchUpdate(): void
+    public function generateApiFarms(string $chain): array
     {
-        $this->nodeClient->getFarms();
-    }
-
-    public function generateApiFarms(): array
-    {
-        $cache = $this->cacheItemPool->getItem('generate-api-farms-v2');
+        $cache = $this->cacheItemPool->getItem('generate-api-farms-v2-' . $chain);
 
         if ($cache->isHit()) {
             return $cache->get();
         }
 
-        $this->triggerFetchUpdate();
-
         $myFarms = [];
-        foreach ($this->farmRepository->getAllValid() as $farm) {
+        foreach ($this->crossFarmRepository->getAllValid($chain) as $farm) {
             $myFarms[] = $this->enrichFarmData($farm['json']);
         }
 
@@ -108,15 +95,34 @@ class FarmPools
 
         $farm['icon'] = '?';
         if ($token) {
-            $farm['icon'] = $this->iconResolver->getIcon($token);
+            $farm['icon'] = $this->iconResolver->getIcon($token, $farm['chain']);
         }
 
-        $farm['provider'] = $this->platformRepository->getPlatform($farm['provider']);
+        $farm['provider'] = $this->crossPlatformRepository->getPlatformOnChain($farm['chain'], $farm['provider']);
 
         if (isset($farm['yield']['apr']) && $farm['yield']['apr'] > 0) {
             $farm['yield']['daily'] = $farm['yield']['apr'] / 365;
         } elseif (isset($farm['yield']['apy']) && $farm['yield']['apy'] > 0) {
             $farm['yield']['daily'] = InterestUtil::apyToApr($farm['yield']['apy'] / 100);
+        }
+
+        if (isset($farm['earns']) && empty($farm['earn'])) {
+            $farm['earn'] = array_map(function (string $symbol) use ($farm) {
+                return [
+                    'symbol' => $symbol,
+                    'icon' => $this->iconResolver->getTokenIconForSymbolAddress($farm['chain'], [['symbol' => $symbol]]),
+                ];
+            }, $farm['earns']);
+        }
+
+        if (isset($farm['earn'])) {
+            $farm['earn'] = array_map(function (array $earn) use ($farm) {
+                if (!isset($earn['icon'])) {
+                    $earn['icon'] = $this->iconResolver->getTokenIconForSymbolAddress($farm['chain'], [$earn]);
+                }
+
+                return $earn;
+            }, $farm['earn']);
         }
 
         return $farm;

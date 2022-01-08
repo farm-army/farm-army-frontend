@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% set title = chain.title ~ " - Token " ~ token_card.symbol|default|upper ~ ' ' ~ token %}
+{% set title = chain_context.title ~ " - Token " ~ token_card.symbol|default|upper ~ ' ' ~ token %}
 
 {% block content %}
 

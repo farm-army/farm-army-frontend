@@ -15,6 +15,7 @@
             {{ form_start(form) }}
             {{ form_errors(form) }}
 
+            {{ form_row(form.chain) }}
             {{ form_row(form.masterchef) }}
             {{ form_row(form.address) }}
 
@@ -25,7 +26,7 @@
     </div>
 
     {% if pools|default([])|length > 0 %}
-        <h3 class="pt-3 text-center">Wallet Pools - {{ address|truncate_address }} - <a class="text-muted" target="_blank" href="{{ chain.explorer }}/address/{{ address }}" title="explorer: Address"><i class="fas fa-external-link-alt"></i></a></h3>
+        <h3 class="pt-3 text-center">Wallet Pools - {{ address|truncate_address }} - <a class="text-muted" target="_blank" href="{{ chain_context.explorer }}/address/{{ address }}" title="explorer: Address"><i class="fas fa-external-link-alt"></i></a></h3>
         <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3 pb-5">
             {% for farm in pools|default([]) %}
                 <div class="col">
@@ -36,7 +37,7 @@
     {% endif %}
 
     {% if master_chef_farms|default([])|length > 0 %}
-        <h3 class="pt-3 text-center">Masterchef - {{ address_masterchef|truncate_address }} -  <a class="text-muted" target="_blank" href="{{ chain.explorer }}/address/{{ address_masterchef }}" title="explorer: Address"><i class="fas fa-external-link-alt"></i></a></h3>
+        <h3 class="pt-3 text-center">Masterchef - {{ address_masterchef|truncate_address }} -  <a class="text-muted" target="_blank" href="{{ chain_context.explorer }}/address/{{ address_masterchef }}" title="explorer: Address"><i class="fas fa-external-link-alt"></i></a></h3>
         {% for farms in master_chef_farms|batch(2) %}
             <div class="row">
                 {% for farm in farms %}

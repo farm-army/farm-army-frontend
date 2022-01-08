@@ -5,7 +5,7 @@
                 <div class="d-flex">
                     {% if item.icon|default %}
                         <div class="pe-2">
-                            <a href="{{ path('token_address', {'token': item.address}) }}" title="Token: {{ item.symbol|default }}">
+                            <a href="{{ path('chain_token_address', {'token': item.address, 'chain': item.chain}) }}" title="Token: {{ item.symbol|default }}">
                                 <picture style="float: left">
                                     <source srcset="{{ item.icon }}" type="image/webp">
                                     <img loading="lazy" src="{{ item.icon }}" title="{{ item.symbol|default }}" alt="" width="42" height="42">
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="col-4 text-end align-middle">
-                <a style="font-size:24px" href="{{ chain.explorer }}/token/{{ item.address }}" target="_blank" title="explorer: {{ item.address }}">
+                <a style="font-size:24px" href="{{ chain_context.explorer }}/token/{{ item.address }}" target="_blank" title="explorer: {{ item.address }}">
                     <i class="fas fa-external-link-alt"></i>
                 </a>
             </div>

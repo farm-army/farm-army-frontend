@@ -4,14 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{{ meta_description|default('Track your farming and pool performance on the ' ~ chain.title ~ ' with farm.army') }}">
+    <meta name="description" content="{{ meta_description|default('Track your DeFi vaults on multiple chains') }}">
     <meta name="author" content="The yield farmer from the moon">
-    <meta name="keywords" content="yield, bnb, binance, crypto, bitcoin, btc, defi, yield, yield farming, staking, pools, smart chain">
+    <meta name="keywords" content="yield, bnb, binance, crypto, bitcoin, btc, defi, yield, yield farming, staking, pools, smart chain, polygon, matic, blockchain">
 
-    <meta property="og:image" content="{{ chain.id == 'bsc' ? asset('assets/img/farm_army_64.png') : asset('assets/img/farm_army_64_' ~ chain.id ~ '.png') }}">
+    <meta property="og:image" content="{{ asset('assets/img/farm_army_64.png') }}">
     <meta property="og:title" content="farm.army">
     <meta property="og:url" content="{{ absolute_url(path('frontpage')) }}">
-    <meta property="og:description" content="Track your farming and pool performance on {{ chain.title }} with farm.army">
+    <meta property="og:description" content="Track your DeFi vaults on multiple chains with farm.army">
 
     {% block meta %}{% endblock meta %}
 
@@ -34,9 +34,9 @@
     {% block stylesheet %}
     {% endblock stylesheet %}
 
-    <link rel="shortcut icon" href="{{ chain.id == 'bsc' ? asset('favicon.ico') : asset('favicon_' ~ chain.id ~ '.ico') }}">
-    <link rel="icon" type="image/png" href="{{ chain.id == 'bsc' ? asset('assets/img/farm_army_32.png') : asset('assets/img/farm_army_32_' ~ chain.id ~ '.png') }}" sizes="32x32">
-    <link rel="apple-touch-icon" sizes="64x64" href="{{ chain.id == 'bsc' ? asset('assets/img/farm_army_64.png') : asset('assets/img/farm_army_64_' ~ chain.id ~ '.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/farm_army_32.png') }}" sizes="32x32">
+    <link rel="apple-touch-icon" sizes="64x64" href="{{ asset('assets/img/farm_army_64.png') }}">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/js/darkmode.min.js"></script>
 </head>
@@ -49,7 +49,7 @@
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ path('frontpage') }}">
-                <img loading="lazy" src="{{ chain.id == 'bsc' ? asset('assets/img/farm_army_32.png') : asset('assets/img/farm_army_32_' ~ chain.id ~ '.png') }}" width="30" height="30" class="d-inline-block align-top" alt="farm.army"> farm.army
+                <img loading="lazy" src="{{ asset('assets/img/farm_army_32.png') }}" width="30" height="30" class="d-inline-block align-top" alt="farm.army"> farm.army
             </a>
 
             <a href="#" class="theme-toggle mx-2 px-3 fs-5 text-dark">
@@ -98,7 +98,7 @@
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
         <div class="row">
             <div class="col">
-                <img loading="lazy" class="mb-2" src="{{ chain.id == 'bsc' ? asset('assets/img/farm_army_32.png') : asset('assets/img/farm_army_32_' ~ chain.id ~ '.png') }}" alt="" height="19">
+                <img loading="lazy" class="mb-2" src="{{ asset('assets/img/farm_army_32.png') }}" alt="" height="19">
                 <small class="d-block mb-3 text-muted">farm.army - &copy; {{ 'now'|date('Y') }}</small>
             </div>
             <div class="col text-center">

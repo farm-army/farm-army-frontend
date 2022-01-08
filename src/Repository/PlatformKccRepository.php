@@ -13,9 +13,10 @@ class PlatformKccRepository implements PlatformRepositoryInterface
         }
 
         return [
-            'id' => 'unknown',
-            'label' => 'Unknown',
+            'id' => $id,
+            'label' => ucfirst($id),
             'icon' => '/assets/platforms/unknown.png',
+            'chain' => 'kcc',
         ];
     }
 
@@ -52,6 +53,7 @@ class PlatformKccRepository implements PlatformRepositoryInterface
                 'url' => 'https://kuswap.finance/',
                 'icon' => '/assets/platforms/kuswap.png',
                 'token' => 'kus',
+                'chain' => 'kcc',
             ],
             [
                 'id' => 'kudex',
@@ -59,6 +61,7 @@ class PlatformKccRepository implements PlatformRepositoryInterface
                 'url' => 'https://kudex.finance/',
                 'icon' => '/assets/platforms/kudex.png',
                 'token' => 'kud',
+                'chain' => 'kcc',
             ],
             [
                 'id' => 'kukafe',
@@ -66,6 +69,7 @@ class PlatformKccRepository implements PlatformRepositoryInterface
                 'url' => 'https://kukafe.finance/',
                 'icon' => '/assets/platforms/kukafe.png',
                 'token' => 'kafe',
+                'chain' => 'kcc',
             ],
             [
                 'id' => 'boneswap',
@@ -73,6 +77,7 @@ class PlatformKccRepository implements PlatformRepositoryInterface
                 'url' => 'https://farm-kcc.boneswap.finance/?ref=0k898r99681P29479o86304292o03071P80N57948S',
                 'icon' => '/assets/platforms/boneswap.png',
                 'token' => 'bone',
+                'chain' => 'kcc',
             ],
             [
                 'id' => 'mojito',
@@ -80,6 +85,7 @@ class PlatformKccRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.mojitoswap.finance/referral?code=5CD2F29F',
                 'icon' => '/assets/platforms/mojito.png',
                 'token' => 'mjt',
+                'chain' => 'kcc',
             ],
         ];
     }

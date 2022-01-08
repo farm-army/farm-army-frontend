@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% set title = chain.title ~ " - Vault " ~ farm.provider.label|default ~ ' - ' ~ farm.name|default %}
+{% set title = chain_context.title ~ " - Vault " ~ farm.provider.label|default ~ ' - ' ~ farm.name|default %}
 
 {% block content %}
     <h2>{{ farm.provider.label|default }} - {{ farm.name|default  }}</h2>
@@ -14,7 +14,7 @@
 
     <h2 class="pt-3">Token</h2>
 
-    <p>Vault want token address <a href="{{ path('token_address', {'token': farm_db.token}) }}">{{ farm_db.token }}</a>.</p>
+    <p>Vault want token address <a href="{{ path('chain_token_address', {'token': farm_db.token, 'chain': farm_db.chain }) }}">{{ farm_db.token }}</a>.</p>
 
     {% if token_card.symbol|default %}
         {% include 'vault/component/token_card.html.twig' with {

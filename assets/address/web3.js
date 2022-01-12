@@ -17,25 +17,19 @@
             });
 
             const inputs = inputsFormatted.map((input, index) => {
-                let item = {
+                const item = {
                     name: '_parameter_' + index,
                 };
 
                 if (input === true || input === false) {
-                    item = {
-                        internalType: "bool",
-                        type: "bool"
-                    }
+                    item.type = 'bool';
+                    item.internalType = 'bool';
                 } else if (Number.isInteger(input)) {
-                    item = {
-                        internalType: "uint256",
-                        type: "uint256"
-                    }
+                    item.type = 'uint256'
+                    item.internalType = 'uint256';
                 } else if (typeof input === 'string' && input.toLowerCase().startsWith('0x')) {
-                    item = {
-                        internalType: "address",
-                        type: "address"
-                    }
+                    item.type = 'address';
+                    item.internalType = 'address';
                 } else {
                     console.log('Error: Unknown contract format...');
                 }

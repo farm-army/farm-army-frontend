@@ -275,6 +275,14 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'token' => 'hnd',
                 'chain' => 'fantom',
             ],
+            [
+                'id' => 'revenant',
+                'label' => 'Revenant',
+                'url' => 'https://revenant.finance/creditum',
+                'icon' => '/assets/platforms/revenant.png',
+                'token' => 'credit',
+                'chain' => 'fantom',
+            ],
         ];
     }
 }

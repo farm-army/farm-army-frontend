@@ -151,6 +151,14 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'token' => 'hnd',
                 'chain' => 'harmony',
             ],
+            [
+                'id' => 'lootswap',
+                'label' => 'Lootswap',
+                'url' => 'https://lootswap.finance',
+                'icon' => '/assets/platforms/lootswap.png',
+                'token' => 'loot',
+                'chain' => 'harmony',
+            ],
         ];
     }
 }

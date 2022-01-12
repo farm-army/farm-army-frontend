@@ -67,6 +67,10 @@ class IconCollectorCommand extends Command
 
         $this->tokenList('https://www.huckleberry.finance/huckleberry.tokenlist.json');
 
+        $this->tokenList('https://raw.githubusercontent.com/VenomProtocol/venomswap-community-token-list/main/src/tokens/harmony-mainnet.json');
+        $this->tokenList('https://raw.githubusercontent.com/VenomProtocol/venomswap-default-token-list/main/src/tokens/harmony-mainnet.json');
+        $this->tokenList('https://legacy.lootswap.finance/lootswap/lists/lootswap-default-tokenlist.json');
+
         return Command::SUCCESS;
     }
 
@@ -115,6 +119,8 @@ class IconCollectorCommand extends Command
 
     private function tokenList(string $url): void
     {
+        $this->logger->info('Fetching ' . $url);
+
         try {
             $decode = json_decode($this->client->request('GET', $url)->getBody()->getContents(), true);
         } catch (\Exception $e) {
@@ -130,6 +136,7 @@ class IconCollectorCommand extends Command
             321 => 'kcc',
             42220 => 'celo',
             1285 => 'moonriver',
+            1666600000 => 'harmony',
         ];
 
         foreach ($decode['tokens'] ?? [] as $token) {

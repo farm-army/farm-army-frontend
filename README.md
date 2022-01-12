@@ -1,6 +1,6 @@
 # farm.army - Frontend
 
-Track your farming and pool performance on the Binance Chain, Polygon, Fantom, KuCoin Community Chain, Harmony, Celo, Moonriver, Cronos
+Track your farming and pool performance on the Binance Smart Chain, Polygon, Fantom, KuCoin Community Chain, Harmony, Celo, Moonriver, Crypto.com: Cronos
 
 ## Tech Stack
 
@@ -25,6 +25,12 @@ composer install
 npm install
 ```
 
+Create local database (default via dotenv is to use sqlite)
+
+```
+bin/console doctrine:schema:update --force
+```
+
 ### Token Icons
 
 Common token icons are included others are used via external repositories inside `remotes/`. Feel free to update them frequently. Hint: they are heavy cached. See cache clear section
@@ -46,6 +52,12 @@ bin/console d:s:u --force
 
 ```
 http://127.0.0.1:8000
+```
+
+You need to import farm locally first from the backend
+
+```
+bin/console app:cross_fetch_farm -vv
 ```
 
 If you want need a running backend checkout also https://github.com/farm-army/farm-army-backend.

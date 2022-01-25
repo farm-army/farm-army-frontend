@@ -13,7 +13,7 @@
                             {% if box.notes|default([])|length > 0 %} <i class="text-muted fas fa-info-circle" style="font-size: 0.8em; opacity: 0.6" title="{{ box.notes|join(' ') }}"></i>{% endif %}
                         </div>
 
-                        <a href="{% if cross_chain|default(false) %}https://{{ box.chain }}.farm.army{% endif %}{{ path('vault_address', { 'hash': box.id|md5 }) }}">
+                        <a href="{{ path('vault_address', { 'hash': box.id|md5 }) }}">
                             <picture>
                                 <source srcset="{{ box.icon|replace({'.png': '.webp'}) }}" type="image/webp">
                                 <img loading="lazy" width="42" height="42" src="{{ box.icon }}" title="{{ box.name }}" alt="">

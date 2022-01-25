@@ -5,22 +5,21 @@
 
 {% block content %}
     <div class="mt-4 pt-4 mx-auto text-center">
-        <p class="lead">Track your farming and pool performance on {% if chain_context.id == 'polygon' %}Polygon (MATIC){% elseif chain_context.id == 'fantom' %}Fantom{% elseif chain_context.id == 'kcc' %}KuCoin Community Chain{% elseif chain_context.id == 'harmony' %}Harmony{% elseif chain_context.id == 'celo' %}Celo{% elseif chain_context.id == 'moonriver' %}Moonriver{% elseif chain_context.id == 'cronos' %}Crypto.com: Cronos{% else %}<a target="_blank" class="text-decoration-none" href="https://www.binance.org/en/smartChain">Binance Smart Chain</a>{% endif %}</p>
+        <p class="lead">Track your farming and pool performance on multiple chains</p>
     </div>
 
     {% include 'components/address_form.html.twig' with {'chain_context': chain_context} %}
 
     <div class="mt-4 pt-4 border-top text-center">
-        <div class="btn-group">
-            <a href="{{ path('frontpage') }}" title="Binance Smart Chain" class="btn btn-outline-light text-dark {{ chain_context.id == 'bsc' ? 'active fw-bold' : '' }}"><img height="24px" alt="Binance Smart Chain" src="{{ asset('assets/chains/bsc.svg') }}"><span class="d-none d-md-inline"> BSC</span></a>
-            <a href="{{ path('frontpage_chain', {'chain': 'polygon'}) }}" title="Polygon" class="btn btn-outline-light text-dark {{ chain_context.id == 'polygon' ? 'active fw-bold' : '' }}"><img height="24px" alt="Polygon" src="{{ asset('assets/chains/polygon.svg') }}"><span class="d-none d-md-inline"> Polygon</span></a>
-            <a href="{{ path('frontpage_chain', {'chain': 'fantom'}) }}" title="Fantom" class="btn btn-outline-light text-dark {{ chain_context.id == 'fantom' ? 'active fw-bold' : '' }}"><img height="24px" alt="Fantom" src="{{ asset('assets/chains/fantom.svg') }}"><span class="d-none d-md-inline"> Fantom</span></a>
-            <a href="{{ path('frontpage_chain', {'chain': 'kcc'}) }}" title="KuCoin Community Chain" class="btn btn-outline-light text-dark {{ chain_context.id == 'kcc' ? 'active fw-bold' : '' }}"><img height="24px" alt="KuCoin Chain" src="{{ asset('assets/chains/kcc.png') }}"><span class="d-none d-md-inline"> KCC</span></a>
-            <a href="{{ path('frontpage_chain', {'chain': 'harmony'}) }}" title="Harmony" class="btn btn-outline-light text-dark {{ chain_context.id == 'harmony' ? 'active fw-bold' : '' }}"><img height="24px" alt="Harmony" src="{{ asset('assets/chains/harmony.png') }}"><span class="d-none d-md-inline"> Harmony</span></a>
-            <a href="{{ path('frontpage_chain', {'chain': 'celo'}) }}" title="Celo" class="btn btn-outline-light text-dark {{ chain_context.id == 'celo' ? 'active fw-bold' : '' }}"><img height="24px" alt="Celo" src="{{ asset('assets/chains/celo.png') }}"><span class="d-none d-md-inline"> Celo</span></a>
-            <a href="{{ path('frontpage_chain', {'chain': 'moonriver'}) }}" title="Moonriver" class="btn btn-outline-light text-dark {{ chain_context.id == 'moonriver' ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonriver" src="{{ asset('assets/chains/moonriver.png') }}"><span class="d-none d-md-inline"> Moonriver</span></a>
-            <a href="{{ path('frontpage_chain', {'chain': 'cronos'}) }}" title="Crypto.com: Cronos" class="btn btn-outline-light text-dark {{ chain_context.id == 'cronos' ? 'active fw-bold' : '' }}"><img height="24px" alt="Crypto.com: Cronos" src="{{ asset('assets/chains/cronos.png') }}"><span class="d-none d-md-inline"> Cronos</span></a>
-        </div>
+        <a href="{{ path('frontpage') }}" title="Binance Smart Chain" class="btn btn-outline-light text-dark {{ chain_context.id == 'bsc' ? 'active fw-bold' : '' }}"><img height="24px" alt="Binance Smart Chain" src="{{ asset('assets/chains/bsc.svg') }}"><span class="d-none d-md-inline"> BSC</span></a>
+        <a href="{{ path('frontpage_chain', {'chain': 'polygon'}) }}" title="Polygon" class="btn btn-outline-light text-dark {{ chain_context.id == 'polygon' ? 'active fw-bold' : '' }}"><img height="24px" alt="Polygon" src="{{ asset('assets/chains/polygon.svg') }}"><span class="d-none d-md-inline"> Polygon</span></a>
+        <a href="{{ path('frontpage_chain', {'chain': 'fantom'}) }}" title="Fantom" class="btn btn-outline-light text-dark {{ chain_context.id == 'fantom' ? 'active fw-bold' : '' }}"><img height="24px" alt="Fantom" src="{{ asset('assets/chains/fantom.svg') }}"><span class="d-none d-md-inline"> Fantom</span></a>
+        <a href="{{ path('frontpage_chain', {'chain': 'kcc'}) }}" title="KuCoin Community Chain" class="btn btn-outline-light text-dark {{ chain_context.id == 'kcc' ? 'active fw-bold' : '' }}"><img height="24px" alt="KuCoin Chain" src="{{ asset('assets/chains/kcc.png') }}"><span class="d-none d-md-inline"> KCC</span></a>
+        <a href="{{ path('frontpage_chain', {'chain': 'harmony'}) }}" title="Harmony" class="btn btn-outline-light text-dark {{ chain_context.id == 'harmony' ? 'active fw-bold' : '' }}"><img height="24px" alt="Harmony" src="{{ asset('assets/chains/harmony.png') }}"><span class="d-none d-md-inline"> Harmony</span></a>
+        <a href="{{ path('frontpage_chain', {'chain': 'celo'}) }}" title="Celo" class="btn btn-outline-light text-dark {{ chain_context.id == 'celo' ? 'active fw-bold' : '' }}"><img height="24px" alt="Celo" src="{{ asset('assets/chains/celo.png') }}"><span class="d-none d-md-inline"> Celo</span></a>
+        <a href="{{ path('frontpage_chain', {'chain': 'moonriver'}) }}" title="Moonriver" class="btn btn-outline-light text-dark {{ chain_context.id == 'moonriver' ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonriver" src="{{ asset('assets/chains/moonriver.png') }}"><span class="d-none d-md-inline"> Moonriver</span></a>
+        <a href="{{ path('frontpage_chain', {'chain': 'cronos'}) }}" title="Crypto.com: Cronos" class="btn btn-outline-light text-dark {{ chain_context.id == 'cronos' ? 'active fw-bold' : '' }}"><img height="24px" alt="Crypto.com: Cronos" src="{{ asset('assets/chains/cronos.png') }}"><span class="d-none d-md-inline"> Cronos</span></a>
+        <a href="{{ path('frontpage_chain', {'chain': 'moonbeam'}) }}" title="Moonbeam" class="btn btn-outline-light text-dark {{ chain_context.id == 'moonbeam' ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonbeam" src="{{ asset('assets/chains/moonbeam.png') }}"><span class="d-none d-md-inline"> Moonbeam</span></a>
     </div>
     <div class="mt-4 pt-4 border-top text-center">
         {% for platform in platforms %}

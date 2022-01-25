@@ -56,6 +56,12 @@ class RandomAddress
             ];
 
             $scan = 'https://blockscout.moonriver.moonbeam.network/address/%s/token-transfers?items_count=20&type=JSON';
+        } elseif ($chain === 'moonbeam') {
+            $urls = [
+                '0xedfb330f5fa216c9d2039b99c8ce9da85ea91c1e', // stellaswap
+            ];
+
+            $scan = 'https://blockscout.moonbeam.network/address/%s/token-transfers?items_count=20&type=JSON';
         } else if ($chain === 'celo') {
             $urls = [
                 '0x0769fd68dFb93167989C6f7254cd0D766Fb2841F', // sushi
@@ -93,7 +99,7 @@ class RandomAddress
                 $array = array_values(array_unique(array_map(static fn(array $item) => $item['from'], $array)));
                 $addresses = array_merge($addresses, $array);
             }
-        } else if ($chain === 'moonriver' || $chain === 'celo' || $chain === 'cronos') {
+        } else if ($chain === 'moonriver' || $chain === 'celo' || $chain === 'cronos' || $chain === 'moonbeam') {
             $addresses = [];
 
             foreach ($urls as $url) {

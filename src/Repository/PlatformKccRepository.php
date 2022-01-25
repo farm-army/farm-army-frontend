@@ -66,7 +66,7 @@ class PlatformKccRepository implements PlatformRepositoryInterface
             [
                 'id' => 'kukafe',
                 'label' => 'Kukafe',
-                'url' => 'https://kukafe.finance/',
+                'url' => 'https://ku.kafe.finance/',
                 'icon' => '/assets/platforms/kukafe.png',
                 'token' => 'kafe',
                 'chain' => 'kcc',

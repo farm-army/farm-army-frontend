@@ -40,7 +40,7 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("/{chain}", name="frontpage_chain", methods={"GET"}, requirements={
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos"
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam"
      * })
      * @Route("/", name="frontpage", methods={"GET"})
      */
@@ -95,7 +95,7 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("/{chainId}", methods={"POST"}, name="frontpage_post_chain", requirements={
-     *  "chainId"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos"
+     *  "chainId"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam"
      * })
      * @Route("/", methods={"POST"}, name="frontpage_post")
      */

@@ -19,6 +19,7 @@
     {% if token_card.symbol|default %}
         {% include 'vault/component/token_card.html.twig' with {
             'item': token_card,
+            'chain_context': chain_context,
         } only %}
     {% endif %}
 

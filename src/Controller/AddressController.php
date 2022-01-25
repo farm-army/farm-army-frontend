@@ -40,7 +40,7 @@ class AddressController extends AbstractController
 
     /**
      * @Route("/{chain}/0x{address}", name="chain_app_farm_index", requirements={
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos"
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam"
      * })
      * @Route("/0x{address}", name="app_farm_index")
      */
@@ -85,7 +85,7 @@ class AddressController extends AbstractController
 
     /**
      * @Route("/{chain}/0x{address}/transactions", name="app_farm_transactions_chain", methods={"GET"}, requirements={
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos"
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam"
      * })
      * @Route("/0x{address}/transactions", name="app_farm_transactions", methods={"GET"})
      */
@@ -118,7 +118,7 @@ class AddressController extends AbstractController
     /**
      * @Route("/0x{address}/nfts", name="app_farm_nfts", methods={"GET"})
      * @Route("/{chain}/0x{address}/nfts", name="app_farm_nfts_chain", methods={"GET"}, requirements={
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos"
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam"
      * })
      */
     public function nfts(string $address, ?string $chain, NodeClient $nodeClient, ChainUtil $chainUtil, NftRepository $nftRepository): Response
@@ -157,7 +157,7 @@ class AddressController extends AbstractController
 
     /**
      * @Route("/{chain}/random", name="random_address_chain", requirements={
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos"
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam"
      * })
      * @Route("/random", name="random_address")
      */
@@ -175,7 +175,7 @@ class AddressController extends AbstractController
 
     /**
      * @Route("/farms/{chain}/0x{address}", name="farm_content_chain", requirements={
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos"
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam"
      * })
      * @Route("/farms/0x{address}", name="farm_content")
      */
@@ -216,7 +216,7 @@ class AddressController extends AbstractController
     /**
      * @Route("/farms/{chain}/0x{address}/platform/{chunk}.json", name="farm_json_platform_chain_chunks", methods={"GET"}, requirements={
      *      "chunk"="\d{1,2}",
-     *      "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
+     *      "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam",
      *      "_format"="json",
      * })
      * @Route("/farms/0x{address}/platform/{chunk}.json", name="farm_json_platform_chunks", methods={"GET"}, requirements={
@@ -258,7 +258,7 @@ class AddressController extends AbstractController
 
     /**
      * @Route("/farms/{chain}/0x{address}/wallet.json", name="farm_json_chain_wallet", methods={"GET"}, requirements={
-     *      "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
+     *      "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam",
      *      "_format"="json",
      * })
      * @Route("/farms/0x{address}/wallet.json", name="farm_json_wallet", methods={"GET"}, requirements={

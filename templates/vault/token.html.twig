@@ -8,6 +8,7 @@
 
     {% include 'vault/component/token_card.html.twig' with {
         'item': token_card,
+        'chain_context': chain_context,
      } only %}
 
     {% if chart|default %}
@@ -52,6 +53,7 @@
             <div class="pb-3 pt-3">
                 {% include 'vault/component/token_card.html.twig' with {
                     'item': same_pair.info,
+                    'chain_context': chain_context,
                 } only %}
 
                 {% for batch in same_pair.vaults|default([])|batch(2) %}

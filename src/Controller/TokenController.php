@@ -36,7 +36,7 @@ class TokenController extends AbstractController
 
     /**
      * @Route("/token/{chain}/{token}", name="chain_token_address", methods={"GET"}, requirements={
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos"
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam"
      * })
      */
     public function token(string $token, string $chain)

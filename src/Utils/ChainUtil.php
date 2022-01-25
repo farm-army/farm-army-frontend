@@ -22,6 +22,8 @@ class ChainUtil
             return 'https://blockscout.moonriver.moonbeam.network';
         } elseif ($chain === 'cronos') {
             return 'https://cronos.crypto.org/explorer';
+        } elseif ($chain === 'moonbeam') {
+            return 'https://blockscout.moonbeam.network';
         }
 
         return 'https://bscscan.com';
@@ -93,7 +95,15 @@ class ChainUtil
                 'chainId' => 25,
                 'token' => 'wcro',
                 'icon' => 'assets/chains/cronos.png',
-            ]
+            ],
+            [
+                'id' => 'moonbeam',
+                'title' => 'Moonbeam',
+                'explorer' => 'https://blockscout.moonbeam.network',
+                'chainId' => 1284,
+                'token' => 'wglmr',
+                'icon' => 'assets/chains/moonbeam.png',
+            ],
         ];
     }
 

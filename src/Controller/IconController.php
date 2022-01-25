@@ -28,7 +28,7 @@ class IconController
      * })
      * @Route("/token/{chain}/{symbolA}-{symbolB}-{symbolC}-{symbolD}-{symbolE}.{format}", name="chain_token_icon_abcde", methods={"GET"}, requirements={
      *  "format"="png|webp",
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam",
      * })
      */
     public function icon5(
@@ -105,7 +105,7 @@ class IconController
      * })
      * @Route("/token/{chain}/{symbolA}-{symbolB}-{symbolC}-{symbolD}.{format}", name="chain_token_icon_abcd", methods={"GET"}, requirements={
      *  "format"="png|webp",
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam",
      * })
      */
     public function icon4(
@@ -176,7 +176,7 @@ class IconController
      * })
      * @Route("/token/{chain}/{symbolA}-{symbolB}-{symbolC}.{format}", name="chain_token_icon_abc", methods={"GET"}, requirements={
      *  "format"="png|webp",
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam",
      * })
      */
     public function icon3(
@@ -241,7 +241,7 @@ class IconController
      * })
      * @Route("/token/{chain}/{symbolA}-{symbolB}.{format}", name="chain_token_icon_pair", methods={"GET"}, requirements={
      *  "format"="png|webp",
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam",
      * })
      */
     public function iconPair(string $symbolA, string $symbolB, string $format, ?string $chain, IconResolver $iconResolver, ImagineInterface $imagine, string $projectDir): Response
@@ -293,7 +293,7 @@ class IconController
      * })
      * @Route("/{chain}/token/{symbol}.{format}", name="chain_token_icon", methods={"GET"}, requirements={
      *  "format"="png|webp",
-     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos",
+     *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam",
      * })
      */
     public function icon(string $symbol, string $format, ?string $chain, ImagineInterface $imagine, IconResolver $iconResolver, string $projectDir): Response

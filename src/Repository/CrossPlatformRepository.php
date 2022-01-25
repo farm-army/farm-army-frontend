@@ -16,6 +16,7 @@ class CrossPlatformRepository
     private PlatformMoonriverRepository $platformMoonriverRepository;
     private PlatformCronosRepository $platformCronosRepository;
     private CacheItemPoolInterface $cacheItemPool;
+    private PlatformMoonbeamRepository $platformMoonbeamRepository;
     private LoggerInterface $logger;
 
     public function __construct(
@@ -27,6 +28,7 @@ class CrossPlatformRepository
         PlatformCeloRepository $platformCeloRepository,
         PlatformMoonriverRepository $platformMoonriverRepository,
         PlatformCronosRepository $platformCronosRepository,
+        PlatformMoonbeamRepository $platformMoonbeamRepository,
         CacheItemPoolInterface $cacheItemPool,
         LoggerInterface $logger
     ) {
@@ -39,6 +41,7 @@ class CrossPlatformRepository
         $this->platformMoonriverRepository = $platformMoonriverRepository;
         $this->platformCronosRepository = $platformCronosRepository;
         $this->cacheItemPool = $cacheItemPool;
+        $this->platformMoonbeamRepository = $platformMoonbeamRepository;
         $this->logger = $logger;
     }
 
@@ -61,6 +64,8 @@ class CrossPlatformRepository
                 return $this->platformMoonriverRepository->getPlatforms();
             case 'cronos':
                 return $this->platformCronosRepository->getPlatforms();
+            case 'moonbeam':
+                return $this->platformMoonbeamRepository->getPlatforms();
             default:
                 throw new \InvalidArgumentException('Invalid platform');
         }
@@ -85,6 +90,8 @@ class CrossPlatformRepository
                 return $this->platformMoonriverRepository->getPlatformChunks();
             case 'cronos':
                 return $this->platformCronosRepository->getPlatformChunks();
+            case 'moonbeam':
+                return $this->platformMoonbeamRepository->getPlatformChunks();
             default:
                 throw new \InvalidArgumentException('invalid chain');
         }
@@ -109,6 +116,8 @@ class CrossPlatformRepository
                 return $this->platformMoonriverRepository->getPlatform($id);
             case 'cronos':
                 return $this->platformCronosRepository->getPlatform($id);
+            case 'moonbeam':
+                return $this->platformMoonbeamRepository->getPlatform($id);
             default:
                 $this->logger->error(sprintf("Invalid platform '%s' '%s'", $chain, $id));
 
@@ -136,7 +145,8 @@ class CrossPlatformRepository
             ...$this->platformHarmonyRepository->getPlatforms(),
             ...$this->platformCeloRepository->getPlatforms(),
             ...$this->platformMoonriverRepository->getPlatforms(),
-            ...$this->platformCronosRepository->getPlatforms()
+            ...$this->platformCronosRepository->getPlatforms(),
+            ...$this->platformMoonbeamRepository->getPlatforms()
         ];
 
         $result = [];
@@ -175,7 +185,8 @@ class CrossPlatformRepository
             ...$this->platformHarmonyRepository->getPlatformChunks(),
             ...$this->platformCeloRepository->getPlatformChunks(),
             ...$this->platformMoonriverRepository->getPlatformChunks(),
-            ...$this->platformCronosRepository->getPlatformChunks()
+            ...$this->platformCronosRepository->getPlatformChunks(),
+            ...$this->platformMoonbeamRepository->getPlatformChunks()
         ];
     }
 }

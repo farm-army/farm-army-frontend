@@ -105,6 +105,8 @@ $(function() {
                 content.html(data)
             }).always(function() {
                 $(exampleModal).find('.ajax-spinner').addClass('d-none');
+            }).fail(function() {
+                content.html('<div class="alert alert-danger" role="alert">An error occurred, please try again later</div>')
             });
         })
     }

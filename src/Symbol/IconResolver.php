@@ -356,6 +356,8 @@ class IconResolver
             $symbol = 'movr';
         } elseif ($symbol === 'wcro') {
             $symbol = 'cro';
+        } elseif ($symbol === 'wglmr') {
+            $symbol = 'glmr';
         }
 
         return $symbol;

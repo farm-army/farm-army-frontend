@@ -310,6 +310,14 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'token' => 'atl',
                 'chain' => 'polygon',
             ],
+            [
+                'id' => 'uniswap',
+                'label' => 'Uniswap',
+                'url' => 'https://app.uniswap.org',
+                'icon' => '/assets/platforms/uniswap.png',
+                'token' => 'uni',
+                'chain' => 'polygon',
+            ],
         ];
     }
 }

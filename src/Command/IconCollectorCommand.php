@@ -136,6 +136,7 @@ class IconCollectorCommand extends Command
             321 => 'kcc',
             42220 => 'celo',
             1285 => 'moonriver',
+            1284 => 'moonbeam',
             1666600000 => 'harmony',
         ];
 

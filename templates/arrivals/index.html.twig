@@ -9,17 +9,16 @@
     </div>
 
     <div class="text-center mb-3">
-        <div class="btn-group">
-            <a href="{{ path('arrivals') }}" title="Show All" class="btn btn-outline-light text-dark {{ chains|length == 0 ? 'active fw-bold' : '' }}"><img height="24px" alt="Binance Smart Chain" src="{{ asset('assets/rocket.png') }}"></a>
-            <a href="{{ path('arrivals', {'chain': 'bsc'}) }}" title="Binance Smart Chain" class="btn btn-outline-light text-dark {{ 'bsc' in chains  ? 'active fw-bold' : '' }}"><img height="24px" alt="Binance Smart Chain" src="{{ asset('assets/chains/bsc.svg') }}"></a>
-            <a href="{{ path('arrivals', {'chain': 'polygon'}) }}" title="Polygon" class="btn btn-outline-light text-dark {{ 'polygon' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Polygon" src="{{ asset('assets/chains/polygon.svg') }}"></a>
-            <a href="{{ path('arrivals', {'chain': 'fantom'}) }}" title="Fantom" class="btn btn-outline-light text-dark {{ 'fantom' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Fantom" src="{{ asset('assets/chains/fantom.svg') }}"></a>
-            <a href="{{ path('arrivals', {'chain': 'kcc'}) }}" title="KuCoin Community Chain" class="btn btn-outline-light text-dark {{ 'kcc' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="KuCoin Chain" src="{{ asset('assets/chains/kcc.png') }}"></a>
-            <a href="{{ path('arrivals', {'chain': 'harmony'}) }}" title="Harmony" class="btn btn-outline-light text-dark {{ 'harmony' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Harmony" src="{{ asset('assets/chains/harmony.png') }}"></a>
-            <a href="{{ path('arrivals', {'chain': 'celo'}) }}" title="Celo" class="btn btn-outline-light text-dark {{ 'celo' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Celo" src="{{ asset('assets/chains/celo.png') }}"></a>
-            <a href="{{ path('arrivals', {'chain': 'moonriver'}) }}" title="Moonriver" class="btn btn-outline-light text-dark {{ 'moonriver' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonriver" src="{{ asset('assets/chains/moonriver.png') }}"></a>
-            <a href="{{ path('arrivals', {'chain': 'cronos'}) }}" title="Crypto.com: Cronos" class="btn btn-outline-light text-dark {{ 'cronos' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Cronos" src="{{ asset('assets/chains/cronos.png') }}"></a>
-        </div>
+        <a href="{{ path('arrivals') }}" title="Show All" class="btn btn-outline-light text-dark {{ chains|length == 0 ? 'active fw-bold' : '' }}"><img height="24px" alt="Binance Smart Chain" src="{{ asset('assets/rocket.png') }}"></a>
+        <a href="{{ path('arrivals', {'chain': 'bsc'}) }}" title="Binance Smart Chain" class="btn btn-outline-light text-dark {{ 'bsc' in chains  ? 'active fw-bold' : '' }}"><img height="24px" alt="Binance Smart Chain" src="{{ asset('assets/chains/bsc.svg') }}"></a>
+        <a href="{{ path('arrivals', {'chain': 'polygon'}) }}" title="Polygon" class="btn btn-outline-light text-dark {{ 'polygon' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Polygon" src="{{ asset('assets/chains/polygon.svg') }}"></a>
+        <a href="{{ path('arrivals', {'chain': 'fantom'}) }}" title="Fantom" class="btn btn-outline-light text-dark {{ 'fantom' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Fantom" src="{{ asset('assets/chains/fantom.svg') }}"></a>
+        <a href="{{ path('arrivals', {'chain': 'kcc'}) }}" title="KuCoin Community Chain" class="btn btn-outline-light text-dark {{ 'kcc' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="KuCoin Chain" src="{{ asset('assets/chains/kcc.png') }}"></a>
+        <a href="{{ path('arrivals', {'chain': 'harmony'}) }}" title="Harmony" class="btn btn-outline-light text-dark {{ 'harmony' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Harmony" src="{{ asset('assets/chains/harmony.png') }}"></a>
+        <a href="{{ path('arrivals', {'chain': 'celo'}) }}" title="Celo" class="btn btn-outline-light text-dark {{ 'celo' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Celo" src="{{ asset('assets/chains/celo.png') }}"></a>
+        <a href="{{ path('arrivals', {'chain': 'moonriver'}) }}" title="Moonriver" class="btn btn-outline-light text-dark {{ 'moonriver' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonriver" src="{{ asset('assets/chains/moonriver.png') }}"></a>
+        <a href="{{ path('arrivals', {'chain': 'cronos'}) }}" title="Crypto.com: Cronos" class="btn btn-outline-light text-dark {{ 'cronos' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Cronos" src="{{ asset('assets/chains/cronos.png') }}"></a>
+        <a href="{{ path('arrivals', {'chain': 'moonbeam'}) }}" title="Moonbeam" class="btn btn-outline-light text-dark {{ 'moonbeam' in chains ? 'active fw-bold' : '' }}"><img height="24px" alt="Moonbeam" src="{{ asset('assets/chains/moonbeam.png') }}"></a>
     </div>
 
     <div class="pt-1">

@@ -1,6 +1,6 @@
 # farm.army - Frontend
 
-Track your farming and pool performance on the Binance Smart Chain, Polygon, Fantom, KuCoin Community Chain, Harmony, Celo, Moonriver, Crypto.com: Cronos
+Track your farming and pool performance on the Binance Smart Chain, Polygon, Fantom, KuCoin Community Chain, Harmony, Celo, Moonriver, Crypto.com: Cronos, Moonbeam
 
 ## Tech Stack
 

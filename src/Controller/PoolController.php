@@ -25,7 +25,6 @@ class PoolController extends AbstractController
     }
 
     /**
-     * @Route("/farm-pools", name="pools", methods={"GET"})
      * @Route("/farm-pools/{chain}", name="pools_chain", methods={"GET"}, requirements={
      *  "chain"="bsc|polygon|fantom|kcc|harmony|celo|moonriver|cronos|moonbeam"
      * })

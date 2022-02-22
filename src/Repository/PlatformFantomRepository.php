@@ -27,16 +27,12 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
             $this->getPlatforms()
         );
 
-        // $middleGroup = ['pancakebunny'];
         $slowGroup = [];
 
         $chunks = array_diff($chunks, $slowGroup);
         // $chunks = array_diff($chunks, $middleGroup);
 
         $chunks = array_chunk($chunks, 5);
-
-        //$chunks[] = $slowGroup;
-        // $chunks[] = $middleGroup;
 
         return $chunks;
     }
@@ -78,6 +74,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
                 'chain' => 'fantom',
+                'group' => 'beefy',
             ],
             [
                 'id' => 'fcurve',
@@ -86,6 +83,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/curve.png',
                 'token' => 'crv',
                 'chain' => 'fantom',
+                'group' => 'pcurve',
             ],
             [
                 'id' => 'frankenstein',
@@ -118,6 +116,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/cream.png',
                 'token' => 'cream',
                 'chain' => 'fantom',
+                'group' => 'cream',
             ],
             [
                 'id' => 'scream',
@@ -150,6 +149,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/hyperjump.png',
                 'token' => 'ori',
                 'chain' => 'fantom',
+                'group' => 'hyperjump',
             ],
             [
                 'id' => 'fautofarm',
@@ -158,6 +158,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/auto.png',
                 'token' => 'fauto',
                 'chain' => 'fantom',
+                'group' => 'autofarm',
             ],
             [
                 'id' => 'feleven',
@@ -166,6 +167,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/eleven.png',
                 'token' => 'ele',
                 'chain' => 'fantom',
+                'group' => 'eleven',
             ],
             [
                 'id' => 'fjetswap',
@@ -174,6 +176,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/jetswap.png',
                 'token' => 'fwings',
                 'chain' => 'fantom',
+                'group' => 'jetswap',
             ],
             [
                 'id' => 'paintswap',
@@ -190,6 +193,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/swamp.png',
                 'token' => 'fswamp',
                 'chain' => 'fantom',
+                'group' => 'swamp',
             ],
             [
                 'id' => 'beethovenx',
@@ -237,19 +241,13 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'chain' => 'fantom',
             ],
             [
-                'id' => 'fpearzap',
-                'label' => 'PearZap',
-                'url' => 'https://fantom.pearzap.com/?r=yv676c7746zC072579641y20709y1y5zC6yA35726F',
-                'icon' => '/assets/platforms/pearzap.png',
-                'chain' => 'fantom',
-            ],
-            [
                 'id' => 'fsynapse',
                 'label' => 'Synapse',
                 'url' => 'https://synapseprotocol.com/pools',
                 'icon' => '/assets/platforms/synapse.png',
                 'token' => 'syn',
                 'chain' => 'fantom',
+                'group' => 'synapse',
             ],
             [
                 'id' => 'hectordao',
@@ -274,6 +272,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/hundred.png',
                 'token' => 'hnd',
                 'chain' => 'fantom',
+                'group' => 'hundred',
             ],
             [
                 'id' => 'revenant',
@@ -321,6 +320,7 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://fantom.market.xyz/',
                 'icon' => '/assets/platforms/market.png',
                 'chain' => 'fantom',
+                'group' => 'market',
             ],
             [
                 'id' => 'oxdao',
@@ -335,6 +335,23 @@ class PlatformFantomRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.sushi.com/',
                 'icon' => '/assets/platforms/sushi.png',
                 'token' => 'sushi',
+                'chain' => 'fantom',
+                'group' => 'psushi',
+            ],
+            [
+                'id' => 'protofi',
+                'label' => 'Protofi',
+                'url' => 'https://fantomdex.protofi.app',
+                'icon' => '/assets/platforms/protofi.png',
+                'token' => 'proto',
+                'chain' => 'fantom',
+            ],
+            [
+                'id' => 'wigoswap',
+                'label' => 'Wigoswap',
+                'url' => 'https://wigoswap.io',
+                'icon' => '/assets/platforms/wigoswap.png',
+                'token' => 'wigo',
                 'chain' => 'fantom',
             ],
         ];

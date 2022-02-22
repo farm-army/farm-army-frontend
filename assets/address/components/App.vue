@@ -118,11 +118,14 @@ export default {
         const platform = this.platforms[key];
 
         if (platform.usd) {
-          summary.vaults += platform.usd
+          summary.vaults += platform.usd;
         }
 
         if (platform.rewards_total) {
-          summary.rewards += platform.rewards_total
+          summary.rewards += platform.rewards_total;
+
+          // vault includes the rewards
+          summary.vaults -= platform.rewards_total;
         }
       }
 

@@ -27,16 +27,11 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
             $this->getPlatforms()
         );
 
-        // $middleGroup = ['pancakebunny'];
         $slowGroup = [];
 
         $chunks = array_diff($chunks, $slowGroup);
-        // $chunks = array_diff($chunks, $middleGroup);
 
         $chunks = array_chunk($chunks, 5);
-
-        //$chunks[] = $slowGroup;
-        // $chunks[] = $middleGroup;
 
         return $chunks;
     }
@@ -54,6 +49,7 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/auto.png',
                 'token' => 'fauto',
                 'chain' => 'moonriver',
+                'group' => 'autofarm',
             ],
             [
                 'id' => 'solarbeam',
@@ -94,6 +90,7 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
                 'chain' => 'moonriver',
+                'group' => 'beefy',
             ],
             [
                 'id' => 'msushi',
@@ -102,6 +99,7 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/sushi.png',
                 'token' => 'sushi',
                 'chain' => 'moonriver',
+                'group' => 'psushi',
             ],
             [
                 'id' => 'mtemplar',
@@ -110,6 +108,7 @@ class PlatformMoonriverRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/templar.png',
                 'token' => 'tem',
                 'chain' => 'moonriver',
+                'group' => 'templar',
             ],
         ];
     }

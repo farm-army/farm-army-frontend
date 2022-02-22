@@ -27,16 +27,11 @@ class PlatformKccRepository implements PlatformRepositoryInterface
             $this->getPlatforms()
         );
 
-        // $middleGroup = ['pancakebunny'];
         $slowGroup = [];
 
         $chunks = array_diff($chunks, $slowGroup);
-        // $chunks = array_diff($chunks, $middleGroup);
 
         $chunks = array_chunk($chunks, 5);
-
-        //$chunks[] = $slowGroup;
-        // $chunks[] = $middleGroup;
 
         return $chunks;
     }

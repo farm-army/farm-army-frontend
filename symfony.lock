@@ -105,6 +105,12 @@
     "imagine/imagine": {
         "version": "1.2.4"
     },
+    "knplabs/knp-components": {
+        "version": "v3.5.0"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.8.0"
+    },
     "kornrunner/keccak": {
         "version": "1.1.0"
     },

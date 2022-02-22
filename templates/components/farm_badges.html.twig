@@ -9,6 +9,8 @@
     or 'deprecated' in farm.flags|default([])
     or 'inactive' in farm.flags|default([])
     or 'bond' in farm.flags|default([])
+    or 'ibToken' in farm.flags|default([])
+    or 'stable' in farm.flags|default([])
 %}
     <div class="position-absolute top-0 end-0">
         {% if 'inactive' in farm.flags|default([]) or farm.inactive|default %}
@@ -21,6 +23,10 @@
 
         {% if 'bond' in farm.flags|default([]) or farm.bond|default %}
             <span class="badge bg-info" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">bond</span>
+        {% endif %}
+
+        {% if 'ibToken' in farm.flags|default([]) %}
+            <span class="badge bg-info" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">ibToken</span>
         {% endif %}
 
         {% if farm.leverage|default %}
@@ -37,6 +43,10 @@
 
         {% if 'borrow' in farm.flags|default([]) %}
             <span class="badge bg-danger" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">borrow</span>
+        {% endif %}
+
+        {% if 'stable' in farm.flags|default([]) %}
+            <span class="badge bg-success" style="font-size: 0.55em; opacity: 0.5; line-height: 0.85em; float:left; margin-left: 2px">stable</span>
         {% endif %}
     </div>
 {% endif %}

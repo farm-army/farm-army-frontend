@@ -1,0 +1,27 @@
+<ul class="pagination pagination-sm" style="margin: 0; padding: 0;">
+    {% if previous is defined %}
+        <li class="page-item page-previous"><a href="#" tabindex="-1" class="page-link">«</a></li>
+    {% else %}
+        <li class="page-item disabled"><a href="#" tabindex="-1" aria-disabled="true" class="page-link">«</a></li>
+    {% endif %}
+
+    <li class="page-item">
+        <select aria-label="Page" class="form-select form-select-sm" {% if pageCount <= 0 %}disabled{% endif %}>
+            {% if pageCount > 0 %}
+                {% for page in range(1, pageCount) %}
+                    {% if page != current %}
+                        <option value="{{ page }}">{{ page }}</option>
+                    {% else %}
+                        <option value="{{ page }}" selected>{{ page }}</option>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </select>
+    </li>
+
+    {% if next is defined %}
+        <li class="page-item page-next"><a href="#" tabindex="-1" class="page-link">»</a></li>
+    {% else %}
+        <li class="page-item disabled"><a href="#" tabindex="-1" aria-disabled="true" class="page-link">»</a></li>
+    {% endif %}
+</ul>

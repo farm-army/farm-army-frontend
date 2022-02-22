@@ -6,7 +6,6 @@ use App\Repository\CrossFarmRepository;
 use App\Repository\CrossPlatformRepository;
 use App\Symbol\IconResolver;
 use App\Utils\InterestUtil;
-use Doctrine\Persistence\ManagerRegistry;
 use Psr\Cache\CacheItemPoolInterface;
 use Twig\Environment;
 

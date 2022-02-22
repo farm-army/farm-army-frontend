@@ -27,16 +27,10 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
             $this->getPlatforms()
         );
 
-        // $middleGroup = ['pancakebunny'];
         $slowGroup = [];
 
         $chunks = array_diff($chunks, $slowGroup);
-        // $chunks = array_diff($chunks, $middleGroup);
-
         $chunks = array_chunk($chunks, 5);
-
-        //$chunks[] = $slowGroup;
-        // $chunks[] = $middleGroup;
 
         return $chunks;
     }
@@ -54,6 +48,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
                 'chain' => 'harmony',
+                'group' => 'beefy',
             ],
             [
                 'id' => 'hsushi',
@@ -62,6 +57,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/sushi.png',
                 'token' => '1sushi',
                 'chain' => 'harmony',
+                'group' => 'psushi',
             ],
             [
                 'id' => 'openswap',
@@ -86,6 +82,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/curve.png',
                 'token' => 'curve',
                 'chain' => 'harmony',
+                'group' => 'pcurve',
             ],
             [
                 'id' => 'artemis',
@@ -126,6 +123,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/synapse.png',
                 'token' => 'syn',
                 'chain' => 'harmony',
+                'group' => 'synapse',
             ],
             [
                 'id' => 'hautofarm',
@@ -134,6 +132,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/auto.png',
                 'token' => 'auto',
                 'chain' => 'harmony',
+                'group' => 'autofarm',
             ],
             [
                 'id' => 'euphoria',
@@ -150,6 +149,7 @@ class PlatformHarmonyRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/hundred.png',
                 'token' => 'hnd',
                 'chain' => 'harmony',
+                'group' => 'hundred',
             ],
             [
                 'id' => 'lootswap',

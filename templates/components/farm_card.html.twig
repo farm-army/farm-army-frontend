@@ -48,8 +48,14 @@
     </div>
 
     <div class="col-2">
-        <div class="float-end">
+        <div class="float-end position-relative">
             <a href="{{ farm.link is defined ? farm.link|default('#') : farm.provider.url|default('#') }}" target="_blank"><img width="48" height="48" alt="{{ farm.provider.label }}" title="{{ farm.provider.label }}" src="{{ farm.provider.icon }}"></a>
+
+            {% if cross_chain|default(false) %}
+                <div class="position-absolute top-100 start-100 translate-middle">
+                    <img width="24" height="24" loading="lazy" src="{% if chain_icon(box.chain) %}{{ asset(chain_icon(box.chain)) }}{% endif %}" alt="{{ box.chain }}">
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>

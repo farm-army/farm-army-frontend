@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\CrossFarm;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 class CrossFarmRepository extends ServiceEntityRepository
@@ -23,15 +24,23 @@ class CrossFarmRepository extends ServiceEntityRepository
         $index = 0;
         foreach ($farms as $farm) {
 
-            $sql = "INSERT INTO cross_farm (hash, farm_id, created_at, last_found_at, updated_at, json, name, tvl, token, chain, compound, leverage, inactive, deprecated) VALUES (:hash, :farm_id, :created_at, :last_found_at, :updated_at, :json, :name, :tvl, :token, :chain, :compound, :leverage, :inactive, :deprecated) "
-                . "ON CONFLICT(farm_id) DO UPDATE SET last_found_at = :last_found_at, json = :json, updated_at = :updated_at, name = :name, tvl = :tvl, token = :token, hash = :hash, chain = :chain, compound = :compound, leverage = :leverage, inactive = :inactive, deprecated = :deprecated";
+            $sql = "INSERT INTO cross_farm (hash, farm_id, created_at, last_found_at, updated_at, json, name, tvl, token, chain, compound, leverage, inactive, deprecated, provider, bond, amm, ib_token, apy, earns, stable) VALUES (:hash, :farm_id, :created_at, :last_found_at, :updated_at, :json, :name, :tvl, :token, :chain, :compound, :leverage, :inactive, :deprecated, :provider, :bond, :amm, :ib_token, :apy, :earns, :stable) "
+                . "ON CONFLICT(farm_id) DO UPDATE SET last_found_at = :last_found_at, json = :json, updated_at = :updated_at, name = :name, tvl = :tvl, token = :token, hash = :hash, chain = :chain, compound = :compound, leverage = :leverage, inactive = :inactive, deprecated = :deprecated, provider = :provider, bond = :bond, amm = :amm, ib_token = :ib_token, apy = :apy, earns = :earns, stable = :stable";
 
             $stmt = $connection->prepare($sql);
+
+            $tvlUsd = $farm['tvl']['usd'] ?? null;
+
+            // secure
+            if ($tvlUsd && $tvlUsd > 10198612188) {
+                $tvlUsd = null;
+            }
 
             $stmt->bindValue('farm_id', $farm['id']);
             $stmt->bindValue('hash', md5($farm['id']));
             $stmt->bindValue('name', $farm['name'] ?? null);
-            $stmt->bindValue('tvl', $farm['tvl']['usd'] ?? null);
+            $stmt->bindValue('tvl', $tvlUsd);
+            $stmt->bindValue('provider', $farm['provider']);
             $stmt->bindValue('chain', $farm['chain'] ?? null);
             $stmt->bindValue('compound', $farm['compound'] ?? false);
             $stmt->bindValue('leverage', $farm['leverage'] ?? false);
@@ -41,8 +50,20 @@ class CrossFarmRepository extends ServiceEntityRepository
             $stmt->bindValue('json', json_encode($farm));
             $stmt->bindValue('token', isset($farm['extra']['transactionToken']) ? strtolower($farm['extra']['transactionToken']) : null);
 
-            $stmt->bindValue('inactive', ($farm['inactive'] ?? false) || ($farm['flags']['inactive'] ?? false));
-            $stmt->bindValue('deprecated', ($farm['deprecated'] ?? false) || ($farm['flags']['deprecated'] ?? false));
+            $stmt->bindValue('inactive', ($farm['inactive'] ?? false) || in_array('inactive', $farm['flags'] ?? [], true));
+            $stmt->bindValue('deprecated', ($farm['deprecated'] ?? false) || in_array('deprecated', $farm['flags'] ?? [], true));
+            $stmt->bindValue('bond', in_array('bond', $farm['flags'] ?? [], true));
+            $stmt->bindValue('amm',
+                in_array('lend', $farm['flags'] ?? [], true)
+                || in_array('borrow', $farm['flags'] ?? [], true)
+            );
+
+            $stmt->bindValue('ib_token', in_array('ibToken', $farm['flags'] ?? [], true));
+            $stmt->bindValue('apy', $farm['yield']['apy'] ?? null);
+
+            $stmt->bindValue('earns', count($farm['earns'] ?? []) > 0 || count($farm['earn'] ?? []));
+
+            $stmt->bindValue('stable', in_array('stable', $farm['flags'] ?? [], true));
 
             $stmt->execute();
 
@@ -123,7 +144,7 @@ class CrossFarmRepository extends ServiceEntityRepository
         $qb->andWhere('f.lastFoundAt <= :now');
         $qb->andWhere('f.lastFoundAt >= :lastFoundAtWindow');
 
-        $qb->setParameter('now', date_create()->modify('+2 hours'));
+        $qb->setParameter('now', new \DateTime(date_create()->modify('+2 hours')->format('Y-m-d H:00:00')));
         $qb->setParameter('lastFoundAtWindow', $this->findLastSyncWindow());
 
         return $qb->getQuery()
@@ -144,7 +165,7 @@ class CrossFarmRepository extends ServiceEntityRepository
 
         $qb->groupBy('f.token');
 
-        $qb->setParameter('now', date_create()->modify('+2 hours'));
+        $qb->setParameter('now', new \DateTime(date_create()->modify('+2 hours')->format('Y-m-d H:00:00')));
         $qb->setParameter('lastFoundAtWindow', $this->findLastSyncWindow());
 
         return $qb->getQuery()
@@ -161,19 +182,19 @@ class CrossFarmRepository extends ServiceEntityRepository
         $qb->andWhere('f.lastFoundAt <= :now');
         $qb->andWhere('f.lastFoundAt >= :lastFoundAtWindow');
 
-        $qb->setParameter('now', date_create()->modify('+2 hours'));
-        $qb->setParameter('lastFoundAtWindow', date_create()->modify('-3 days'));
+        $qb->setParameter('now', new \DateTime(date_create()->modify('+2 hours')->format('Y-m-d H:00:00')));
+        $qb->setParameter('lastFoundAtWindow', new \DateTime(date_create()->modify('-30 days')->format('Y-m-d H:00:00')));
 
         $result = $qb->getQuery()
             ->useQueryCache(true)
             ->setResultCacheLifetime(60 * 30)
-            ->setResultCacheId('last-sync-window-cross')
+            ->setResultCacheId('last-sync-window-cross-v1')
             ->getSingleScalarResult();
 
         if (!$result) {
-            $result = date_create()->modify('-5 days');
+            $result = date_create()->modify('-5 days midnight');
         } else {
-            $result = new \DateTimeImmutable($result);
+            $result = (new \DateTimeImmutable($result))->modify('-3 day midnight');
         }
 
         return new \DateTimeImmutable($result->format('Y-m-d H:00:00'));
@@ -273,5 +294,125 @@ class CrossFarmRepository extends ServiceEntityRepository
             ->setResultCacheLifetime(60 * 30)
             ->setResultCacheId('all-valid-crossfarms-v3-content-' . $chain)
             ->getArrayResult();
+    }
+
+    public function search(array $platforms, array $chains, ?string $query, array $tags, int $page, ?string $sort): Query
+    {
+        // cache hit
+        sort($platforms);
+        sort($chains);
+        sort($tags);
+        $query = $query ? strtolower($query) : null;
+
+        $md5 = md5(json_encode([
+            $platforms,
+            $chains,
+            $query,
+            $tags,
+            $page,
+            $sort
+        ]));
+
+        $qb = $this->createQueryBuilder('f');
+
+        if ($sort === 'tvl_desc') {
+            $qb->orderBy('f.tvl', 'DESC');
+        }
+
+        if ($sort === 'tvl_asc') {
+            $qb->orderBy('f.tvl', 'ASC');
+        }
+
+        if ($sort === 'apy_desc') {
+            $qb->orderBy('f.apy', 'DESC');
+        }
+
+        if ($sort === 'apy_asc') {
+            $qb->orderBy('f.apy', 'ASC');
+        }
+
+        if ($sort === 'name_desc') {
+            $qb->orderBy('f.name', 'DESC');
+        }
+
+        if ($sort === 'name_asc') {
+            $qb->orderBy('f.name', 'ASC');
+        }
+
+        if ($sort === 'provider_desc') {
+            $qb->orderBy('f.provider', 'DESC');
+        }
+
+        if ($sort === 'provider_asc') {
+            $qb->orderBy('f.provider', 'ASC');
+        }
+
+        $qb->andWhere('f.lastFoundAt >= :lastFoundAtWindow');
+        $qb->setParameter('lastFoundAtWindow', $this->findLastSyncWindow());
+
+        if (count($platforms) > 0) {
+            $qb->andWhere('f.provider IN (:provider)');
+            $qb->setParameter('provider', $platforms);
+        }
+
+        if (count($chains) > 0) {
+            $qb->andWhere('f.chain IN (:chain)');
+            $qb->setParameter('chain', $chains);
+        }
+
+        if ($query && strlen($query) < 150) {
+            $q1 = [];
+
+            $q1[] = $qb->expr()->like('f.name', ':query');
+            $qb->setParameter('query', '%' . $query . '%');
+
+            if (strlen($query) > 3 && preg_match('#^[0x]?.[0-9a-f]{3,}$#i', $query)) {
+                $q1[] = $qb->expr()->like('f.token', ':token');
+                $q1[] = $qb->expr()->like('f.token0', ':token');
+                $q1[] = $qb->expr()->like('f.token1', ':token');
+
+                $qb->setParameter('token', '%' . $query . '%');
+            }
+
+            $qb->andWhere($qb->expr()->orX(...$q1));
+        }
+
+        $q = [];
+        if (in_array('bond', $tags, true)) {
+            $q[] = $qb->expr()->eq('f.bond', true);
+        }
+
+        if (in_array('auto_compound', $tags, true)) {
+            $q[] = $qb->expr()->eq('f.compound', true);
+        }
+
+        if (in_array('lend_borrow', $tags, true)) {
+            $q[] = $qb->expr()->eq('f.amm', true);
+        }
+
+        if (in_array('ib_token', $tags, true)) {
+            $q[] = $qb->expr()->eq('f.ibToken', true);
+        }
+
+        if (in_array('earns', $tags, true)) {
+            $q[] = $qb->expr()->eq('f.earns', true);
+        }
+
+        if (in_array('leverage', $tags, true)) {
+            $q[] = $qb->expr()->eq('f.leverage', true);
+        }
+
+        if (in_array('stable', $tags, true)) {
+            $q[] = $qb->expr()->eq('f.stable', true);
+        }
+
+        if (count($q) > 0) {
+            $qb->andWhere($qb->expr()->orX(...$q));
+        }
+
+        return $qb->getQuery()
+            ->useQueryCache(true)
+            ->setResultCacheLifetime(60 * 30)
+            ->setResultCacheId('farm-search-backend-' . $md5);
     }
 }

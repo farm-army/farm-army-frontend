@@ -27,7 +27,6 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
             $this->getPlatforms()
         );
 
-        // $middleGroup = ['pancakebunny'];
         $slowGroup = [];
 
         $chunks = array_diff($chunks, $slowGroup);
@@ -70,6 +69,7 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/sushi.png',
                 'token' => 'sushi',
                 'chain' => 'celo',
+                'group' => 'psushi',
             ],
             [
                 'id' => 'moola',
@@ -86,6 +86,7 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
                 'chain' => 'celo',
+                'group' => 'beefy',
             ],
             [
                 'id' => 'cautofarm',
@@ -93,6 +94,7 @@ class PlatformCeloRepository implements PlatformRepositoryInterface
                 'url' => 'https://autofarm.network/celo/',
                 'icon' => '/assets/platforms/auto.png',
                 'chain' => 'celo',
+                'group' => 'autofarm',
             ],
             [
                 'id' => 'celodex',

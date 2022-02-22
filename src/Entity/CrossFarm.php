@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="crossfarm_created_at", columns={"created_at"}),
  *        @ORM\Index(name="crossfarm_last_found_at", columns={"last_found_at"}),
  *        @ORM\Index(name="crossfarm_tvl", columns={"tvl"}),
+ *        @ORM\Index(name="crossfarm_provider", columns={"provider"}),
  *        @ORM\Index(name="crossfarm_hash", columns={"hash"}),
  *        @ORM\Index(name="crossfarm_farm_id", columns={"farm_id"}),
  *        @ORM\Index(name="crossfarm_token", columns={"token"}),
@@ -54,6 +55,21 @@ class CrossFarm
      * @ORM\Column(type="float", nullable=true)
      */
     private $tvl;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $provider;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $apy;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $apyHistory;
 
     /**
      * @ORM\Column(type="json", nullable=true)
@@ -104,6 +120,31 @@ class CrossFarm
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $deprecated = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $ibToken = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $stable = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $bond = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $amm = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $earns = false;
 
     /**
      * @ORM\Column(type="string", nullable=true, length=50)

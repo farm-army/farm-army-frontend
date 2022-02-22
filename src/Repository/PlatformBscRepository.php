@@ -27,16 +27,13 @@ class PlatformBscRepository
             $this->getPlatforms()
         );
 
-       // $middleGroup = ['pancakebunny'];
         $slowGroup = ['alpha', 'alpaca'];
 
         $chunks = array_diff($chunks, $slowGroup);
-       // $chunks = array_diff($chunks, $middleGroup);
 
         $chunks = array_chunk($chunks, 5);
 
         $chunks[] = $slowGroup;
-       // $chunks[] = $middleGroup;
 
         return $chunks;
     }
@@ -54,6 +51,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/auto.png',
                 'token' => 'auto',
                 'chain' => 'bsc',
+                'group' => 'autofarm',
             ],
             [
                 'id' => 'beefy',
@@ -62,6 +60,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
                 'chain' => 'bsc',
+                'group' => 'beefy',
             ],
             [
                 'id' => 'pancakebunny',
@@ -70,6 +69,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/pancakebunny.png',
                 'token' => 'bunny',
                 'chain' => 'bsc',
+                'group' => 'pancakebunny',
             ],
             [
                 'id' => 'pancake',
@@ -113,22 +113,6 @@ class PlatformBscRepository
                 'chain' => 'bsc',
             ],
             [
-                'id' => 'kebab',
-                'label' => 'Kebab',
-                'url' => 'https://kebabfinance.com',
-                'icon' => '/assets/platforms/kebab.png',
-                'token' => 'kebab',
-                'chain' => 'bsc',
-            ],
-            [
-                'id' => 'valuedefi',
-                'label' => 'ValueDefi',
-                'url' => 'https://bsc.valuedefi.io/#/vfarm',
-                'icon' => '/assets/platforms/valuedefi.png',
-                'token' => 'vbswap',
-                'chain' => 'bsc',
-            ],
-            [
                 'id' => 'saltswap',
                 'label' => 'SaltSwap',
                 'url' => 'https://www.saltswap.finance/',
@@ -143,6 +127,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/hyperjump.png',
                 'token' => 'alloy',
                 'chain' => 'bsc',
+                'group' => 'hyperjump',
             ],
             [
                 'id' => 'apeswap',
@@ -151,22 +136,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/apeswap.png',
                 'token' => 'banana',
                 'chain' => 'bsc',
-            ],
-            [
-                'id' => 'slime',
-                'label' => 'Slime',
-                'url' => 'https://app.slime.finance/',
-                'icon' => '/assets/platforms/slime.png',
-                'token' => 'slme',
-                'chain' => 'bsc',
-            ],
-            [
-                'id' => 'jul',
-                'label' => 'JulSwap',
-                'url' => 'https://info.julswap.com/',
-                'icon' => '/assets/platforms/jul.png',
-                'token' => 'juld',
-                'chain' => 'bsc',
+                'group' => 'apeswap',
             ],
             [
                 'id' => 'space',
@@ -178,7 +148,7 @@ class PlatformBscRepository
             ],
             [
                 'id' => 'blizzard',
-                'label' => 'Blizzard Money',
+                'label' => 'Blizzard',
                 'url' => 'https://www.blizzard.money/',
                 'icon' => '/assets/platforms/blizzard.png',
                 'token' => 'blzd',
@@ -186,15 +156,16 @@ class PlatformBscRepository
             ],
             [
                 'id' => 'wault',
-                'label' => 'Wault Finance',
+                'label' => 'Wault',
                 'url' => 'https://app.wault.finance/',
                 'icon' => '/assets/platforms/wault.png',
                 'token' => 'wex',
                 'chain' => 'bsc',
+                'group' => 'wault',
             ],
             [
                 'id' => 'alpaca',
-                'label' => 'Alpaca Finance',
+                'label' => 'Alpaca',
                 'url' => 'https://app.alpacafinance.org/',
                 'icon' => '/assets/platforms/alpaca.png',
                 'token' => 'alpaca',
@@ -217,14 +188,6 @@ class PlatformBscRepository
                 'chain' => 'bsc',
             ],
             [
-                'id' => 'polaris',
-                'label' => 'Polaris',
-                'url' => 'https://app.polarisdefi.io/',
-                'icon' => '/assets/platforms/polaris.png',
-                'token' => 'polar',
-                'chain' => 'bsc',
-            ],
-            [
                 'id' => 'cheese',
                 'label' => 'Cheesecake',
                 'url' => 'https://cheesecakeswap.com/',
@@ -239,6 +202,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/swamp.png',
                 'token' => 'swamp',
                 'chain' => 'bsc',
+                'group' => 'swamp',
             ],
             [
                 'id' => 'pandayield',
@@ -255,6 +219,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/cafeswap.png',
                 'token' => 'brew',
                 'chain' => 'bsc',
+                'group' => 'cafeswap',
             ],
             [
                 'id' => 'belt',
@@ -279,6 +244,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/jetswap.png',
                 'token' => 'wings',
                 'chain' => 'bsc',
+                'group' => 'jetswap',
             ],
             [
                 'id' => 'warden',
@@ -311,6 +277,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/eleven.png',
                 'token' => 'ele',
                 'chain' => 'bsc',
+                'group' => 'eleven',
             ],
             [
                 'id' => 'coinswap',
@@ -327,6 +294,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/farmhero.png',
                 'token' => 'hero',
                 'chain' => 'bsc',
+                'group' => 'farmhero',
             ],
             [
                 'id' => 'treedefi',
@@ -367,20 +335,13 @@ class PlatformBscRepository
                 'chain' => 'bsc',
             ],
             [
-                'id' => 'qubit',
-                'label' => 'Qubit',
-                'url' => 'https://qbt.fi/app',
-                'icon' => '/assets/platforms/qubit.png',
-                'token' => 'qbt',
-                'chain' => 'bsc',
-            ],
-            [
                 'id' => 'cream',
                 'label' => 'Cream',
                 'url' => 'https://app.cream.finance/',
                 'icon' => '/assets/platforms/cream.png',
                 'token' => 'cream',
                 'chain' => 'bsc',
+                'group' => 'cream',
             ],
             [
                 'id' => 'venus',
@@ -405,6 +366,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/fortube.png',
                 'token' => 'for',
                 'chain' => 'bsc',
+                'group' => 'fortube',
             ],
             [
                 'id' => 'planet',
@@ -445,6 +407,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/atlantis.png',
                 'token' => 'atl',
                 'chain' => 'bsc',
+                'group' => 'atlantis',
             ],
             [
                 'id' => 'synapse',
@@ -453,6 +416,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/synapse.png',
                 'token' => 'syn',
                 'chain' => 'bsc',
+                'group' => 'synapse',
             ],
             [
                 'id' => 'annex',
@@ -461,6 +425,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/annex.png',
                 'token' => 'ann',
                 'chain' => 'bsc',
+                'group' => 'annex',
             ],
             [
                 'id' => 'templar',
@@ -469,6 +434,7 @@ class PlatformBscRepository
                 'icon' => '/assets/platforms/templar.png',
                 'token' => 'tem',
                 'chain' => 'bsc',
+                'group' => 'templar',
             ],
             [
                 'id' => 'nemesis',
@@ -500,6 +466,13 @@ class PlatformBscRepository
                 'url' => 'https://unusdao.finance',
                 'icon' => '/assets/platforms/unus.png',
                 'token' => 'udo',
+                'chain' => 'bsc',
+            ],
+            [
+                'id' => 'theanimal',
+                'label' => 'theanimal',
+                'url' => 'https://theanimal.farm/referrals/0x898e99681C29479b86304292b03071C80A57948F',
+                'icon' => '/assets/platforms/theanimal.png',
                 'chain' => 'bsc',
             ],
             /*

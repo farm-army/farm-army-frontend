@@ -175,6 +175,11 @@ class CrossPlatformRepository
         ];
     }
 
+    public function getPlatforms(): array
+    {
+        return array_values($this->getPlatformMap());
+    }
+
     public function getPlatformChunks(): array
     {
         return [

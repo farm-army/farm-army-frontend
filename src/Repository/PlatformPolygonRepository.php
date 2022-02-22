@@ -27,16 +27,11 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
             $this->getPlatforms()
         );
 
-        // $middleGroup = ['pancakebunny'];
         $slowGroup = [];
 
         $chunks = array_diff($chunks, $slowGroup);
-        // $chunks = array_diff($chunks, $middleGroup);
 
         $chunks = array_chunk($chunks, 5);
-
-        //$chunks[] = $slowGroup;
-        // $chunks[] = $middleGroup;
 
         return $chunks;
     }
@@ -54,14 +49,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/wault.png',
                 'token' => 'wexpoly',
                 'chain' => 'polygon',
-            ],
-            [
-                'id' => 'polyzap',
-                'label' => 'Polyzap',
-                'url' => 'https://farm.polyzap.finance?ref=0x898e99681C29479b86304292b03071C80A57948F',
-                'icon' => '/assets/platforms/polyzap.png',
-                'token' => 'pzap',
-                'chain' => 'polygon',
+                'group' => 'wault',
             ],
             [
                 'id' => 'polycat',
@@ -78,6 +66,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/jetswap.png',
                 'token' => 'pwings',
                 'chain' => 'polygon',
+                'group' => 'jetswap',
             ],
             [
                 'id' => 'augury',
@@ -94,6 +83,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/swamp.png',
                 'token' => 'pswamp',
                 'chain' => 'polygon',
+                'group' => 'swamp',
             ],
             [
                 'id' => 'ppancakebunny',
@@ -102,6 +92,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/pancakebunny.png',
                 'token' => 'polybunny',
                 'chain' => 'polygon',
+                'group' => 'pancakebunny',
             ],
             [
                 'id' => 'mai',
@@ -118,6 +109,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/farmhero.png',
                 'token' => 'honor',
                 'chain' => 'polygon',
+                'group' => 'farmhero',
             ],
             [
                 'id' => 'polycrystal',
@@ -142,6 +134,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
                 'chain' => 'polygon',
+                'group' => 'beefy',
             ],
             [
                 'id' => 'dinoswap',
@@ -158,6 +151,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/auto.png',
                 'token' => 'pauto',
                 'chain' => 'polygon',
+                'group' => 'autofarm',
             ],
             [
                 'id' => 'dfyn',
@@ -174,6 +168,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/apeswap.png',
                 'token' => 'banana',
                 'chain' => 'polygon',
+                'group' => 'apeswap',
             ],
             [
                 'id' => 'psushi',
@@ -182,6 +177,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/sushi.png',
                 'token' => 'sushi',
                 'chain' => 'polygon',
+                'group' => 'psushi',
             ],
             [
                 'id' => 'pcurve',
@@ -190,6 +186,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/curve.png',
                 'token' => 'crv',
                 'chain' => 'polygon',
+                'group' => 'pcurve',
             ],
             [
                 'id' => 'peleven',
@@ -198,6 +195,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/eleven.png',
                 'token' => 'ele',
                 'chain' => 'polygon',
+                'group' => 'eleven',
             ],
             [
                 'id' => 'adamant',
@@ -216,20 +214,13 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'chain' => 'polygon',
             ],
             [
-                'id' => 'pearzap',
-                'label' => 'PearZap',
-                'url' => 'https://app.pearzap.com/?r=yv676c7746zC072579641y20709y1y5zC6yA35726F',
-                'icon' => '/assets/platforms/pearzap.png',
-                'token' => 'pear',
-                'chain' => 'polygon',
-            ],
-            [
                 'id' => 'pcream',
                 'label' => 'Cream',
                 'url' => 'https://app.cream.finance/',
                 'icon' => '/assets/platforms/cream.png',
                 'token' => 'cream',
                 'chain' => 'polygon',
+                'group' => 'cream',
             ],
             [
                 'id' => 'pfortube',
@@ -238,6 +229,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/fortube.png',
                 'token' => 'for',
                 'chain' => 'polygon',
+                'group' => 'fortube',
             ],
             [
                 'id' => 'balancer',
@@ -262,6 +254,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/cafeswap.png',
                 'token' => 'pbrew',
                 'chain' => 'polygon',
+                'group' => 'cafeswap',
             ],
             [
                 'id' => 'polysage',
@@ -280,20 +273,13 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'chain' => 'polygon',
             ],
             [
-                'id' => 'pfulcrum',
-                'label' => 'Fulcrum',
-                'url' => 'https://polygon.fulcrum.trade/lend',
-                'icon' => '/assets/platforms/fulcrum.png',
-                'token' => 'bzrk',
-                'chain' => 'polygon',
-            ],
-            [
                 'id' => 'psynapse',
                 'label' => 'Synapse',
                 'url' => 'https://synapseprotocol.com/pools',
                 'icon' => '/assets/platforms/synapse.png',
                 'token' => 'syn',
                 'chain' => 'polygon',
+                'group' => 'synapse',
             ],
             [
                 'id' => 'market',
@@ -301,6 +287,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'url' => 'https://polygon.market.xyz/',
                 'icon' => '/assets/platforms/market.png',
                 'chain' => 'polygon',
+                'group' => 'market',
             ],
             [
                 'id' => 'patlantis',
@@ -309,6 +296,7 @@ class PlatformPolygonRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/atlantis.png',
                 'token' => 'atl',
                 'chain' => 'polygon',
+                'group' => 'atlantis',
             ],
             [
                 'id' => 'uniswap',

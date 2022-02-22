@@ -21,7 +21,7 @@ class ChainUtil
         } elseif ($chain === 'moonriver') {
             return 'https://blockscout.moonriver.moonbeam.network';
         } elseif ($chain === 'cronos') {
-            return 'https://cronos.crypto.org/explorer';
+            return 'https://cronoscan.com';
         } elseif ($chain === 'moonbeam') {
             return 'https://blockscout.moonbeam.network';
         }
@@ -35,6 +35,7 @@ class ChainUtil
             [
                 'id' => 'bsc',
                 'title' => 'Binance Smart Chain',
+                'shortTitle' => 'BSC',
                 'explorer' => 'https://bscscan.com',
                 'chainId' => 56,
                 'token' => 'bnb',
@@ -59,6 +60,7 @@ class ChainUtil
             [
                 'id' => 'kcc',
                 'title' => 'KuCoin Community Chain',
+                'shortTitle' => 'KCC',
                 'explorer' => 'https://explorer.kcc.io/en',
                 'chainId' => 321,
                 'token' => 'kcs',
@@ -91,7 +93,8 @@ class ChainUtil
             [
                 'id' => 'cronos',
                 'title' => 'Crypto.com: Cronos',
-                'explorer' => 'https://cronos.crypto.org/explorer',
+                'shortTitle' => 'Cronos',
+                'explorer' => 'https://cronoscan.com',
                 'chainId' => 25,
                 'token' => 'wcro',
                 'icon' => 'assets/chains/cronos.png',

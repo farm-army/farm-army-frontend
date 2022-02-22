@@ -27,16 +27,11 @@ class PlatformMoonbeamRepository implements PlatformRepositoryInterface
             $this->getPlatforms()
         );
 
-        // $middleGroup = ['pancakebunny'];
         $slowGroup = [];
 
         $chunks = array_diff($chunks, $slowGroup);
-        // $chunks = array_diff($chunks, $middleGroup);
 
         $chunks = array_chunk($chunks, 5);
-
-        //$chunks[] = $slowGroup;
-        // $chunks[] = $middleGroup;
 
         return $chunks;
     }
@@ -61,6 +56,23 @@ class PlatformMoonbeamRepository implements PlatformRepositoryInterface
                 'url' => 'https://app.solarflare.io',
                 'icon' => '/assets/platforms/solarflare.png',
                 'token' => 'flare',
+                'chain' => 'moonbeam',
+            ],
+            [
+                'id' => 'mbbeefy',
+                'label' => 'Beefy',
+                'url' => 'https://app.beefy.finance/#/moonbeam',
+                'icon' => '/assets/platforms/beefy.png',
+                'token' => 'bifi',
+                'chain' => 'moonbeam',
+                'group' => 'beefy',
+            ],
+            [
+                'id' => 'thorus',
+                'label' => 'Thorus',
+                'url' => 'https://app.thorus.fi',
+                'icon' => '/assets/platforms/thorus.png',
+                'token' => 'tho',
                 'chain' => 'moonbeam',
             ],
         ];

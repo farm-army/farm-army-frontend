@@ -27,16 +27,10 @@ class PlatformCronosRepository implements PlatformRepositoryInterface
             $this->getPlatforms()
         );
 
-        // $middleGroup = ['pancakebunny'];
         $slowGroup = [];
 
         $chunks = array_diff($chunks, $slowGroup);
-        // $chunks = array_diff($chunks, $middleGroup);
-
         $chunks = array_chunk($chunks, 5);
-
-        //$chunks[] = $slowGroup;
-        // $chunks[] = $middleGroup;
 
         return $chunks;
     }
@@ -84,6 +78,7 @@ class PlatformCronosRepository implements PlatformRepositoryInterface
                 'url' => 'https://autofarm.network/cronos',
                 'icon' => '/assets/platforms/auto.png',
                 'chain' => 'cronos',
+                'group' => 'autofarm',
             ],
             [
                 'id' => 'crbeefy',
@@ -92,6 +87,7 @@ class PlatformCronosRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/beefy.png',
                 'token' => 'bifi',
                 'chain' => 'cronos',
+                'group' => 'beefy',
             ],
             [
                 'id' => 'crannex',
@@ -100,6 +96,7 @@ class PlatformCronosRepository implements PlatformRepositoryInterface
                 'icon' => '/assets/platforms/annex.png',
                 'token' => 'ann',
                 'chain' => 'cronos',
+                'group' => 'annex',
             ],
             [
                 'id' => 'mmf',

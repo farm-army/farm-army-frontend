@@ -1,0 +1,219 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'Farm & Liquidity Pools - Arrival Timeline' %}
+{% set description = 'Searching and tracking farming and liqudify pools' %}
+
+{% block content %}
+    <div class="my-2 row">
+        <div class="col">
+            <a class="btn btn-outline-secondary d-inline d-lg-none" data-bs-toggle="offcanvas" href="#offcanvasSearch" role="button" aria-controls="offcanvasSearch">
+                <i class="fa fa-filter"></i>
+            </a>
+        </div>
+        <div class="col">
+            <div class="d-flex justify-content-end">
+                <div class="align-self-center text-nowrap me-3 fs-6">Total: {{ pagination.totalItemCount }}</div>
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="d-none col-lg-2 d-lg-block">
+            {{ desktop_form }}
+        </div>
+
+        <div class="col-12 col-lg-10">
+            {{ content_result }}
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSearch" aria-labelledby="offcanvasSearchLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasSearchLabel">Filter</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            {{ desktop_form }}
+        </div>
+    </div>
+{% endblock %}
+
+{% set desktop_form %}
+    {% form_theme form.query 'bootstrap_5_layout.html.twig' %}
+
+    {{ form_start(form) }}
+
+    {{ form_row(form.query) }}
+
+    <div class="mt-1">
+        {{ form_label(form.chains) }}
+        {{ form_widget(form.chains) }}
+    </div>
+
+    <div class="mt-1">
+        {{ form_label(form.providers) }}
+        {{ form_widget(form.providers) }}
+    </div>
+
+    <div class="mt-1">
+        {{ form_label(form.tags) }}
+        {{ form_widget(form.tags) }}
+    </div>
+
+    <div class="mt-1">
+        <button class="btn btn-primary">Filter</button>
+    </div>
+
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+{% endset %}
+
+{% set content_result %}
+    <div class="card shadow-sm mb-2 pool-card">
+        <div class="card-body">
+            <div class="row sortable-row">
+                <div class="col-3">
+                    <a href="#" class="text-dark" data-sort="{% if sort == 'name_desc' %}name_asc{% elseif sort == 'name_asc' %}{% else %}name_desc{% endif %}"
+                    >Name</a>
+                    {% if sort == 'name_desc' %}<i class="fas fa-arrow-down"></i>{% endif %}
+                    {% if sort == 'name_asc' %}<i class="fas fa-arrow-up"></i>{% endif %}
+                </div>
+
+                <div class="col-3 text-center">
+                    <a href="#" class="text-dark" data-sort="{% if sort == 'tvl_desc' %}tvl_asc{% elseif sort == 'tvl_asc' %}{% else %}tvl_desc{% endif %}"
+                    >TVL</a>
+                    {% if sort == 'tvl_desc' %}<i class="fas fa-arrow-down"></i>{% endif %}
+                    {% if sort == 'tvl_asc' %}<i class="fas fa-arrow-up"></i>{% endif %}
+                </div>
+
+                <div class="col-2 text-center">
+                    <i title="Yearly APY / Daily APR" class="far fa-question-circle"></i>
+                    <a href="#" class="text-dark" data-sort="{% if sort == 'apy_desc' %}apy_asc{% elseif sort == 'apy_asc' %}{% else %}apy_desc{% endif %}"
+                    >Yield</a>
+                    {% if sort == 'apy_desc' %}<i class="fas fa-arrow-down"></i>{% endif %}
+                    {% if sort == 'apy_asc' %}<i class="fas fa-arrow-up"></i>{% endif %}
+                </div>
+
+                <div class="col-2 text-center">Earns</div>
+
+                <div class="col-2 text-end">
+                    <a href="#" class="text-dark" data-sort="{% if sort == 'provider_desc' %}provider_asc{% elseif sort == 'provider_asc' %}{% else %}provider_desc{% endif %}"
+                    >Platform</a>
+                    {% if sort == 'provider_desc' %}<i class="fas fa-arrow-down"></i>{% endif %}
+                    {% if sort == 'provider_asc' %}<i class="fas fa-arrow-up"></i>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pt-1">
+        {% for farm in farms %}
+            {{ farm.content|raw }}
+        {% else %}
+            <div class="card shadow-sm mb-2 pool-card">
+                <div class="card-body">
+                    <div class="text-center text-muted">No matching item found</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {# display navigation #}
+    <div class="d-flex justify-content-end mb-2">
+        <div class="align-self-center text-nowrap me-3 fs-6">Total: {{ pagination.totalItemCount }}</div>
+        <div class="pagination-sm">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+{% endset %}
+
+{% block javascript %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js"
+        integrity="sha512-pF+DNRwavWMukUv/LyzDyDMn8U2uvqYQdJN0Zvilr6DDo/56xPDZdDoyPDYZRSL4aOKO/FGKXTpzDyQJ8je8Qw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(function () {
+    $("select.selectize").selectize({
+        plugins: ["remove_button"],
+    });
+
+    $("#farm_search_page").val(1);
+
+    $(".pagination-sm").on('change', 'select', function(e) {
+        e.preventDefault();
+
+        const form = $('.offcanvas form');
+
+        form.find('#farm_search_page').val($(this).val());
+        form.submit();
+    });
+
+    $(".pagination-sm .page-next").on('click', function(e) {
+        e.preventDefault();
+
+        const select = $(this).closest('.pagination-sm').find('select');
+        const foo = parseInt(select.val()) + 1;
+        select.val(foo).trigger("change");
+    });
+
+    $(".pagination-sm .page-previous").on('click', function(e) {
+        e.preventDefault();
+
+        const select = $(this).closest('.pagination-sm').find('select');
+        const foo = parseInt(select.val()) - 1;
+        select.val(foo).trigger("change");
+    });
+
+    $(".sortable-row").on('click', 'a', function(e) {
+        e.preventDefault();
+
+        const data = $(this).attr('data-sort');
+        const form = $('.offcanvas form');
+
+        form.find("#farm_search_page").val(1);
+        form.find('#farm_search_sort').val(data);
+        form.submit();
+    });
+
+    $("select.selectize-icon").selectize({
+        plugins: ["remove_button"],
+        dataAttr: 'data-selectize',
+        render: {
+            option: function (item, escape) {
+                return '<div class="option align-self-center"><img loading="lazy" src="' + escape(item.icon) + '" width="12px" height="12px">&nbsp;' + escape(item.text) +'</div>';
+            },
+            item: function (item, escape) {
+                return '<div class="item align-self-center"><img loading="lazy" src="' + escape(item.icon) + '" width="12px" height="12px">&nbsp;' + escape(item.text) +'</div>';
+            },
+        }
+    });
+});
+</script>
+{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.min.css"
+          integrity="sha512-bkB9w//jjNUnYbUpATZQCJu2khobZXvLP5GZ8jhltg7P/dghIrTaSJ7B/zdlBUT0W/LXGZ7FfCIqNvXjWKqCYA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <style>
+        .selectize-control.single .selectize-input.input-active,
+        .selectize-input {
+            background: none;
+        }
+
+        html.dark .selectize-control.single .selectize-input.input-active,
+        html.dark .selectize-input {
+            background-color: #222;
+        }
+
+        html.dark .selectize-input {
+            border: 1px solid #515151;
+        }
+
+        .selectize-dropdown,
+        .selectize-input,
+        .selectize-input input {
+            font-size: 15px;
+        }
+    </style>
+{% endblock %}
